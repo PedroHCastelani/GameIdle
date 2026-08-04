@@ -833,23 +833,27 @@ Mapa dividido em regiões disputadas por guilds. Controle garante bônus passivo
 ### Estilo: GTA Clássico Top-Down
 Perspectiva top-down, pixel art urbano, mapa de cidade com ruas, quarteirões, edifícios e estabelecimentos. Sprites de personagem expressivos em 32×32.
 
-### Ferramentas de IA para Geração de Assets
+### Pipeline de Assets e Ferramentas
 
-| Ferramenta | Uso | Observação |
-|---|---|---|
-| Midjourney | Concept art e referências | Melhor qualidade para direção visual inicial |
-| Leonardo.ai | Sprites pixel art consistentes | Modelos treinados em pixel art |
-| Kling AI | Animações a partir de sprites | Gera frames de animação |
-| Aseprite | Refinamento e animação final | Software padrão para pixel art |
-| Stable Diffusion + ControlNet | Geração em batch de variações | Mais flexível, requer setup local |
+A definição de ferramentas, paleta e pipeline é responsabilidade dos **agentes de asset autônomos**.
+O DEV-ASSET-LEAD lidera a pesquisa e decisão com DEV-ASSET-CHAR, DEV-ASSET-ENV e DEV-ASSET-ANIM.
+As decisões são registradas no Notion antes de qualquer produção:
 
-**Fluxo recomendado:**
-```
-1. Definir estilo base com Midjourney (3–5 referências aprovadas)
-2. Gerar sprites base com Leonardo.ai usando as referências como guia
-3. Refinar e animar no Aseprite (~20–30% do esforço de criar do zero)
-4. Claude gera descrições detalhadas de cada asset para alimentar os prompts
-```
+| Decisão | Status |
+|---|---|
+| D-010 — Ferramentas de geração de pixel art | Aberta |
+| D-011 — Paleta oficial de cores (máx 32 cores) | Aberta |
+| D-012 — Tamanho base de sprite (16×16 ou 32×32) | Aberta |
+| D-013 — Efeitos sonoros (fase futura) | Aberta |
+
+O resultado é documentado em `docs/ASSET_GUIDELINES.md` — criado pelo DEV-ASSET-LEAD após resolução das decisões. Nenhum asset é gerado sem esse arquivo existir e estar aprovado.
+
+**Ferramentas candidatas** (a avaliar pelos agentes — não definitivas):
+- Plataforma My ub.ia (22+ IAs, incluindo geração de imagem)
+- Compatibilidade com Claude Code como critério de seleção
+- Aseprite para refinamento manual quando necessário
+
+**Perfis dos agentes:** `.claude/agents/asset-lead.md`, `asset-char.md`, `asset-env.md`, `asset-anim.md`
 
 ---
 

@@ -266,3 +266,73 @@ DEV-QA valida (testes, casos de borda, cobertura)
 | DevOps / CI-CD / Deploy | DEV-TL-INFRA | DEV-TL-INFRA |
 | Segurança / LGPD | DEV-SEGURANÇA | DEV-TL-INFRA |
 | Agentes de operação | DEV-QA | DEV-TL-PRODUTO + DEV-TL-INFRA |
+
+---
+
+## DoD para Tasks de Asset Visual
+
+### DEV-ASSET-LEAD (direção e validação)
+```
+[ ] ASSET_GUIDELINES.md criado com: paleta oficial, tamanho de sprite, regras de perspectiva,
+    convenção de nomenclatura, regras de animação e o que é proibido
+[ ] Decisões D-010, D-011 e D-012 resolvidas e registradas no Notion
+[ ] Estrutura de pastas criada em apps/web/public/assets/
+[ ] Ferramenta de geração escolhida e documentada
+[ ] Paleta oficial com máximo 32 cores, exportada como palette.png
+[ ] TASKS.md atualizado
+```
+
+### DEV-ASSET-CHAR (personagens)
+```
+[ ] ASSET_GUIDELINES.md lido e seguido — task não inicia sem ele
+[ ] Usa apenas cores da paleta oficial
+[ ] Tamanho de sprite correto para a categoria
+[ ] Perspectiva top-down consistente com os demais assets
+[ ] 4 direções geradas para personagens móveis (N, S, L, O)
+[ ] Outline de 1px presente
+[ ] Sem cópia de elementos visuais do GTA original (Rockstar Games)
+[ ] Arquivo PNG com transparência (canal alpha)
+[ ] Nomenclatura correta conforme ASSET_GUIDELINES.md
+[ ] Organizado na pasta correta (apps/web/public/assets/sprites/)
+[ ] DEV-ASSET-LEAD aprovou o asset
+[ ] TASKS.md atualizado com arquivos criados
+```
+
+### DEV-ASSET-ENV (ambientação)
+```
+[ ] ASSET_GUIDELINES.md lido e seguido — task não inicia sem ele
+[ ] Usa apenas cores da paleta oficial
+[ ] Tamanho de tile correto e consistente
+[ ] Tiles são modulares (combinam sem costuras visíveis)
+[ ] Mínimo de 2 variações por tile base
+[ ] Sem cópia de elementos visuais do GTA original
+[ ] Formato PNG correto
+[ ] Nomenclatura correta
+[ ] Organizado em apps/web/public/assets/tilesets/
+[ ] DEV-ASSET-LEAD aprovou
+[ ] TASKS.md atualizado
+```
+
+### DEV-ASSET-ANIM (animação)
+```
+[ ] ASSET_GUIDELINES.md lido e seguido — task não inicia sem ele
+[ ] Sprites base aprovados pelo DEV-ASSET-LEAD antes de animar
+[ ] Spritesheet em grid uniforme (todos os frames do mesmo tamanho)
+[ ] JSON de metadados criado para cada animação (frameWidth, frameHeight, frameCount, fps, loop)
+[ ] Frame rate dentro dos padrões (idle 4–6fps, walk 8fps, run 12fps, effects 12–15fps)
+[ ] Loop sem pulo visual entre último e primeiro frame
+[ ] Nomenclatura correta
+[ ] Organizado em apps/web/public/assets/animations/
+[ ] DEV-ASSET-LEAD aprovou
+[ ] TASKS.md atualizado
+[ ] Mapeamento de som futuro documentado em ASSET_GUIDELINES.md (seção "Mapeamento de Som")
+```
+
+### O que NÃO é DoD para assets
+| ❌ Não é DoD | ✅ O que é DoD |
+|---|---|
+| "O sprite ficou bonito" | DEV-ASSET-LEAD aprovou formalmente |
+| "Usei cores parecidas" | Apenas cores da paleta oficial (arquivo palette.png) |
+| "Parece diferente do GTA" | Sem nenhum elemento copiável do GTA identificável |
+| "Está na pasta certa" | Nomenclatura + pasta + formato PNG + transparência corretos |
+| "A animação roda" | JSON de metadados criado e loop sem pulo visual validado |

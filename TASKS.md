@@ -167,3 +167,45 @@
 4. **Conflito de arquivo** — se o arquivo que você precisa tocar está em "Arquivos em uso", PARE e reporte ao Tech Lead
 5. **Bloqueio** — se uma dependência não está Done, mova para Bloqueado com o motivo
 6. **PO sincroniza com Notion** — toda mudança de status neste arquivo é refletida no board Kanban pelo DEV-PO
+
+---
+
+## 🟡 Backlog — Assets Visuais (pré-requisito: D-010, D-011, D-012 resolvidas)
+
+| ID | Título | Agente | Estimativa | Depende de |
+|---|---|---|---|---|
+| T-080 | Definição de ferramentas e pipeline de asset | DEV-ASSET-LEAD | G | D-010 |
+| T-081 | Paleta oficial e ASSET_GUIDELINES.md | DEV-ASSET-LEAD | G | T-080, D-011, D-012 |
+| T-082 | Estrutura de pastas de assets | DEV-ASSET-LEAD | P | T-081 |
+| T-083 | Sprites base — Policial (4 direções, idle) | DEV-ASSET-CHAR | G | T-081 |
+| T-084 | Sprites base — Ladrão (4 direções, idle) | DEV-ASSET-CHAR | G | T-081 |
+| T-085 | Sprites base — Médico (3 alinhamentos, 4 direções, idle) | DEV-ASSET-CHAR | G | T-081 |
+| T-086 | Sprites — NPCs civis (variações) | DEV-ASSET-CHAR | G | T-081 |
+| T-087 | Sprites — Veículos (policial, civil, ambulância) | DEV-ASSET-CHAR | M | T-081 |
+| T-088 | Tilesets — Ruas e calçadas | DEV-ASSET-ENV | G | T-081 |
+| T-089 | Tilesets — Edifícios exteriores (delegacia, hospital, banco, beco) | DEV-ASSET-ENV | G | T-081 |
+| T-090 | Tilesets — Interiores | DEV-ASSET-ENV | G | T-081 |
+| T-091 | Tilesets — Props urbanos | DEV-ASSET-ENV | M | T-081 |
+| T-092 | Animações — Personagens (walk, run, action por profissão) | DEV-ASSET-ANIM | XG | T-083, T-084, T-085 |
+| T-093 | Animações — Efeitos visuais (hit, heal, arrest, levelup, etc.) | DEV-ASSET-ANIM | G | T-081 |
+| T-094 | Animações — UI (loading, stamina, notificação) | DEV-ASSET-ANIM | M | T-081 |
+
+---
+
+## 📋 Decisões Pendentes — atualizado
+
+| # | Decisão | Bloqueia | Status | Responsável |
+|---|---|---|---|---|
+| D-001 | Custo dos slots de personagem em Gold | T-019 | Aberta | PO |
+| D-002 | Nível mínimo e custo de criação de guild | T-058 | Aberta | PO |
+| D-003 | Vantagem premium no banco | T-035 | Aberta | PO |
+| D-004 | Gateway de pagamento | Nível 11 | Aberta | PO + jurídico |
+| D-005 | Valores de calibragem econômica | T-037 | Aberta — pós Fase 1 | PO |
+| D-006 | Duração dos buffs médicos e cooldown | T-029 | Aberta | PO |
+| D-007 | Serviço de validação de CPF | T-010 | ✅ BrasilAPI (gratuita) | PO |
+| D-008 | Canal de alertas da equipe | T-037, T-038 | Aberta | PO |
+| D-009 | Workspace Notion | T-007 | ✅ Claude integrado ao Notion | PO |
+| D-010 | Ferramentas de geração de assets (pixel art) | T-080 e toda produção de asset | Aberta | DEV-ASSET-LEAD |
+| D-011 | Paleta oficial de cores dos assets (máx 32 cores) | T-081 e toda produção de asset | Aberta | DEV-ASSET-LEAD |
+| D-012 | Tamanho base de sprite (16×16 ou 32×32) | T-081+ | Aberta | DEV-ASSET-LEAD |
+| D-013 | Efeitos sonoros — escopo e ferramentas (fase futura) | Nenhuma task atual | Aberta | PO |

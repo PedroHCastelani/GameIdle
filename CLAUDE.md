@@ -107,3 +107,14 @@ Documento completo: docs/Definition_of_Done.md
 | qa.md | DEV-QA | Testes, cobertura, casos de borda |
 | devops.md | DEV-DEVOPS | CI/CD, Docker, ambientes, deploy |
 | security.md | DEV-SEGURANÇA | OWASP, LGPD, auditoria |
+
+## Agentes de Asset Visual (.claude/agents/)
+
+| Arquivo | Agente | Escopo |
+|---|---|---|
+| `asset-lead.md` | DEV-ASSET-LEAD | Direção visual, validação de assets, pipeline |
+| `asset-char.md` | DEV-ASSET-CHAR | Sprites de personagens, NPCs e veículos |
+| `asset-env.md` | DEV-ASSET-ENV | Tilesets de ruas, edifícios e ambientação |
+| `asset-anim.md` | DEV-ASSET-ANIM | Animações, spritesheets e efeitos visuais |
+
+**Regra de asset:** Nenhum asset é gerado sem docs/ASSET_GUIDELINES.md existir e estar aprovado pelo DEV-ASSET-LEAD. As decisões D-010, D-011 e D-012 no Notion devem ser resolvidas antes de qualquer produção visual.

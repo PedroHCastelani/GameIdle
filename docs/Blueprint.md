@@ -149,6 +149,29 @@ NÍVEL 11 — MONETIZAÇÃO (depende do Nível 4 + CNPJ ativo)
 ├── Fluxo de compra de Créditos
 └── Assinatura premium mensal
 
+NÍVEL 11 — MONETIZAÇÃO (depende do Nível 4 + CNPJ ativo)
+├── Gateway de pagamento (Stripe + Mercado Pago)
+├── Webhook de pagamento com validação HMAC
+├── Fluxo de compra de Créditos
+└── Assinatura premium mensal
+
+NÍVEL 12 — ASSETS VISUAIS (paralelo à Fase 1 — não bloqueia código)
+├── D-010 resolvida: ferramentas de geração definidas pelo DEV-ASSET-LEAD
+├── D-011 resolvida: paleta oficial aprovada
+├── D-012 resolvida: tamanho base de sprite definido
+├── ASSET_GUIDELINES.md criado e aprovado (T-081)
+├── Sprites base dos 3 personagens jogáveis (T-083, T-084, T-085)
+├── Sprites de NPCs e veículos (T-086, T-087)
+├── Tilesets de ruas, edifícios e interiores (T-088, T-089, T-090)
+├── Props urbanos (T-091)
+├── Animações de personagens e efeitos (T-092, T-093)
+└── Animações de UI (T-094)
+
+  Agentes responsáveis: DEV-ASSET-LEAD, DEV-ASSET-CHAR, DEV-ASSET-ENV, DEV-ASSET-ANIM
+  Nota: produção de assets corre em paralelo ao desenvolvimento de código.
+  Assets não bloqueiam a Fase 0 ou Fase 1, mas devem estar prontos antes do go-live.
+  Som (D-013) é fase posterior ao visual estabilizado.
+
 FASE 2 — CONTEÚDO AVANÇADO (após MVP estabilizado em produção)
 ├── Árvore de talentos completa
 ├── Missões nível 31–80+
@@ -244,6 +267,29 @@ FASE 2 — CONTEÚDO AVANÇADO (após MVP estabilizado em produção)
 | T-064 | QA — Fase 1.5 | DEV-QA | PvP sem exploits; economia estável; cobertura ≥ 80% | T-050–T-063 |
 
 **Critério de avanço para Fase 2:** sem exploits conhecidos de PvP, economia estável por 2 semanas, ratio torneira/ralo entre 0.90 e 1.10, monetização (Nível 11) funcional se CNPJ disponível.
+
+---
+
+### ASSETS VISUAIS — Nível 12 (paralelo à Fase 1 e 1.5)
+**Duração estimada:** contínua, começa após D-010/D-011/D-012 resolvidas
+
+| ID | Entrega | Agente | Critério de Pronto | Depende de |
+|---|---|---|---|---|
+| T-080 | Definição de ferramentas e pipeline | DEV-ASSET-LEAD | ASSET_GUIDELINES.md criado com ferramentas, paleta e tamanho aprovados | D-010, D-011, D-012 |
+| T-081 | Paleta oficial + estrutura de pastas | DEV-ASSET-LEAD | palette.png exportado, pastas criadas em apps/web/public/assets/ | T-080 |
+| T-082 | Estrutura de pastas de assets | DEV-ASSET-LEAD | Todas as pastas criadas conforme ASSET_GUIDELINES.md | T-081 |
+| T-083 | Sprites base — Policial | DEV-ASSET-CHAR | 4 direções, idle, PNG com alpha, aprovado pelo LEAD | T-081 |
+| T-084 | Sprites base — Ladrão | DEV-ASSET-CHAR | 4 direções, idle, PNG com alpha, aprovado pelo LEAD | T-081 |
+| T-085 | Sprites base — Médico (3 alinhamentos) | DEV-ASSET-CHAR | 4 direções × 3 alinhamentos, aprovado pelo LEAD | T-081 |
+| T-086 | Sprites — NPCs civis | DEV-ASSET-CHAR | Mínimo 4 variações, aprovado pelo LEAD | T-081 |
+| T-087 | Sprites — Veículos | DEV-ASSET-CHAR | Policial, civil, ambulância — aprovados pelo LEAD | T-081 |
+| T-088 | Tilesets — Ruas e calçadas | DEV-ASSET-ENV | Modulares, sem costuras, mín 2 variações por tile | T-081 |
+| T-089 | Tilesets — Edifícios exteriores | DEV-ASSET-ENV | Delegacia, hospital, banco, beco — aprovados pelo LEAD | T-081 |
+| T-090 | Tilesets — Interiores | DEV-ASSET-ENV | Delegacia, hospital, banco — aprovados pelo LEAD | T-081 |
+| T-091 | Tilesets — Props urbanos | DEV-ASSET-ENV | Postes, lixeiras, carros estacionados — aprovados | T-081 |
+| T-092 | Animações — Personagens | DEV-ASSET-ANIM | walk, run, action por profissão + JSON metadados | T-083, T-084, T-085 |
+| T-093 | Animações — Efeitos visuais | DEV-ASSET-ANIM | hit, heal, arrest, levelup, money, prison, buff + JSON | T-081 |
+| T-094 | Animações — UI | DEV-ASSET-ANIM | loading, stamina regen, notificação + JSON | T-081 |
 
 ---
 
@@ -346,6 +392,13 @@ Todos os itens abaixo precisam estar ✅ antes de abrir para jogadores:
 - [ ] SSL válido com renovação automática
 - [ ] Todos os alertas de monitoramento configurados e testados
 - [ ] Runbooks de incidente escritos para os cenários mais prováveis
+
+**Assets Visuais:**
+- [ ] Todos os sprites base aprovados (personagens, NPCs, veículos)
+- [ ] Tilesets suficientes para as áreas da Fase 1 renderizarem
+- [ ] Animações de walk, idle e action dos 3 personagens jogáveis
+- [ ] Efeitos visuais críticos: hit, heal, arrest, levelup
+- [ ] ASSET_GUIDELINES.md publicado em docs/
 
 **Monetização (se ativa no lançamento):**
 - [ ] CNPJ ativo

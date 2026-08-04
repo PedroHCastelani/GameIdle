@@ -861,3 +861,199 @@ Para evitar ambiguidade, o que explicitamente **não** conta como "pronto":
 7. **Log de tudo** — toda ação relevante é registrada (TASKS.md, Notion, security_logs ou economy_logs)
 8. **Falha explícita** — agente que encontra erro reporta claramente, não continua silenciosamente
 9. **DoD é lei** — nenhum Tech Lead aprova task sem DoD completamente satisfeito
+
+---
+
+## PARTE 5 — AGENTES DE ASSET VISUAL
+
+### Visão Geral
+
+Os agentes de asset são responsáveis por toda a produção visual do The Life. Operam via Claude Code e seguem a mesma hierarquia de governança dos agentes de desenvolvimento — leitura obrigatória do Blueprint.md e TASKS.md antes de qualquer ação.
+
+**Hierarquia:**
+```
+DEV-ASSET-LEAD (coordenação e validação)
+    ├── DEV-ASSET-CHAR  (sprites de personagens, NPCs e veículos)
+    ├── DEV-ASSET-ENV   (tilesets de ambientação e cenário)
+    └── DEV-ASSET-ANIM  (animações e efeitos visuais)
+```
+
+**Primeira tarefa de todos os agentes de asset:**
+Antes de gerar qualquer arquivo, o DEV-ASSET-LEAD deve liderar a discussão de ferramentas e paleta, registrar a decisão no Notion (D-010) e criar o arquivo `docs/ASSET_GUIDELINES.md`. Nenhum asset é gerado sem esse documento existir e estar aprovado.
+
+---
+
+### DEV-ASSET-LEAD — Asset Lead
+
+**Arquivo:** `.claude/agents/asset-lead.md`
+**Responsabilidade:** Coordena a produção visual, define pipeline, valida consistência entre todos os assets e aprova entregas dos demais agentes de asset.
+
+**Primeira tarefa obrigatória — Decisão de Ferramentas (D-010):**
+Pesquisar e comparar ferramentas disponíveis na plataforma My ub.ia e compatíveis com Claude Code para geração de pixel art. Critérios:
+- Capacidade de gerar pixel art top-down consistente
+- Manutenção de paleta fixa entre gerações
+- Qualidade de sprites 16×16 ou 32×32
+- Disponibilidade de API para workflow automatizado
+- Custo dentro do plano contratado
+
+A decisão deve ser registrada como Decisão Pendente D-010 no Notion antes de qualquer implementação.
+
+**Não gera assets diretamente.** Define o padrão e valida.
+
+---
+
+### DEV-ASSET-CHAR — Agente de Personagens
+
+**Arquivo:** `.claude/agents/asset-char.md`
+**Responsabilidade:** Gera sprites de personagens jogáveis (Policial, Ladrão, Médico), NPCs e veículos.
+
+**Identidade visual por profissão:**
+- Policial: azul (#4A9EFF), uniforme urbano com progressão visual por nível
+- Ladrão: vermelho (#FF4757), roupas escuras com progressão visual por nível
+- Médico: verde (#2ED573), jaleco que muda conforme alinhamento (bem/mal/neutro)
+
+**Nunca inicia** sem ASSET_GUIDELINES.md aprovado.
+
+---
+
+### DEV-ASSET-ENV — Agente de Ambientação
+
+**Arquivo:** `.claude/agents/asset-env.md`
+**Responsabilidade:** Gera tilesets de ruas, calçadas, edifícios (delegacia, hospital, banco, beco), interiores e props urbanos.
+
+**Ambientes principais:**
+Ruas e calçadas, exteriores de edifícios em perspectiva top-down, interiores (delegacia, hospital, banco), props urbanos (postes, lixeiras, carros estacionados).
+
+**Nunca inicia** sem ASSET_GUIDELINES.md aprovado.
+
+---
+
+### DEV-ASSET-ANIM — Agente de Animação
+
+**Arquivo:** `.claude/agents/asset-anim.md`
+**Responsabilidade:** Monta spritesheets de animação a partir dos sprites aprovados pelo DEV-ASSET-CHAR, cria efeitos visuais de ação e UI animada.
+
+**Animações por personagem:** idle, walk, run, action (específica da profissão), hurt, death, prison.
+**Efeitos visuais:** hit, shoot, heal, arrest, money, levelup, prison, buff.
+**Trabalha sempre após** DEV-ASSET-CHAR ter sprites aprovados.
+
+**Nota sobre som:** Documenta mapeamento de som futuro em ASSET_GUIDELINES.md mas não inicia produção de áudio — escopo futuro.
+
+---
+
+### Regras Específicas dos Agentes de Asset
+
+1. **ASSET_GUIDELINES.md é lei** — nenhum asset gerado sem esse documento existir
+2. **DEV-ASSET-LEAD valida antes de Done** — nenhum asset vai para a pasta de destino sem aprovação
+3. **Nunca copiar GTA** — paleta, proporções e estilo devem ser distintamente originais
+4. **Paleta fechada** — apenas as cores definidas no ASSET_GUIDELINES.md
+5. **Som é fase posterior** — documentar necessidades futuras, não implementar agora
+6. **Decisão de ferramenta vai para o Notion** — D-010 deve ser resolvida antes de qualquer geração
+
+---
+
+## PARTE 5 — AGENTES DE ASSET VISUAL
+
+### Visão Geral
+
+Os agentes de asset são responsáveis por toda a produção visual do The Life. Operam via Claude Code com a mesma hierarquia de governança dos agentes de desenvolvimento — leitura obrigatória de Blueprint.md e TASKS.md antes de qualquer ação.
+
+```
+DEV-ASSET-LEAD  (coordenação, validação, pipeline)
+    ├── DEV-ASSET-CHAR  (sprites de personagens, NPCs, veículos)
+    ├── DEV-ASSET-ENV   (tilesets de ambientação e cenário)
+    └── DEV-ASSET-ANIM  (animações, spritesheets, efeitos visuais)
+```
+
+**Primeira tarefa obrigatória de todos os agentes de asset:**
+DEV-ASSET-LEAD lidera a discussão de ferramentas e paleta, registra as decisões D-010, D-011 e D-012 no Notion e cria `docs/ASSET_GUIDELINES.md`. Nenhum asset é gerado sem esse documento existir e aprovado.
+
+---
+
+### DEV-ASSET-LEAD — Asset Lead
+**Arquivo:** `.claude/agents/asset-lead.md`
+
+**Responsabilidade:** Coordena produção visual, define pipeline, valida consistência entre todos os assets e aprova entregas dos demais agentes.
+
+**Decisões que lidera:**
+
+| Decisão | Critérios |
+|---|---|
+| D-010 — Ferramentas | Pesquisa na My ub.ia + compatibilidade Claude Code + API disponível |
+| D-011 — Paleta | Máx 32 cores, distinta do GTA original, coerente com identidade do The Life |
+| D-012 — Tamanho de sprite | 16×16 (mais retrô) vs 32×32 (mais expressivo) — considerar desempenho no navegador |
+
+**Não gera assets diretamente.** Define o padrão e valida.
+
+**Regras invioláveis:**
+- Nunca aprovar asset que copie elementos do GTA (Rockstar Games)
+- Nunca iniciar produção em escala sem ASSET_GUIDELINES.md aprovado
+- Toda decisão de ferramenta registrada no Notion antes de implementar
+- Som (D-013) é fase posterior — foco total em visual
+
+---
+
+### DEV-ASSET-CHAR — Agente de Personagens
+**Arquivo:** `.claude/agents/asset-char.md`
+
+**Responsabilidade:** Gera sprites de personagens jogáveis, NPCs e veículos.
+
+**Identidade visual por profissão:**
+- Policial: azul (#4A9EFF), uniforme urbano com progressão por nível
+- Ladrão: vermelho (#FF4757), roupas escuras com progressão por nível
+- Médico: verde (#2ED573), jaleco que muda conforme alinhamento (bem/mal/neutro)
+
+**Especificações:**
+- 4 direções (N, S, L, O) para personagens móveis
+- Outline de 1px obrigatório
+- PNG com canal alpha
+- Spritesheet completo por personagem
+
+**Nunca inicia** sem ASSET_GUIDELINES.md aprovado.
+
+---
+
+### DEV-ASSET-ENV — Agente de Ambientação
+**Arquivo:** `.claude/agents/asset-env.md`
+
+**Responsabilidade:** Gera tilesets de ruas, calçadas, edifícios exteriores e interiores, props urbanos.
+
+**Ambientes principais:** ruas e calçadas, exteriores top-down (delegacia, hospital, banco, beco), interiores (delegacia, hospital, banco), props (postes, lixeiras, carros estacionados).
+
+**Especificações:**
+- Tiles modulares — combinam sem costuras
+- Mínimo 2 variações por tile base
+- Paleta de asfalto: tons escuros (#1A1A2E base) — distinto do GTA
+
+**Nunca inicia** sem ASSET_GUIDELINES.md aprovado.
+
+---
+
+### DEV-ASSET-ANIM — Agente de Animação
+**Arquivo:** `.claude/agents/asset-anim.md`
+
+**Responsabilidade:** Monta spritesheets de animação a partir dos sprites aprovados pelo DEV-ASSET-CHAR, cria efeitos visuais e UI animada.
+
+**Animações por personagem:** idle (2–4f), walk (6–8f), run (6–8f), action por profissão, hurt, death, prison.
+
+**Efeitos visuais:** hit, shoot, heal, arrest, money, levelup, prison, buff.
+
+**Frame rates padrão:** idle 4–6fps · walk 8fps · run 12fps · effects 12–15fps
+
+**JSON de metadados** obrigatório para cada animação (frameWidth, frameHeight, frameCount, fps, loop, spritesheet path).
+
+**Trabalha sempre após** DEV-ASSET-CHAR ter sprites aprovados pelo LEAD.
+
+**Som:** documenta mapeamento de animações→som em ASSET_GUIDELINES.md (seção "Mapeamento de Som") mas não inicia produção de áudio — escopo futuro definido em D-013.
+
+---
+
+### Regras Específicas dos Agentes de Asset
+
+1. **Blueprint.md e TASKS.md primeiro** — mesma regra dos demais agentes de desenvolvimento
+2. **ASSET_GUIDELINES.md é lei** — nenhum asset gerado sem esse documento
+3. **DEV-ASSET-LEAD valida antes de Done** — nenhum asset vai para destino final sem aprovação
+4. **Nunca copiar GTA** — paleta, proporções e estilo devem ser distintamente originais
+5. **Paleta fechada** — apenas cores definidas em ASSET_GUIDELINES.md
+6. **Decisão de ferramenta vai para o Notion** — D-010 resolvida antes de qualquer geração
+7. **Som é fase posterior** — documentar necessidades, não implementar agora
