@@ -861,6 +861,7 @@ Para evitar ambiguidade, o que explicitamente **não** conta como "pronto":
 7. **Log de tudo** — toda ação relevante é registrada (TASKS.md, Notion, security_logs ou economy_logs)
 8. **Falha explícita** — agente que encontra erro reporta claramente, não continua silenciosamente
 9. **DoD é lei** — nenhum Tech Lead aprova task sem DoD completamente satisfeito
+10. **RP-01 — Sincronização de Sprint** — ao final de cada sprint, gerar script de commit (não versionado) e prompt detalhado para IA do Notion (baseado em scripts/template/template-notion.md). O prompt deve ser autocontido e não depender de suposições.
 
 ---
 

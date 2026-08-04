@@ -31,7 +31,8 @@
 
 | ID | Título | Agente | Estimativa | Depende de |
 |---|---|---|---|---|
-| T-001 | Monorepo configurado | DEV-DEVOPS | M | — |
+| T-000 | Configurar .gitignore e estrutura de templates | DEV-DEVOPS | P | — |
+| T-001 | Monorepo configurado | DEV-DEVOPS | M | T-000 |
 | T-002 | Docker local (PostgreSQL + Redis + PgBouncer) | DEV-DEVOPS | M | T-001 |
 | T-003 | Schema inicial — todas as tabelas | DEV-DATABASE | G | T-002 |
 | T-004 | CI/CD — GitHub Actions | DEV-DEVOPS | M | T-001 |
@@ -102,9 +103,8 @@
 
 | ID | Título | Agente | Arquivos em uso | Iniciado em |
 |---|---|---|---|---|
-| — | — | — | — | — |
+| T-000 | Configurar .gitignore e estrutura de templates | DEV-DEVOPS | .gitignore, scripts/template/template-notion.md | 2026-08-04 |
 
-*(Nenhuma task em progresso — projeto não iniciado)*
 
 ---
 

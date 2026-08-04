@@ -37,3 +37,7 @@ Thumbs.db
 # Prisma
 apps/api/prisma/dev.db
 apps/api/prisma/dev.db-journal
+
+# Scripts locais de commit/push — nunca devem ir para o repositório
+script-commit.sh
+

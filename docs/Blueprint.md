@@ -448,3 +448,32 @@ Todos os itens abaixo precisam estar ✅ antes de abrir para jogadores:
 | Runtime | Node.js LTS | 22.x |
 | Agentes autônomos | Claude Code | — |
 | Gestão de tasks | Notion + TASKS.md | — |
+
+## Regras de Processo
+
+### RP-01 — Sincronização de Sprint (Repositório + Notion)
+
+Ao final de **cada sprint**, o agente condutor DEVE gerar DOIS artefatos:
+
+1. **Script de commit** (`script-commit.sh` na raiz) — script shell com todos os comandos git para subir as alterações, com mensagem estruturada contendo:
+   - Tasks concluídas, em progresso e bloqueadas
+   - Arquivos modificados
+   - Decisões resolvidas e abertas
+   - Status do TASKS.md
+   - Próximo passo
+
+2. **Prompt para IA do Notion** (`scripts/template/template-notion.md`) — documento markdown extremamente detalhado para a IA de integração com o Notion executar:
+
+    **Regra:** O prompt do Notion deve ser tão detalhado que a IA não precise fazer nenhuma suposição — cada ação deve estar explicitamente descrita com coluna de destino e texto exato.
+
+   - Mover cards entre colunas do Kanban
+   - Atualizar status de cada task
+   - Criar novos cards se necessário
+   - Registrar decisões tomadas
+   - Linkar PRs e documentação
+
+**Configuração de versionamento:**
+- `script-commit.sh` → **NÃO versionado** (adicionado ao `.gitignore`)
+- `scripts/template/template-notion.md` → **Versionado** (template reutilizável)
+
+**Fluxo:**
