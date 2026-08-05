@@ -31,14 +31,16 @@
 
 | ID | Título | Agente | Estimativa | Depende de |
 |---|---|---|---|---|
-| T-000 | Configurar .gitignore e estrutura de templates | DEV-DEVOPS | P | — |
-| T-001 | Monorepo configurado | DEV-DEVOPS | M | T-000 |
-| T-002 | Docker local (PostgreSQL + Redis + PgBouncer) | DEV-DEVOPS | M | T-001 |
-| T-003 | Schema inicial — todas as tabelas | DEV-DATABASE | G | T-002 |
-| T-004 | CI/CD — GitHub Actions | DEV-DEVOPS | M | T-001 |
-| T-005 | Seed de dados (áreas, missões, inimigos, buffs) | DEV-DATABASE | M | T-003 |
-| T-006 | TASKS.md criado na raiz do repositório | DEV-PO | P | T-001 |
-| T-007 | Notion — workspace e board Kanban | DEV-PO | M | D-009 |
+| T-001 | Atualizar Blueprint.md com fluxo completo da RP-01 | DEV-DEVOPS | P | T-000 |
+| T-002 | Monorepo configurado | DEV-DEVOPS | M | T-001 |
+| T-003 | Configurar .gitignore e estrutura de templates | DEV-DEVOPS | P | — |
+| T-004 | Monorepo configurado | DEV-DEVOPS | M | T-000 |
+| T-005 | Docker local (PostgreSQL + Redis + PgBouncer) | DEV-DEVOPS | M | T-001 |
+| T-006 | Schema inicial — todas as tabelas | DEV-DATABASE | G | T-002 |
+| T-007 | CI/CD — GitHub Actions | DEV-DEVOPS | M | T-001 |
+| T-008 | Seed de dados (áreas, missões, inimigos, buffs) | DEV-DATABASE | M | T-003 |
+| T-009 | TASKS.md criado na raiz do repositório | DEV-PO | P | T-001 |
+| T-010 | Notion — workspace e board Kanban | DEV-PO | M | D-009 |
 
 ---
 
@@ -104,7 +106,7 @@
 | ID | Título | Agente | Arquivos em uso | Iniciado em |
 |---|---|---|---|---|
 | T-000 | Configurar .gitignore e estrutura de templates | DEV-DEVOPS | .gitignore, scripts/template/template-notion.md | 2026-08-04 |
-
+## | — | — | — | — | — | — |
 
 ---
 
@@ -112,16 +114,16 @@
 
 | ID | Título | Agente | PR | Arquivos modificados | Concluído em |
 |---|---|---|---|---|---|
-| — | — | — | — | — | — |
+## | — | — | — | — | — | — |
 
 ---
 
-## ✅ Concluído
+## ✅ Concluído (últimas 2 semanas)
 
-| ID | Título | Agente | PR | Arquivos modificados | Data |
-|---|---|---|---|---|---|
-| — | — | — | — | — | — |
-
+| ID | Título | Agente | Arquivos modificados | Data |
+|---|---|---|---|---|
+| T-000 | Configurar .gitignore e estrutura de templates | DEV-DEVOPS | .gitignore, scripts/template/template-notion.md, script-commit.sh | 2026-08-04 |
+## | — | — | — | — | — | — |
 ---
 
 ## ❌ Falhou / Reaberto

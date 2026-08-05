@@ -462,9 +462,7 @@ Ao final de **cada sprint**, o agente condutor DEVE gerar DOIS artefatos:
    - Status do TASKS.md
    - Próximo passo
 
-2. **Prompt para IA do Notion** (`scripts/template/template-notion.md`) — documento markdown extremamente detalhado para a IA de integração com o Notion executar:
-
-    **Regra:** O prompt do Notion deve ser tão detalhado que a IA não precise fazer nenhuma suposição — cada ação deve estar explicitamente descrita com coluna de destino e texto exato.
+2. **Prompt para IA do Notion** (`scripts/template/template-notion.md`) — documento markdown extremamente detalhado para a IA de integração com o Notion executar:    
 
    - Mover cards entre colunas do Kanban
    - Atualizar status de cada task
@@ -477,3 +475,18 @@ Ao final de **cada sprint**, o agente condutor DEVE gerar DOIS artefatos:
 - `scripts/template/template-notion.md` → **Versionado** (template reutilizável)
 
 **Fluxo:**
+    ```
+    Sprint concluída
+          ↓
+    Agente atualiza TASKS.md
+          ↓
+    Gera script-commit.sh (local, não versionado)
+          ↓
+    Gera prompt Notion baseado no template
+          ↓
+    Usuário executa script → git push
+          ↓
+    Usuário cola prompt na IA do Notion → board atualizado
+    ```
+    
+    **Regra:** O prompt do Notion deve ser tão detalhado que a IA não precise fazer nenhuma suposição — cada ação deve estar explicitamente descrita com coluna de destino e texto exato.
