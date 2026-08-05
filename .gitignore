@@ -41,4 +41,8 @@ apps/api/prisma/dev.db-journal
 # Scripts locais de commit/push — nunca devem ir para o repositório
 script-commit.sh
 setup-monorepo.sh
+scripts/task-T003-local.sh
 
+
+# Docker
+docker-compose.override.yml
