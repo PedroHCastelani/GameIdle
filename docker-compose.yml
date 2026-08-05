@@ -1,65 +1,81 @@
 version: '3.9'
 
 services:
+  # ============================================================
+  # PostgreSQL 16 — Banco principal
+  # ============================================================
   postgres:
     image: postgres:16-alpine
-    container_name: thelife_postgres
+    container_name: the-life-postgres
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: thelife_dev
-      POSTGRES_USER: dev
-      POSTGRES_PASSWORD: devpassword123
+      POSTGRES_USER: ${POSTGRES_USER:-thelife}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-thelife_dev_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-the_life}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dev -d thelife_dev"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-thelife} -d ${POSTGRES_DB:-the_life}"]
+      interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - the-life-network
 
+  # ============================================================
+  # Redis 7 — Cache + Filas BullMQ
+  # ============================================================
   redis:
     image: redis:7-alpine
-    container_name: thelife_redis
+    container_name: the-life-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     ports:
-      - "6379:6379"
-    command: redis-server --appendonly yes
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
+      interval: 10s
+      timeout: 5s
       retries: 5
+    networks:
+      - the-life-network
 
+  # ============================================================
+  # PgBouncer — Pool de conexões PostgreSQL
+  # ============================================================
   pgbouncer:
-    image: pgbouncer/pgbouncer
-    container_name: thelife_pgbouncer
+    image: edoburu/pgbouncer:latest
+    container_name: the-life-pgbouncer
+    restart: unless-stopped
     environment:
-      DATABASES_HOST: postgres
-      DATABASES_PORT: 5432
-      DATABASES_DBNAME: thelife_dev
-      DATABASES_USER: dev
-      DATABASES_PASSWORD: devpassword123
-      PGBOUNCER_POOL_MODE: transaction
-      PGBOUNCER_MAX_CLIENT_CONN: 1000
-      PGBOUNCER_DEFAULT_POOL_SIZE: 25
-      PGBOUNCER_AUTH_TYPE: plain
+      DATABASE_URL: postgres://${POSTGRES_USER:-thelife}:${POSTGRES_PASSWORD:-thelife_dev_2026}@postgres:5432/${POSTGRES_DB:-the_life}
+      POOL_MODE: transaction
+      MAX_CLIENT_CONN: 100
+      MAX_DB_CONNECTIONS: 20
     ports:
-      - "5433:5432"
+      - "${PGBOUNCER_PORT:-6432}:5432"
     depends_on:
       postgres:
         condition: service_healthy
-
-  redis-commander:
-    image: rediscommander/redis-commander:latest
-    container_name: thelife_redis_ui
-    environment:
-      REDIS_HOSTS: local:redis:6379
-    ports:
-      - "8081:8081"
-    depends_on:
-      - redis
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -p 5432"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - the-life-network
 
 volumes:
   postgres_data:
+    driver: local
   redis_data:
+    driver: local
+
+networks:
+  the-life-network:
+    driver: bridge

@@ -1,5 +1,5 @@
 # TASKS.md — The Life
-**Última atualização:** 2026-07-21  
+**Última atualização:** 2026-08-04 22:30 (atualizado pelo DEV-PO)  
 **Regra:** Todo agente atualiza este arquivo antes de iniciar e ao concluir qualquer task.  
 **Formato de data:** YYYY-MM-DD HH:MM
 
@@ -21,9 +21,9 @@
 
 | ID | Título | Agente | Motivo | Depende de | Desde |
 |---|---|---|---|---|---|
-| T-019 | Slots de personagem — compra | DEV-BACKEND | Aguarda D-001: custo em Gold indefinido | T-018, D-001 | — |
-| T-035 | Banco — backend | DEV-BACKEND | Aguarda D-003: vantagem premium indefinida | T-018, D-003 | — |
-| T-058 | Guild básica | DEV-BACKEND | Aguarda D-002: nível mínimo e custo indefinidos | T-050, D-002 | — |
+| T-019 | Slots de personagem | DEV-BACKEND | Aguarda D-001 (custo em Gold) | 2026-08-04 |
+| T-035 | Banco — backend | DEV-BACKEND | Aguarda D-003 (vantagem premium) | 2026-08-04 |
+| T-058 | Guild básica | DEV-BACKEND | Aguarda D-002 (nível mínimo) | 2026-08-04 |
 
 ---
 
@@ -105,7 +105,6 @@
 
 | ID | Título | Agente | Arquivos em uso | Iniciado em |
 |---|---|---|---|---|
-| T-000 | Configurar .gitignore e estrutura de templates | DEV-DEVOPS | .gitignore, scripts/template/template-notion.md | 2026-08-04 |
 ## | — | — | — | — | — | — |
 
 ---
@@ -123,7 +122,9 @@
 | ID | Título | Agente | Arquivos modificados | Data |
 |---|---|---|---|---|
 | T-000 | Configurar .gitignore e estrutura de templates | DEV-DEVOPS | .gitignore, scripts/template/template-notion.md, script-commit.sh | 2026-08-04 |
-## | — | — | — | — | — | — |
+| T-001 | Configuração inicial | DEV-PO | Blueprint.md, Agentes_Autonomos.md | 2026-08-04 |
+| T-001 | Completar fluxo RP-01 | DEV-PO | Blueprint.md | 2026-08-04 |
+| T-002 | Monorepo configurado | DEV-DEVOPS | apps/, packages/, root configs | 2026-08-04 |
 ---
 
 ## ❌ Falhou / Reaberto
