@@ -1,0 +1,43 @@
+name: Task Branch → Master Merge
+
+on:
+  workflow_run:
+    workflows: ["PR Check"]
+    types:
+      - completed
+    branches:
+      - 'T-*'
+
+jobs:
+  auto-merge:
+    name: 🔀 Auto-merge to master
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+
+      - name: 🔧 Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: 🔀 Merge to master
+        run: |
+          TASK_BRANCH="${{ github.event.workflow_run.head_branch }}"
+          echo "🔀 Merging $TASK_BRANCH into master..."
+          
+          git checkout master
+          git pull origin master
+          git merge "$TASK_BRANCH" --no-ff -m "Merge branch '$TASK_BRANCH' into master (CI passed ✅)"
+          git push origin master
+          
+          echo "✅ Merge completed successfully!"

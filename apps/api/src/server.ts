@@ -33,9 +33,12 @@ export async function buildServer() {
 
   app.setErrorHandler((error, _request, reply) => {
     app.log.error(error);
-    reply.status(error.statusCode ?? 500).send({
-      error: error.message ?? 'Internal Server Error',
+    // ✅ Depois
+    const err = error as { statusCode?: number; message?: string };
+    reply.status(err.statusCode ?? 500).send({
+      error: err.message ?? 'Internal Server Error',
     });
+
   });
 
   return app;

@@ -42,6 +42,7 @@ apps/api/prisma/dev.db-journal
 script-commit.sh
 setup-monorepo.sh
 scripts/task-T003-local.sh
+script-local.sh
 
 
 # Docker
