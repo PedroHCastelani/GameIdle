@@ -1,5 +1,5 @@
 # TASKS.md — The Life
-Última atualização: 2026-08-05 20:22 (atualizado pelo DEV-DEVOPS — T-004 concluída)
+Última atualização: 2026-08-07 (atualizado pelo DEV-DEVOPS — T-004 mergeada na master via PR #1)
 **Regra:** Todo agente atualiza este arquivo antes de iniciar e ao concluir qualquer task.
 **Formato de data:** YYYY-MM-DD HH:MM
 
@@ -25,6 +25,7 @@
 | T-001 | Completar fluxo RP-01 | DEV-PO | Blueprint.md | 2026-08-04 |
 | T-002 | Monorepo configurado | DEV-DEVOPS | apps/*, packages/*, root configs | 2026-08-04 |
 | T-003 | Docker local | DEV-DEVOPS | docker-compose.yml, docker/*, scripts/*, .env | 2026-08-04 |
+| T-004 | CI/CD — GitHub Actions | DEV-DEVOPS | .github/workflows/*.yml, eslint.config.js, apps/api/tsconfig.json, package.json, pnpm-lock.yaml, docs/CI_CD.md | 2026-08-05 |
 
 ---
 
@@ -40,7 +41,7 @@
 
 | ID | Título | Agente | PR | Arquivos modificados | Concluído em |
 |---|---|---|---|---|---|
-| T-004 | CI/CD — GitHub Actions | DEV-DEVOPS | — | eslint.config.js, apps/api/tsconfig.json | 2026-08-05 20:22 |
+| (vazio) | | | | | |
 
 ---
 
