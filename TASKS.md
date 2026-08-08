@@ -1,6 +1,6 @@
 # TASKS.md — The Life
-**Última atualização:** 2026-08-04 22:30 (atualizado pelo DEV-PO)  
-**Regra:** Todo agente atualiza este arquivo antes de iniciar e ao concluir qualquer task.  
+Última atualização: 2026-08-05 20:22 (atualizado pelo DEV-DEVOPS — T-004 concluída)
+**Regra:** Todo agente atualiza este arquivo antes de iniciar e ao concluir qualquer task.
 **Formato de data:** YYYY-MM-DD HH:MM
 
 ---
@@ -17,10 +17,37 @@
 
 ---
 
+## ✅ Concluído (últimas 2 semanas)
+
+| ID | Título | Agente | Arquivos modificados | Data |
+|---|---|---|---|---|
+| T-000 | Configuração inicial | DEV-PO | Blueprint.md, Agentes_Autonomos.md | 2026-08-04 |
+| T-001 | Completar fluxo RP-01 | DEV-PO | Blueprint.md | 2026-08-04 |
+| T-002 | Monorepo configurado | DEV-DEVOPS | apps/*, packages/*, root configs | 2026-08-04 |
+| T-003 | Docker local | DEV-DEVOPS | docker-compose.yml, docker/*, scripts/*, .env | 2026-08-04 |
+
+---
+
+## 🟠 Em Progresso
+
+| ID | Título | Agente | Status | Arquivos em uso | Iniciado em |
+|---|---|---|---|---|---|
+| (vazio) | | | | | |
+
+---
+
+## 🔵 Aguardando Review
+
+| ID | Título | Agente | PR | Arquivos modificados | Concluído em |
+|---|---|---|---|---|---|
+| T-004 | CI/CD — GitHub Actions | DEV-DEVOPS | — | eslint.config.js, apps/api/tsconfig.json | 2026-08-05 20:22 |
+
+---
+
 ## 🔴 Bloqueado
 
-| ID | Título | Agente | Motivo | Depende de | Desde |
-|---|---|---|---|---|---|
+| ID | Título | Agente | Motivo do bloqueio | Bloqueado desde |
+|---|---|---|---|---|
 | T-019 | Slots de personagem | DEV-BACKEND | Aguarda D-001 (custo em Gold) | 2026-08-04 |
 | T-035 | Banco — backend | DEV-BACKEND | Aguarda D-003 (vantagem premium) | 2026-08-04 |
 | T-058 | Guild básica | DEV-BACKEND | Aguarda D-002 (nível mínimo) | 2026-08-04 |
@@ -31,16 +58,10 @@
 
 | ID | Título | Agente | Estimativa | Depende de |
 |---|---|---|---|---|
-| T-001 | Atualizar Blueprint.md com fluxo completo da RP-01 | DEV-DEVOPS | P | T-000 |
-| T-002 | Monorepo configurado | DEV-DEVOPS | M | T-001 |
-| T-003 | Configurar .gitignore e estrutura de templates | DEV-DEVOPS | P | — |
-| T-004 | Monorepo configurado | DEV-DEVOPS | M | T-000 |
-| T-005 | Docker local (PostgreSQL + Redis + PgBouncer) | DEV-DEVOPS | M | T-001 |
-| T-006 | Schema inicial — todas as tabelas | DEV-DATABASE | G | T-002 |
-| T-007 | CI/CD — GitHub Actions | DEV-DEVOPS | M | T-001 |
-| T-008 | Seed de dados (áreas, missões, inimigos, buffs) | DEV-DATABASE | M | T-003 |
-| T-009 | TASKS.md criado na raiz do repositório | DEV-PO | P | T-001 |
-| T-010 | Notion — workspace e board Kanban | DEV-PO | M | D-009 |
+| — | — | — | — | — |
+| T-005 | Seed de dados (áreas, missões, inimigos, buffs) | DEV-DATABASE | M | T-003 |
+| T-006 | Configurar Prisma ORM | DEV-DATABASE | M (4-8h) | T-003, T-005 |
+| T-007 | Estrutura de rotas API | DEV-BACKEND | M (4-8h) | T-006 |
 
 ---
 
@@ -48,7 +69,7 @@
 
 | ID | Título | Agente | Estimativa | Depende de |
 |---|---|---|---|---|
-| T-010 | Auth completo (CPF, login, refresh, LGPD) | DEV-BACKEND | G | T-003, D-007 |
+| T-010 | Auth completo (CPF, login, refresh, LGPD) | DEV-BACKEND | G | T-006, D-007 |
 | T-011 | AG-07 Session Guardian | DEV-BACKEND | M | T-010 |
 | T-012 | Criação de personagem + validação de facção | DEV-BACKEND | M | T-010 |
 | T-013 | UI — Auth e criação de personagem | DEV-FRONTEND | G | T-010, T-012 |
@@ -101,32 +122,6 @@
 
 ---
 
-## 🟠 Em Progresso
-
-| ID | Título | Agente | Arquivos em uso | Iniciado em |
-|---|---|---|---|---|
-## | — | — | — | — | — | — |
-
----
-
-## 🔵 Aguardando Review
-
-| ID | Título | Agente | PR | Arquivos modificados | Concluído em |
-|---|---|---|---|---|---|
-## | — | — | — | — | — | — |
-
----
-
-## ✅ Concluído (últimas 2 semanas)
-
-| ID | Título | Agente | Arquivos modificados | Data |
-|---|---|---|---|---|
-| T-000 | Configurar .gitignore e estrutura de templates | DEV-DEVOPS | .gitignore, scripts/template/template-notion.md, script-commit.sh | 2026-08-04 |
-| T-001 | Configuração inicial | DEV-PO | Blueprint.md, Agentes_Autonomos.md | 2026-08-04 |
-| T-001 | Completar fluxo RP-01 | DEV-PO | Blueprint.md | 2026-08-04 |
-| T-002 | Monorepo configurado | DEV-DEVOPS | apps/, packages/, root configs | 2026-08-04 |
----
-
 ## ❌ Falhou / Reaberto
 
 | ID | Título | Agente | Motivo da falha | Reaberto em |
@@ -145,9 +140,13 @@
 | D-004 | Gateway de pagamento (Stripe / MercadoPago) | Nível 11 | Aberta | PO + jurídico |
 | D-005 | Valores de calibragem econômica | T-037 | Aberta — pós Fase 1 | PO |
 | D-006 | Duração dos buffs médicos e cooldown | T-029 | Aberta | PO |
-| D-007 | Serviço de validação de CPF (BrasilAPI ou Serpro) | T-010 | Aberta | PO |
+| D-007 | Serviço de validação de CPF (BrasilAPI ou Serpro) | T-010 | ✅ BrasilAPI (gratuita) | PO |
 | D-008 | Canal de alertas da equipe (Discord, Slack, outro) | T-037, T-038 | Aberta | PO |
-| D-009 | Workspace Notion (URL, permissões, estrutura) | T-007 | Aberta | PO |
+| D-009 | Workspace Notion (URL, permissões, estrutura) | CI/CD básico | ✅ Claude integrado ao Notion | PO |
+| D-010 | Ferramentas de geração de assets (pixel art) | T-080 e toda produção de asset | Aberta | DEV-ASSET-LEAD |
+| D-011 | Paleta oficial de cores dos assets (máx 32 cores) | T-081 e toda produção de asset | Aberta | DEV-ASSET-LEAD |
+| D-012 | Tamanho base de sprite (16×16 ou 32×32) | T-081+ | Aberta | DEV-ASSET-LEAD |
+| D-013 | Efeitos sonoros — escopo e ferramentas (fase futura) | Nenhuma task atual | Aberta | PO |
 
 ---
 

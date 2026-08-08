@@ -9,19 +9,25 @@
   },
   "scripts": {
     "dev": "turbo run dev",
-    "build": "turbo run build",
-    "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck",
-    "test": "turbo run test",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
     "clean": "turbo run clean && rm -rf node_modules",
     "docker:start": "bash scripts/docker-start.sh",
     "docker:stop": "docker-compose down",
     "docker:clean": "docker-compose down -v",
     "docker:test": "bash scripts/docker-test.sh",
-    "docker:logs": "docker-compose logs -f"
+    "docker:logs": "docker-compose logs -f",
+    "lint:fix": "turbo lint:fix",
+    "test:watch": "turbo test:watch",
+    "test:coverage": "turbo test:coverage",
+    "ci": "turbo lint typecheck test build --concurrency=1"
   },
   "devDependencies": {
+    "globals": "^17.9.0",
     "turbo": "^2.5.0",
     "typescript": "^5.8.0"
-  }
+  },
+  "type": "module"
 }
