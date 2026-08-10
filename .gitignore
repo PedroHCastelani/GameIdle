@@ -33,6 +33,8 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+*.tsbuildinfo
+tsconfig.tsbuildinfo
 
 # Prisma
 apps/api/prisma/dev.db
