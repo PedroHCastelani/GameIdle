@@ -1,5 +1,5 @@
 # TASKS.md — The Life
-Última atualização: 2026-08-07 (atualizado pelo DEV-DEVOPS — T-004 mergeada na master via PR #1)
+Última atualização: 2026-08-10 (atualizado pelo DEV-DATABASE — T-005 e T-006 concluídas)
 **Regra:** Todo agente atualiza este arquivo antes de iniciar e ao concluir qualquer task.
 **Formato de data:** YYYY-MM-DD HH:MM
 
@@ -26,6 +26,8 @@
 | T-002 | Monorepo configurado | DEV-DEVOPS | apps/*, packages/*, root configs | 2026-08-04 |
 | T-003 | Docker local | DEV-DEVOPS | docker-compose.yml, docker/*, scripts/*, .env | 2026-08-04 |
 | T-004 | CI/CD — GitHub Actions | DEV-DEVOPS | .github/workflows/*.yml, eslint.config.js, apps/api/tsconfig.json, package.json, pnpm-lock.yaml, docs/CI_CD.md | 2026-08-05 |
+| T-005 | Seed de dados (áreas, missões, inimigos, buffs) | DEV-DATABASE | apps/api/prisma/seed.ts | 2026-08-10 |
+| T-006 | Configurar Prisma ORM | DEV-DATABASE | apps/api/prisma/schema.prisma, apps/api/prisma/migrations/*, apps/api/package.json | 2026-08-10 |
 
 ---
 
