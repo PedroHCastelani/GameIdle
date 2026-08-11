@@ -35,7 +35,7 @@
 
 | ID | Título | Agente | Status | Arquivos em uso | Iniciado em |
 |---|---|---|---|---|---|
-| T-008 | SonarCloud — Quality Gate e métricas obrigatórias | DEV-DEVOPS | IN_PROGRESS | .github/workflows/ci.yml, sonar-project.properties, docs/Definition_of_Done.md, docs/CI_CD.md, TASKS.md | 2026-08-11 09:00 |
+| (vazio) | | | | | |
 
 ---
 
@@ -44,6 +44,7 @@
 | ID | Título | Agente | PR | Arquivos modificados | Concluído em |
 |---|---|---|---|---|---|
 | T-007 | Estrutura de rotas API | DEV-BACKEND | https://github.com/PedroHCastelani/GameIdle/pull/3 | apps/api/src/server.ts, apps/api/src/routes/*, apps/api/package.json, pnpm-lock.yaml | 2026-08-11 08:20 |
+| T-008 | SonarCloud — Quality Gate e métricas obrigatórias | DEV-DEVOPS | https://github.com/PedroHCastelani/GameIdle/pull/4 | .github/workflows/ci.yml, sonar-project.properties, docs/Definition_of_Done.md, docs/CI_CD.md, TASKS.md | 2026-08-11 09:16 |
 
 ---
 
