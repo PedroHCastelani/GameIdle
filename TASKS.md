@@ -35,7 +35,7 @@
 
 | ID | Título | Agente | Status | Arquivos em uso | Iniciado em |
 |---|---|---|---|---|---|
-| (vazio) | | | | | |
+| T-007 | Estrutura de rotas API | DEV-BACKEND | IN_PROGRESS | apps/api/src/server.ts, apps/api/src/routes/*, apps/api/package.json, pnpm-lock.yaml | 2026-08-11 00:00 |
 
 ---
 
