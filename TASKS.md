@@ -28,6 +28,8 @@
 | T-004 | CI/CD — GitHub Actions | DEV-DEVOPS | .github/workflows/*.yml, eslint.config.js, apps/api/tsconfig.json, package.json, pnpm-lock.yaml, docs/CI_CD.md | 2026-08-05 |
 | T-005 | Seed de dados (áreas, missões, inimigos, buffs) | DEV-DATABASE | apps/api/prisma/seed.ts | 2026-08-10 |
 | T-006 | Configurar Prisma ORM | DEV-DATABASE | apps/api/prisma/schema.prisma, apps/api/prisma/migrations/*, apps/api/package.json | 2026-08-10 |
+| T-007 | Estrutura de rotas API | DEV-BACKEND | apps/api/src/server.ts, apps/api/src/routes/*, apps/api/package.json, pnpm-lock.yaml | 2026-08-11 |
+| T-008 | SonarCloud — Quality Gate e métricas obrigatórias | DEV-DEVOPS | .github/workflows/ci.yml, sonar-project.properties, docs/Definition_of_Done.md, docs/CI_CD.md, TASKS.md | 2026-08-11 |
 
 ---
 
@@ -43,8 +45,8 @@
 
 | ID | Título | Agente | PR | Arquivos modificados | Concluído em |
 |---|---|---|---|---|---|
-| T-007 | Estrutura de rotas API | DEV-BACKEND | https://github.com/PedroHCastelani/GameIdle/pull/3 | apps/api/src/server.ts, apps/api/src/routes/*, apps/api/package.json, pnpm-lock.yaml | 2026-08-11 08:20 |
-| T-008 | SonarCloud — Quality Gate e métricas obrigatórias | DEV-DEVOPS | https://github.com/PedroHCastelani/GameIdle/pull/4 | .github/workflows/ci.yml, sonar-project.properties, docs/Definition_of_Done.md, docs/CI_CD.md, TASKS.md | 2026-08-11 09:16 |
+| (vazio) | | | | | |
+
 
 ---
 
