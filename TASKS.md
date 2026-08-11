@@ -44,6 +44,7 @@
 | ID | Título | Agente | PR | Arquivos modificados | Concluído em |
 |---|---|---|---|---|---|
 | T-007 | Estrutura de rotas API | DEV-BACKEND | https://github.com/PedroHCastelani/GameIdle/pull/3 | apps/api/src/server.ts, apps/api/src/routes/*, apps/api/package.json, pnpm-lock.yaml | 2026-08-11 08:20 |
+| T-008 | SonarCloud — Quality Gate e métricas obrigatórias | DEV-DEVOPS | https://github.com/PedroHCastelani/GameIdle/pull/4 | .github/workflows/ci.yml, sonar-project.properties, docs/Definition_of_Done.md, docs/CI_CD.md, TASKS.md | 2026-08-11 09:16 |
 
 ---
 
@@ -65,6 +66,8 @@
 | T-005 | Seed de dados (áreas, missões, inimigos, buffs) | DEV-DATABASE | M | T-003 |
 | T-006 | Configurar Prisma ORM | DEV-DATABASE | M (4-8h) | T-003, T-005 |
 | T-007 | Estrutura de rotas API | DEV-BACKEND | M (4-8h) | T-006 |
+| T-008 | SonarCloud — Quality Gate e métricas obrigatórias | DEV-DEVOPS | M | T-004 |
+| T-009 | Hardening CI/SonarCloud e correções QA | DEV-DEVOPS + DEV-QA | G | T-004, T-008 |
 
 ---
 
@@ -122,6 +125,15 @@
 | T-062 | AG-04 Hunted Ranker | DEV-BACKEND | M | T-061 |
 | T-063 | UI — Guild, chat e hunted | DEV-FRONTEND | G | T-058, T-059, T-061 |
 | T-064 | QA — Fase 1.5 | DEV-QA | G | T-050–T-063 |
+
+---
+
+## 📊 Backlog — Qualidade, Segurança e Observabilidade
+
+| ID | Título | Agente | Critério de aceite | Depende de |
+|---|---|---|---|---|
+| T-008 | SonarCloud — Quality Gate e métricas obrigatórias | DEV-DEVOPS | Quality Gate ativo no SonarCloud e bloqueando PR; métricas mínimas documentadas: 0 bugs, 0 vulnerabilidades novas, coverage mínimo para código novo, duplicação controlada e análise por PR funcionando | T-004 |
+| T-009 | Hardening CI/SonarCloud e correções QA | DEV-DEVOPS + DEV-QA | Vulnerabilidades SonarCloud revisadas/corrigidas ou justificadas; workflows com mitigação contra injection; secrets removidos do código; teste fraco corrigido; scripts e code smells críticos priorizados; migrations configuradas corretamente no escopo do Sonar | T-004, T-008 |
 
 ---
 

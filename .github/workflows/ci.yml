@@ -13,6 +13,8 @@ concurrency:
 env:
   NODE_VERSION: '20'
   PNPM_VERSION: '9'
+  SONAR_PROJECT_KEY: PedroHCastelani_GameIdle
+  SONAR_ORGANIZATION: pedro-castelani
 
 jobs:
   # ============================================================
@@ -151,12 +153,40 @@ jobs:
         run: echo "✅ Build completed successfully!"
 
   # ============================================================
-  # JOB 5: SUMMARY
+  # JOB 5: SONARCLOUD
+  # ============================================================
+  sonarcloud:
+    name: 📈 SonarCloud
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [lint, typecheck, test, build]
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📈 Run SonarCloud analysis
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ env.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ env.SONAR_ORGANIZATION }}
+
+      - name: 🚦 Check SonarCloud Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # ============================================================
+  # JOB 6: SUMMARY
   # ============================================================
   summary:
     name: 📊 CI Summary
     runs-on: ubuntu-latest
-    needs: [lint, typecheck, test, build]
+    needs: [lint, typecheck, test, build, sonarcloud]
     if: always()
     
     steps:
@@ -169,12 +199,14 @@ jobs:
           echo "TypeCheck: ${{ needs.typecheck.result }}"
           echo "Test: ${{ needs.test.result }}"
           echo "Build: ${{ needs.build.result }}"
+          echo "SonarCloud: ${{ needs.sonarcloud.result }}"
           echo "=========================================="
           
           if [[ "${{ needs.lint.result }}" != "success" ]] || \
              [[ "${{ needs.typecheck.result }}" != "success" ]] || \
              [[ "${{ needs.test.result }}" != "success" ]] || \
-             [[ "${{ needs.build.result }}" != "success" ]]; then
+             [[ "${{ needs.build.result }}" != "success" ]] || \
+             [[ "${{ needs.sonarcloud.result }}" != "success" ]]; then
             echo "❌ CI Pipeline FAILED"
             exit 1
           fi

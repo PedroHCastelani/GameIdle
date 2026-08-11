@@ -20,6 +20,7 @@ Nenhum Tech Lead aprova um PR sem DoD completo. Nenhum agente move uma task para
 [ ] pnpm lint passa sem erros ou warnings novos
 [ ] pnpm typecheck passa sem erros novos
 [ ] pnpm test passa sem falhas (nenhum teste existente quebrado)
+[ ] SonarCloud Quality Gate passa no PR, sem bugs ou vulnerabilidades novas
 [ ] TASKS.md atualizado: status, arquivos modificados, data de conclusão
 [ ] Card no Notion atualizado: PR linkado, status movido para In Review
 [ ] Tech Lead do escopo (Produto ou Infra) revisou e aprovou o PR
