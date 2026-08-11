@@ -43,7 +43,7 @@
 
 | ID | Título | Agente | PR | Arquivos modificados | Concluído em |
 |---|---|---|---|---|---|
-| (vazio) | | | | | |
+| T-007 | Estrutura de rotas API | DEV-BACKEND | https://github.com/PedroHCastelani/GameIdle/pull/3 | apps/api/src/server.ts, apps/api/src/routes/*, apps/api/package.json, pnpm-lock.yaml | 2026-08-11 08:20 |
 
 ---
 
