@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Life — Proposta de Parceria</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg:        #0A0A0F;
+    --panel:     #13131E;
+    --panel2:    #1A1A2E;
+    --gold:      #F5C518;
+    --gold-dim:  #C49A10;
+    --text:      #E8E8E8;
+    --muted:     #7A7A8C;
+    --red:       #FF4757;
+    --green:     #2ED573;
+    --border:    rgba(245,197,24,0.15);
+    --border2:   rgba(255,255,255,0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 80px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(245,197,24,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 100%, rgba(255,71,87,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0.9;
+  }
+
+  .hero-title {
+    font-size: clamp(72px, 12vw, 130px);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .hero-title span {
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: clamp(13px, 2vw, 16px);
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .hero-tagline {
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 300;
+    color: var(--text);
+    max-width: 680px;
+    line-height: 1.45;
+    margin-bottom: 64px;
+  }
+
+  .hero-tagline strong {
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .divider {
+    width: 1px;
+    height: 48px;
+    background: var(--border);
+    align-self: center;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 96px 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    opacity: 0.8;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .section-title em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .section-desc {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 640px;
+    line-height: 1.7;
+    margin-bottom: 56px;
+  }
+
+  .sep {
+    border: none;
+    border-top: 1px solid var(--border2);
+    margin: 0;
+  }
+
+  /* ── CONCEPT CARDS ── */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2px;
+    margin-bottom: 0;
+  }
+
+  .concept-card {
+    background: var(--panel);
+    padding: 36px 32px;
+    border: 1px solid var(--border2);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .concept-card:hover {
+    border-color: var(--border);
+  }
+
+  .concept-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .concept-card:hover::before { opacity: 1; }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  .card-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* ── PROFESSIONS ── */
+  .prof-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  @media (max-width: 700px) {
+    .prof-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 24px; }
+    .divider { display: none; }
+  }
+
+  .prof-card {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .prof-card.law { border-top: 3px solid #4A9EFF; }
+  .prof-card.crime { border-top: 3px solid var(--red); }
+  .prof-card.neutral { border-top: 3px solid var(--green); }
+
+  .prof-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  .prof-card.law .prof-badge    { background: rgba(74,158,255,0.15); color: #4A9EFF; }
+  .prof-card.crime .prof-badge  { background: rgba(255,71,87,0.15); color: var(--red); }
+  .prof-card.neutral .prof-badge{ background: rgba(46,213,115,0.15); color: var(--green); }
+
+  .prof-name {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .prof-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+  .prof-progression {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  .prof-progression span {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* ── ECONOMY ── */
+  .economy-flow {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  @media (max-width: 800px) {
+    .economy-flow {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+
+  .flow-block { text-align: center; }
+
+  .flow-icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .flow-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .flow-items {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .flow-arrow {
+    color: var(--gold);
+    font-size: 24px;
+    opacity: 0.5;
+  }
+
+  .currency-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .currency-row { grid-template-columns: 1fr; }
+  }
+
+  .currency-card {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    padding: 32px;
+  }
+
+  .currency-name {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .currency-name.gold-c { color: var(--gold); }
+  .currency-name.credits-c { color: #A78BFA; }
+
+  .currency-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── DOCS GRID ── */
+  .docs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 2px;
+  }
+
+  .doc-card {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: background 0.2s, border-color 0.2s;
+    position: relative;
+  }
+
+  .doc-card:hover {
+    background: var(--panel2);
+    border-color: var(--border);
+  }
+
+  .doc-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+  }
+
+  .doc-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .doc-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .doc-lines {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    opacity: 0.6;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--border2);
+  }
+
+  /* ── AGENTS ── */
+  .agents-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  @media (max-width: 800px) {
+    .agents-section { grid-template-columns: 1fr; }
+  }
+
+  .agent-group-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .agent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .agent-item {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .agent-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--gold);
+    opacity: 0.7;
+    flex-shrink: 0;
+    padding-top: 2px;
+    min-width: 72px;
+  }
+
+  .agent-info {}
+
+  .agent-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .agent-role {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── PARTNERSHIP ── */
+  .partner-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 40px;
+  }
+
+  @media (max-width: 600px) {
+    .partner-grid { grid-template-columns: 1fr; }
+  }
+
+  .partner-block {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    padding: 36px 32px;
+  }
+
+  .partner-block.highlight {
+    border-color: var(--border);
+    background: var(--panel2);
+  }
+
+  .partner-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .partner-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .partner-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .partner-items li {
+    font-size: 14px;
+    color: var(--muted);
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .partner-items li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 12px;
+  }
+
+  /* ── PILLARS ── */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2px;
+    margin-top: 0;
+  }
+
+  .pillar {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    padding: 28px 24px;
+    text-align: center;
+  }
+
+  .pillar-icon {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .pillar-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .pillar-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── CLOSING ── */
+  .closing {
+    text-align: center;
+    padding: 120px 24px;
+    background: var(--panel);
+    border-top: 1px solid var(--border2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .closing::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 50% 60% at 50% 100%, rgba(245,197,24,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .closing-title {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    line-height: 1.1;
+  }
+
+  .closing-sub {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+  }
+
+  .closing-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    opacity: 0.5;
+    text-transform: uppercase;
+    margin-top: 64px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border2);
+    z-index: 100;
+  }
+
+  .nav-logo {
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .nav-logo span { color: var(--gold); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  @media (max-width: 600px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+  }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(245,197,24,0.07) 0%, rgba(245,197,24,0.02) 100%);
+    border: 1px solid var(--border);
+    padding: 32px 36px;
+    margin: 40px 0;
+  }
+
+  .highlight-box p {
+    font-size: 17px;
+    color: var(--text);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  .highlight-box strong {
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  /* ── FULL WIDTH WRAPPER ── */
+  .full-width {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">The <span>Life</span></div>
+  <ul class="nav-links">
+    <li><a href="#concept">Conceito</a></li>
+    <li><a href="#gameplay">Gameplay</a></li>
+    <li><a href="#economy">Economia</a></li>
+    <li><a href="#docs">Documentação</a></li>
+    <li><a href="#agents">Agentes</a></li>
+    <li><a href="#partnership">Parceria</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Proposta de Parceria Estratégica · 2026</div>
+  <h1 class="hero-title">The <span>Life</span></h1>
+  <p class="hero-sub">MMORPG Idle · Navegador · Mobile</p>
+  <p class="hero-tagline">
+    Um jogo idle urbano com <strong>dualidade de facções</strong>, economia interdependente e
+    profundidade de progressão. Do mesmo universo que originou GTA —
+    repensado para o formato idle.
+  </p>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-value">9</span>
+      <span class="stat-label">Documentos técnicos</span>
+    </div>
+    <div class="divider"></div>
+    <div class="stat">
+      <span class="stat-value">18</span>
+      <span class="stat-label">Agentes autônomos</span>
+    </div>
+    <div class="divider"></div>
+    <div class="stat">
+      <span class="stat-value">64</span>
+      <span class="stat-label">Tasks mapeadas</span>
+    </div>
+    <div class="divider"></div>
+    <div class="stat">
+      <span class="stat-value">3</span>
+      <span class="stat-label">Fases de entrega</span>
+    </div>
+  </div>
+</div>
+
+<hr class="sep">
+
+<!-- CONCEPT -->
+<section id="concept">
+  <div class="section-label">Conceito</div>
+  <h2 class="section-title">Dois lados.<br>Uma <em>cidade</em>. Suas escolhas.</h2>
+  <p class="section-desc">
+    The Life coloca o jogador dentro de uma cidade viva onde Lei e Crime coexistem,
+    se enfrentam e dependem uns dos outros para existir. Não há herói universal —
+    há apenas o papel que você escolheu viver.
+  </p>
+
+  <div class="highlight-box">
+    <p>
+      Inspirado na dualidade de <strong>GTA</strong> e na profundidade de progressão de
+      <strong>Tibia</strong> e <strong>The Crims</strong>, The Life traz o que nenhum
+      idle atual oferece: <strong>consequências reais</strong> para cada decisão,
+      uma economia que depende da interação entre facções e personagens com
+      identidade própria construída ao longo de meses de progressão.
+    </p>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <span class="card-icon">🌐</span>
+      <div class="card-title">Joga no navegador</div>
+      <div class="card-desc">Zero download. Funciona em qualquer dispositivo, completamente responsivo de mobile a desktop. Frictionless onboarding.</div>
+    </div>
+    <div class="concept-card">
+      <span class="card-icon">⏱️</span>
+      <div class="card-title">Idle genuíno</div>
+      <div class="card-desc">O progresso acontece offline. O jogador abre o jogo, colhe resultados e toma decisões — o ciclo que retém por meses.</div>
+    </div>
+    <div class="concept-card">
+      <span class="card-icon">🎭</span>
+      <div class="card-title">Facções exclusivas</div>
+      <div class="card-desc">Conta pertence a um lado: Lei ou Crime. Escolha que define toda a experiência, impossível de reverter facilmente.</div>
+    </div>
+    <div class="concept-card">
+      <span class="card-icon">⚔️</span>
+      <div class="card-title">PvP com consequências</div>
+      <div class="card-desc">Captura, prisão, propina, vingança. Cada confronto tem impacto real na economia e na progressão do personagem.</div>
+    </div>
+    <div class="concept-card">
+      <span class="card-icon">🔐</span>
+      <div class="card-title">Segurança e LGPD</div>
+      <div class="card-desc">CPF único por conta, sessão única, conformidade integral com a LGPD. Projetado para escalar sem os problemas dos concorrentes.</div>
+    </div>
+    <div class="concept-card">
+      <span class="card-icon">💹</span>
+      <div class="card-title">Economia auto-sustentável</div>
+      <div class="card-desc">Duas moedas. Ciclo de torneiras e ralos controlados. Nenhum gold é criado do nada — tudo circula ou é removido.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- GAMEPLAY -->
+<section id="gameplay">
+  <div class="section-label">Gameplay</div>
+  <h2 class="section-title">Três profissões.<br><em>Infinitas</em> formas de jogar.</h2>
+  <p class="section-desc">
+    A escolha de profissão define o estilo de jogo, os tipos de missão, os atributos prioritários
+    e o papel dentro do ecossistema econômico do servidor.
+  </p>
+
+  <div class="prof-grid">
+    <div class="prof-card law">
+      <span class="prof-badge">Lei</span>
+      <div class="prof-name">Policial</div>
+      <div class="prof-desc">Aplica a lei, captura criminosos e sobe na hierarquia até se tornar Delegado — o único que pode aceitar ou recusar propinas de presos.</div>
+      <div class="prof-progression">
+        Blitz → <span>Investigação</span> → Operação →<br>
+        SWAT → <span>Delegado</span>
+      </div>
+    </div>
+    <div class="prof-card crime">
+      <span class="prof-badge">Crime</span>
+      <div class="prof-name">Ladrão</div>
+      <div class="prof-desc">Opera nas sombras, acumula fortuna no mercado negro e constrói uma organização criminosa. Pode aceitar contratos de eliminação no late game.</div>
+      <div class="prof-progression">
+        Furto → <span>Assalto</span> → Organização →<br>
+        <span>Chefe do Crime</span>
+      </div>
+    </div>
+    <div class="prof-card neutral">
+      <span class="prof-badge">Neutro</span>
+      <div class="prof-name">Médico</div>
+      <div class="prof-desc">A profissão mais estratégica. Escolhe um alinhamento — do bem, do mal ou neutro — e é indispensável para ambos os lados. Curandeiro do ecossistema.</div>
+      <div class="prof-progression">
+        Clínico → <span>Especialista</span> → Cirurgião →<br>
+        <span>Dono de Hospital</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 48px;">
+    <div class="section-label" style="margin-bottom: 24px;">Mecânicas que diferenciam</div>
+    <div class="pillars">
+      <div class="pillar">
+        <span class="pillar-icon">📊</span>
+        <div class="pillar-title">Skills sem cap</div>
+        <div class="pillar-desc">Progressão infinita com retorno decrescente. Veteranos sempre têm algo a evoluir.</div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">🌳</span>
+        <div class="pillar-title">Árvore de talentos</div>
+        <div class="pillar-desc">Decisões de longo prazo que criam builds únicas. Reverter tem custo alto.</div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">⚡</span>
+        <div class="pillar-title">Sistema de stamina</div>
+        <div class="pillar-desc">Governa missões de alto risco. Free e premium têm limites distintos.</div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">🏛️</span>
+        <div class="pillar-title">Sistema de prisão</div>
+        <div class="pillar-desc">Captura, pena, propina com Delegado, debuff de furtividade. PvP com consequências duradouras.</div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">🏆</span>
+        <div class="pillar-title">Top 5 Hunted</div>
+        <div class="pillar-desc">Ranking semanal torna os mais eficientes alvos legítimos. Risco proporcional à fama.</div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">🏰</span>
+        <div class="pillar-title">Sistema de guild</div>
+        <div class="pillar-desc">Progressão coletiva. Membros contribuem gold e itens para subir o rank da guild.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ECONOMY -->
+<section id="economy">
+  <div class="section-label">Economia</div>
+  <h2 class="section-title">Gold que circula.<br>Economia que <em>dura</em>.</h2>
+  <p class="section-desc">
+    A principal causa de morte de jogos idle é a inflação descontrolada.
+    The Life resolve isso com um ciclo rigoroso de torneiras e ralos, duas moedas
+    distintas e uma interdependência real entre as profissões.
+  </p>
+
+  <div class="economy-flow">
+    <div class="flow-block">
+      <span class="flow-icon">🚰</span>
+      <div class="flow-title">Torneiras</div>
+      <div class="flow-items">
+        Missões NPC<br>
+        Salário do governo<br>
+        Seguro médico<br>
+        Eventos controlados
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-block">
+      <span class="flow-icon">🔄</span>
+      <div class="flow-title">Circulação</div>
+      <div class="flow-items">
+        Mercado de itens<br>
+        Consultas médicas<br>
+        Propinas<br>
+        Contratos de crime<br>
+        PvP (transferência)
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-block">
+      <span class="flow-icon">🕳️</span>
+      <div class="flow-title">Ralos</div>
+      <div class="flow-items">
+        Morte (% em mãos)<br>
+        Taxas de mercado<br>
+        Hospital NPC<br>
+        Banco (taxa)<br>
+        Guild upgrades<br>
+        Mudança de alinhamento
+      </div>
+    </div>
+  </div>
+
+  <div class="currency-row">
+    <div class="currency-card">
+      <div class="currency-name gold-c">Gold</div>
+      <div class="currency-desc">
+        Moeda interna. Obtida em missões, PvP, serviços e vendas. Circula entre jogadores.
+        Parte é removida permanentemente a cada morte, transação e penalidade.
+        Mantém o equilíbrio da economia do servidor.
+      </div>
+    </div>
+    <div class="currency-card">
+      <div class="currency-name credits-c">Créditos</div>
+      <div class="currency-desc">
+        Moeda premium. Adquirida com dinheiro real — mas também negociável entre jogadores
+        por Gold. Nunca convertida diretamente pelo sistema. Modelo de RMT saudável:
+        o Gold que muda de mão já existia no servidor.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- DOCS -->
+<section id="docs">
+  <div class="section-label">Documentação</div>
+  <h2 class="section-title">Um projeto pronto<br>para ser <em>construído</em>.</h2>
+  <p class="section-desc">
+    Antes de escrever uma linha de código, o projeto foi integralmente documentado.
+    9 documentos técnicos cobrem desde o design de jogo até a conformidade legal,
+    com mais de 5.000 linhas de especificação.
+  </p>
+
+  <div class="docs-grid">
+    <div class="doc-card">
+      <div class="doc-tag">Game Design</div>
+      <div class="doc-name">GDD Completo</div>
+      <div class="doc-desc">Visão geral, profissões, mecânicas, sistemas de PvP, progressão e roadmap de 3 fases.</div>
+      <div class="doc-lines">927 linhas</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-tag">Banco de Dados</div>
+      <div class="doc-name">Schema do Banco</div>
+      <div class="doc-desc">Schema Prisma completo com 40+ tabelas, enums, índices críticos e estratégia de particionamento.</div>
+      <div class="doc-lines">1.288 linhas</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-tag">Backend</div>
+      <div class="doc-name">Motor de Cálculo</div>
+      <div class="doc-desc">Lógica server-side em TypeScript: cálculo idle, PvP, prisão, buffs médicos, stamina e sessão única.</div>
+      <div class="doc-lines">579 linhas</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-tag">Monetização</div>
+      <div class="doc-name">Sistema Econômico</div>
+      <div class="doc-desc">Ciclo completo das duas moedas, torneiras, ralos, controle de inflação e dashboard de monitoramento.</div>
+      <div class="doc-lines">221 linhas</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-tag">Compliance</div>
+      <div class="doc-name">Segurança e LGPD</div>
+      <div class="doc-desc">4 camadas de segurança, CPF com hash SHA-256, conformidade LGPD integral, log de auditoria.</div>
+      <div class="doc-lines">304 linhas</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-tag">IA / Automação</div>
+      <div class="doc-name">Agentes Autônomos</div>
+      <div class="doc-desc">18 agentes definidos: 8 de desenvolvimento (Claude Code) e 10 de operação em produção.</div>
+      <div class="doc-lines">863 linhas</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-tag">Execução</div>
+      <div class="doc-name">Blueprint</div>
+      <div class="doc-desc">Mapa de dependências em 11 níveis, fases de entrega, critérios de go-live e protocolo de falha.</div>
+      <div class="doc-lines">397 linhas</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-tag">Qualidade</div>
+      <div class="doc-name">Definition of Done</div>
+      <div class="doc-desc">DoD por tipo de task, 60+ casos de borda obrigatórios e fluxo de aprovação com responsabilidades.</div>
+      <div class="doc-lines">268 linhas</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-tag">Gestão</div>
+      <div class="doc-name">TASKS.md</div>
+      <div class="doc-desc">64 tasks mapeadas em 3 fases, decisões pendentes rastreadas, sistema de comunicação entre agentes.</div>
+      <div class="doc-lines">169 linhas</div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- AGENTS -->
+<section id="agents">
+  <div class="section-label">Automação</div>
+  <h2 class="section-title">Desenvolvido e operado<br>com <em>agentes autônomos</em>.</h2>
+  <p class="section-desc">
+    O projeto foi estruturado para ser construído e mantido com agentes de IA autônomos via Claude Code,
+    com papéis claros, regras de comunicação definidas e supervisão humana nos pontos críticos.
+  </p>
+
+  <div class="agents-section">
+    <div>
+      <div class="agent-group-title">Agentes de Desenvolvimento</div>
+      <div class="agent-list">
+        <div class="agent-item">
+          <div class="agent-id">DEV-PO</div>
+          <div class="agent-info">
+            <div class="agent-name">Product Owner</div>
+            <div class="agent-role">Gerencia backlog no Notion, escreve cards com critérios de aceite, mantém TASKS.md</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">DEV-TL-PROD</div>
+          <div class="agent-info">
+            <div class="agent-name">Tech Lead de Produto</div>
+            <div class="agent-role">Orquestra backend/frontend/QA, revisa PRs, valida Definition of Done</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">DEV-TL-INFRA</div>
+          <div class="agent-info">
+            <div class="agent-name">Tech Lead de Infraestrutura</div>
+            <div class="agent-role">Orquestra DevOps/Segurança, aprova deploys, garante LGPD</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">DEV-BACKEND</div>
+          <div class="agent-info">
+            <div class="agent-name">Agente Backend</div>
+            <div class="agent-role">API Fastify, motor de cálculo, agentes de operação, WebSocket</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">DEV-FRONTEND</div>
+          <div class="agent-info">
+            <div class="agent-name">Agente Frontend</div>
+            <div class="agent-role">Next.js, Zustand, UI responsiva mobile-first, cliente WebSocket</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">DEV-DATABASE</div>
+          <div class="agent-info">
+            <div class="agent-name">Agente Database</div>
+            <div class="agent-role">Schema Prisma, migrations reversíveis, índices, otimização</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">DEV-QA</div>
+          <div class="agent-info">
+            <div class="agent-name">Agente QA</div>
+            <div class="agent-role">Testes unitários e de integração, 60+ casos de borda mapeados</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">DEV-DEVOPS</div>
+          <div class="agent-info">
+            <div class="agent-name">Agente DevOps</div>
+            <div class="agent-role">CI/CD GitHub Actions, ambientes local/staging/produção, Docker</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">DEV-SEC</div>
+          <div class="agent-info">
+            <div class="agent-name">Agente Segurança</div>
+            <div class="agent-role">OWASP Top 10, auditoria de dependências, conformidade LGPD</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="agent-group-title">Agentes de Operação (produção)</div>
+      <div class="agent-list">
+        <div class="agent-item">
+          <div class="agent-id">AG-01</div>
+          <div class="agent-info">
+            <div class="agent-name">Idle Calculator</div>
+            <div class="agent-role">Calcula progresso offline ao reconectar. Seed determinístico para auditoria.</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">AG-02</div>
+          <div class="agent-info">
+            <div class="agent-name">Prison Warden</div>
+            <div class="agent-role">Libera personagens com pena cumprida. Cron a cada 5 minutos.</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">AG-03</div>
+          <div class="agent-info">
+            <div class="agent-name">Economy Monitor</div>
+            <div class="agent-role">Monitora saúde econômica, ajusta drop rates, alerta anomalias.</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">AG-04</div>
+          <div class="agent-info">
+            <div class="agent-name">Hunted Ranker</div>
+            <div class="agent-role">Recalcula Top 5 Hunted semanal e publica no Redis.</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">AG-05</div>
+          <div class="agent-info">
+            <div class="agent-name">Market Cleaner</div>
+            <div class="agent-role">Expira listings vencidos, devolve créditos automaticamente.</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">AG-07</div>
+          <div class="agent-info">
+            <div class="agent-name">Session Guardian</div>
+            <div class="agent-role">Garante sessão única por conta. Invalida ao novo login.</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">AG-08</div>
+          <div class="agent-info">
+            <div class="agent-name">Anomaly Detector</div>
+            <div class="agent-role">Detecta comportamentos suspeitos. Nunca bane automaticamente.</div>
+          </div>
+        </div>
+        <div class="agent-item">
+          <div class="agent-id">AG-10</div>
+          <div class="agent-info">
+            <div class="agent-name">Content Moderator</div>
+            <div class="agent-role">Modera chat e nomes em tempo real. Banimento é sempre humano.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- PARTNERSHIP -->
+<section id="partnership">
+  <div class="section-label">Parceria</div>
+  <h2 class="section-title">O projeto está pronto.<br>Falta a <em>experiência</em>.</h2>
+  <p class="section-desc">
+    The Life foi concebido, documentado e estruturado com visão de produto completa.
+    O que buscamos é um parceiro com experiência no território onde ainda não estamos:
+    desenvolvimento de jogos idle, publicação e distribuição.
+  </p>
+
+  <div class="partner-grid">
+    <div class="partner-block">
+      <div class="partner-label">O que o projeto traz</div>
+      <div class="partner-title">Conceito, documentação e visão de produto</div>
+      <ul class="partner-items">
+        <li>Game design completo e documentado</li>
+        <li>Arquitetura técnica definida e pronta para execução</li>
+        <li>Modelo econômico desenhado para longevidade</li>
+        <li>Conformidade LGPD desde a fundação</li>
+        <li>Estrutura de agentes autônomos para desenvolvimento</li>
+        <li>IP do jogo — The Life</li>
+        <li>Visão de produto e decisões de design</li>
+      </ul>
+    </div>
+    <div class="partner-block highlight">
+      <div class="partner-label">O que buscamos no parceiro</div>
+      <div class="partner-title">Experiência, execução e alcance</div>
+      <ul class="partner-items">
+        <li>Capacidade de desenvolvimento em jogos idle</li>
+        <li>Conhecimento de publicação e distribuição de jogos</li>
+        <li>Experiência com monetização e retenção no segmento</li>
+        <li>Rede de distribuição e canais já estabelecidos</li>
+        <li>Know-how de lançamento e crescimento de base de jogadores</li>
+        <li>Referências no mercado de jogos idle</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <p>
+      A proposta de estrutura da parceria está <strong>em aberto para negociação</strong>.
+      O que não está em aberto: <strong>a propriedade intelectual e a visão de produto
+      permanecem com o idealizador</strong>. Buscamos um parceiro com participação na receita,
+      não um prestador de serviço — alguém que tenha tanto interesse quanto nós
+      em ver The Life crescer.
+    </p>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<div class="closing">
+  <h2 class="closing-title">The Life<br><span style="color:var(--gold)">está esperando.</span></h2>
+  <p class="closing-sub">
+    A documentação está completa. A visão está clara. A arquitetura está definida.
+    O próximo passo é construir junto com quem conhece o território.
+  </p>
+  <p class="closing-tag">The Life · Confidencial · 2026 · Todos os direitos reservados</p>
+</div>
+
+</body>
+</html>

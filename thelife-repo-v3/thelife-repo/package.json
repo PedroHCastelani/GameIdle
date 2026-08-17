@@ -1,0 +1,23 @@
+{
+  "name": "the-life",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "db:migrate": "pnpm --filter @thelife/api db:migrate",
+    "db:studio": "pnpm --filter @thelife/api db:studio",
+    "db:seed": "pnpm --filter @thelife/api db:seed",
+    "db:generate": "pnpm --filter @thelife/api db:generate"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}

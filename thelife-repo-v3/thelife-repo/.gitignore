@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment variables (NUNCA commitar)
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+.next/
+dist/
+build/
+out/
+
+# Turbo
+.turbo/
+
+# Testing
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Prisma
+apps/api/prisma/dev.db
+apps/api/prisma/dev.db-journal
