@@ -18,8 +18,8 @@ model User {
   emailVerified   Boolean   @default(false)
   verifyToken     String?
   passwordHash    String
-  cpfHash         String    @unique  // SHA-256 com salt — nunca texto plano
-  cpfSalt         String            // salt único por conta
+  cpfHash         String    @unique  // Legado: identidade sintética prototype:UUID no protótipo; nunca CPF real
+  cpfSalt         String            // NOT_A_CPF no protótipo
   accountSide     AccountSide?      // definido ao criar o primeiro personagem
   pvpProtected    Boolean   @default(true)   // false após 7 dias
   isBanned        Boolean   @default(false)
@@ -57,7 +57,7 @@ enum AccountSide {
 model Session {
   id           String   @id @default(cuid())
   userId       String
-  refreshToken String   @unique
+  refreshToken String   @unique // SHA-256 do token aleatório, nunca token bruto
   expiresAt    DateTime
   ipAddress    String?
   userAgent    String?
