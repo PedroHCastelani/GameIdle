@@ -44,7 +44,7 @@ async function request<T>(path: string, method = 'GET', body?: unknown): Promise
 }
 
 export type Profession = 'POLICE' | 'THIEF' | 'DOCTOR';
-export type Encounter = { id: string; name: string; description: string; level: number; stages: string[]; lockReason?: string | null; approaches: { id: string; name: string; description: string; power: number; gold: number; exp: number; ending: string; specialization?: string; expertise?: number; bonus?: number; effectivePower?: number; completed?: boolean; unlocks?: string[]; lockReason?: string | null }[] };
+export type Encounter = { id: string; name: string; description: string; level: number; stages: string[]; lockReason?: string | null; character?: { name: string; role: string; relationship: string; dialogue: string }; event?: string; approaches: { id: string; name: string; description: string; power: number; gold: number; exp: number; ending: string; specialization?: string; expertise?: number; bonus?: number; storyBonus?: number; effectivePower?: number; completed?: boolean; unlocks?: string[]; lockReason?: string | null }[] };
 export type Adventure = {
   encounters?: Encounter[]; encounterWaitSeconds?: number; encounterReceivedAt?: number;
   specializations?: { name: string; points: number; bonus: number }[];

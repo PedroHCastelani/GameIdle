@@ -49,3 +49,7 @@ Nove ocorrências repetíveis, com 18 abordagens temáticas e consequências em 
 ## R-007 — consequências persistentes
 
 Seis especializações temáticas e seis missões de continuidade. Decisões bem-sucedidas inéditas dão pontos, bônus de poder por área e acesso às próximas missões. 69 testes (50 API e 19 UI), incluindo ambos os caminhos das três profissões e bônus alterando resultado. Detalhes em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md).
+
+## R-008 — personagens e acontecimentos
+
+Helena, Íris e Rosa reconhecem escolhas anteriores e mudam sua participação conforme o último compromisso. Seis episódios adicionais; 74 testes (54 API e 20 UI), incluindo alteração real de poder/recompensa e preservação do histórico. Regras em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md).

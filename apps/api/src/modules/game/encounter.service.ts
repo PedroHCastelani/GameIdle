@@ -35,9 +35,9 @@ export function encounterService(db: PrismaClient) {
         const approach = view.approaches.find(c => c.id === choiceId)!;
         if (view.lockReason || approach.lockReason) throw new ApiError(409, view.lockReason ?? approach.lockReason!);
         const power = approach.effectivePower;
-        const stages = resolveChapter(power, choice.power), success = stages.every(s => s.success);
-        const gold = success ? BigInt(choice.gold) : 0n, exp = success ? BigInt(choice.exp) : 0n;
-        const ending = success ? choice.ending : 'Sua preparação foi insuficiente. A equipe de apoio assumiu a ocorrência; você gastou 1 stamina e não recebeu recompensas.';
+        const stages = resolveChapter(power, approach.power), success = stages.every(s => s.success);
+        const gold = success ? BigInt(approach.gold) : 0n, exp = success ? BigInt(approach.exp) : 0n;
+        const ending = success ? approach.ending : 'Sua preparação foi insuficiente. A equipe de apoio assumiu a ocorrência; você gastou 1 stamina e não recebeu recompensas.';
         const attempt = await tx.stageAttempt.create({ data: { characterId: id, missionId, requestKey, difficulty: 'EASY', staminaSpent: 1, stageReached: stages.filter(s => s.success).length, totalStages: stages.length, outcome: success ? 'BOSS_DEFEATED' : 'FAILED', goldGained: gold, expGained: exp, startedAt: now, endedAt: now } });
         await tx.stageResult.createMany({ data: stages.map(s => ({ attemptId: attempt.id, stageNumber: s.stage, enemies: [{ name: encounter.stages[s.stage - 1], required: s.required, power, choiceId, choiceName: choice.name, ending }], goldGained: 0n, expGained: 0n, outcome: s.success ? 'SUCCESS' : 'FAILED' })) });
         await tx.character.update({ where: { id }, data: { staminaCurrent: stamina.value - 1, staminaLastRegen: stamina.cursor, goldHand: { increment: gold }, experience: { increment: exp }, level: levelFromExperience(char.experience + exp, char.level) } });

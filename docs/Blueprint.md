@@ -34,3 +34,7 @@ Ampliar a variedade por profissão após R-005: ocorrências locais repetíveis,
 ## Incremento autorizado R-007
 
 Consequências persistentes das escolhas: duas especializações por profissão, bônus no poder das ocorrências e seis continuidades condicionadas ao histórico. Progressão derivada de decisões distintas bem-sucedidas; repetição não acumula pontos. O recorte segue local e mantém campanha/idle. Contrato em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md).
+
+## Incremento autorizado R-008
+
+Ampliar missões com personagens recorrentes, acontecimentos condicionados às escolhas anteriores e teste como jogador. Implementado como dois episódios por profissão, vínculo persistente entre parceria e autonomia, apoio/recompensa contextual e desfecho histórico imutável. Escopo solo local; sem simulação global ou facções.

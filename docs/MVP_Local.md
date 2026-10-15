@@ -24,3 +24,7 @@ Após o MVP, o usuário autorizou variedade de missões e decisões. Entrega adi
 ## Expansão R-007 (15/10/2026)
 
 Decisões agora concedem especialização persistente (+3 poder por abordagem inédita concluída) e liberam seis missões de continuidade, totalizando quinze ocorrências e trinta abordagens. Dois caminhos por profissão; requisitos prévios e pontos também bloqueiam abordagens avançadas. Histórico anterior é aproveitado sem duplicar recompensas. Regras e limites em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md).
+
+## Expansão R-008 (15/10/2026)
+
+Seis episódios narrativos, três personagens recorrentes e relações derivadas do último compromisso bem-sucedido. Parceria oferece apoio de +12 poder no episódio seguinte; autonomia muda a participação e oferece +80 gold. Total: 21 ocorrências e 42 abordagens. Decisões reversíveis mediante novo encontro, respeitando stamina e intervalo. Detalhes em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md).

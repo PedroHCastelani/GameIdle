@@ -41,6 +41,7 @@ Nenhuma tarefa em progresso.
 
 | ID | Entrega | Evidência | Pendência |
 |---|---|---|---|
+| R-008 | Seis episódios e três personagens que reagem às escolhas anteriores | 74 testes; playtest Médico com parceria, autonomia, recompensas e diário preservado após reload; docs/Ocorrencias_Profissoes.md | Revisão PR #6; balanceamento provisório |
 | R-007 | Consequências persistentes, seis especializações e seis continuidades | 69 testes; playtest Médico com desbloqueio avançado e persistência após reload; docs/Ocorrencias_Profissoes.md | Revisão PR #6; balanceamento provisório |
 | R-001 | Reconciliar documentação e regras | docs atualizados; originais arquivados; IDs deduplicados | Revisão do PR |
 | R-002 | CI reproduzível e testes reais | Validate e SonarCloud aprovados em 49e3380; cobertura nova 96,5% | Revisão PR #6 |

@@ -152,6 +152,73 @@ describe.skipIf(process.env.RUN_DB_TESTS !== 'true')('profession encounters with
     expect((await p.post('encounter',{...payload,choiceId:'expand',requestId:randomUUID()})).json().outcome).toBe('FAILED');
     expect((await p.state()).adventure.specializations[0].points).toBe(2);
   });
+  it.each(['POLICE', 'THIEF', 'DOCTOR'] as const)('changes NPC support, events and rewards from the latest commitment as %s', async profession => {
+    const p = await player(profession), prefix = profession.toLowerCase();
+    await db.character.update({where:{id:p.id},data:{level:20,experience:36100}});
+    const definitions = professionEncounters(profession);
+    const post = (encounterId: string, choiceId: string, requestId = randomUUID()) => p.post('encounter',{encounterId,choiceId,requestId});
+    const meeting = `${prefix}_story_meeting`, crisis = `${prefix}_story_crisis`;
+    expect((await post(meeting,'partner')).statusCode).toBe(409);
+    expect((await post(crisis,'careful')).statusCode).toBe(409);
+    const track = profession === 'THIEF' ? 1 : 0;
+    await post(definitions[0].id,definitions[0].approaches[track].id); await advanceCooldown(p.id);
+    await post(`${prefix}_followup_${track}`,'establish'); await advanceCooldown(p.id);
+    let state = (await p.state()).adventure;
+    expect(state.encounters[5].lockReason).toBeNull();
+    expect(state.encounters[5].character.dialogue).not.toContain('Ainda não');
+    const requestId = randomUUID();
+    const replies = await Promise.all([post(meeting,'partner',requestId),post(meeting,'partner',requestId)]);
+    expect(replies.map(r => r.json().outcome)).toEqual(['BOSS_DEFEATED','BOSS_DEFEATED']);
+    await advanceCooldown(p.id);
+    state = (await p.state()).adventure;
+    expect(state.encounters[6].character.relationship).toBe('Parceria ativa');
+    const partnered = state.encounters[6];
+    expect(partnered.approaches[0].effectivePower).toBe(state.power + state.specializations[0].bonus + 12);
+    const first = await post(crisis,'careful'); expect(first.json().message).toContain(partnered.approaches[0].ending);
+    const oldAttempt = await db.stageAttempt.findFirstOrThrow({where:{characterId:p.id,missionId:`mvp_encounter_${crisis}`},include:{stageResults:true}});
+    await advanceCooldown(p.id);
+    expect((await post(meeting,'independent')).json().outcome).toBe('BOSS_DEFEATED'); await advanceCooldown(p.id);
+    expect((await post(meeting,'partner',requestId)).statusCode).toBe(200); // Replaying an old request cannot change today's relationship.
+    state = (await p.state()).adventure;
+    expect(state.encounters[6].character.relationship).toBe('Autonomia respeitada');
+    expect(state.encounters[6].event).not.toBe(partnered.event);
+    expect(state.encounters[6].approaches[1].storyBonus).toBe(0);
+    expect(state.encounters[6].approaches[1].gold).toBe(380);
+    const before = await db.character.findUniqueOrThrow({where:{id:p.id}});
+    const direct = await post(crisis,'direct'); expect(direct.json().outcome).toBe('BOSS_DEFEATED');
+    const after = await db.character.findUniqueOrThrow({where:{id:p.id}});
+    expect(BigInt(after.goldHand) - BigInt(before.goldHand)).toBe(380n);
+    expect(BigInt(after.experience) - BigInt(before.experience)).toBe(300n);
+    expect(after.staminaCurrent).toBe(before.staminaCurrent - 1);
+    expect((await db.stageResult.findMany({where:{attemptId:oldAttempt.id}}))).toEqual(oldAttempt.stageResults);
+    await advanceCooldown(p.id);
+    const points = state.specializations.map((s: {points:number}) => s.points);
+    await post(meeting,'partner'); // A repeated older choice changes commitment without another expertise point.
+    state = (await p.state()).adventure;
+    expect(state.encounters[6].character.relationship).toBe('Parceria ativa');
+    expect(state.encounters[6].approaches[1].gold).toBe(300);
+    expect(state.specializations.map((s: {points:number}) => s.points)).toEqual([points[0],points[1]+1]);
+    expect((await post(meeting,'partner',requestId)).statusCode).toBe(200);
+    expect(await db.stageAttempt.count({where:{characterId:p.id}})).toBe(7);
+    const other = await player(profession);
+    expect((await other.state()).adventure.encounters[6].character.relationship).toBe('Aguardando compromisso');
+  });
+  it('keeps the NPC commitment on failure and uses collaboration power in actual resolution', async () => {
+    const p = await player('DOCTOR');
+    await db.character.update({where:{id:p.id},data:{level:10,experience:8100}});
+    const post = (encounterId:string,choiceId:string) => p.post('encounter',{encounterId,choiceId,requestId:randomUUID()});
+    for (const [id,choice] of [['doctor_square','prevention'],['doctor_followup_0','establish'],['doctor_story_meeting','partner']]) {
+      expect((await post(id,choice)).json().outcome).toBe('BOSS_DEFEATED'); await advanceCooldown(p.id);
+    }
+    await db.character.update({where:{id:p.id},data:{level:5,experience:1600,campaignCycles:0}});
+    expect((await post('doctor_story_meeting','independent')).json().outcome).toBe('FAILED'); await advanceCooldown(p.id);
+    expect((await p.state()).adventure.encounters[6].character.relationship).toBe('Parceria ativa');
+    await db.character.update({where:{id:p.id},data:{level:9,experience:6400,campaignCycles:0}});
+    const state = (await p.state()).adventure;
+    expect(state.power + state.specializations[0].bonus).toBeLessThan(105);
+    expect(state.encounters[6].approaches[0].effectivePower).toBeGreaterThanOrEqual(105);
+    expect((await post('doctor_story_crisis','careful')).json().outcome).toBe('BOSS_DEFEATED');
+  });
 });
 
 it('derives bounded expertise from valid historical decisions, ignoring duplicates and legacy data', () => {

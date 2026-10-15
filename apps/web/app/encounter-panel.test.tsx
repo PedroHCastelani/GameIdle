@@ -12,6 +12,19 @@ const adventure: Adventure = { chapter: 3, completed: true, ending: 'Fim', power
 const props = { characterId: 'char', level: 2, busy: false, act: async (action: () => Promise<void>) => { try { await action(); } catch { /* Parent displays request errors. */ } }, refresh: vi.fn(async () => {}), notify: vi.fn() };
 const confirm = () => screen.getByRole('button', { name: 'Confirmar abordagem (1 stamina)' }) as HTMLButtonElement;
 
+it('shows the NPC response, changed event and applied support from the refreshed server state', () => {
+  const story = {...mission, character:{name:'Rosa',role:'Agente comunitária',relationship:'Parceria ativa',dialogue:'Minha rede está pronta.'},event:'Rosa mobiliza voluntários.',approaches:mission.approaches.map(c=>({...c,specialization:'Cuidado comunitário',storyBonus:12,effectivePower:105}))};
+  const {rerender} = render(<EncounterPanel {...props} adventure={{...adventure,encounters:[story]}} />);
+  expect(screen.getByText('Parceria ativa')).toBeTruthy();
+  expect(screen.getByText('Rosa mobiliza voluntários.')).toBeTruthy();
+  expect(screen.getAllByText(/Apoio do personagem: \+12 poder/)).toHaveLength(2);
+  rerender(<EncounterPanel {...props} adventure={{...adventure,encounters:[{...story,event:'A equipe segue sozinha.',character:{...story.character,relationship:'Autonomia respeitada',dialogue:'Vou respeitar esse espaço.'},approaches:story.approaches.map(c=>({...c,storyBonus:0,gold:c.gold+80}))}]}} />);
+  expect(screen.getByText('Autonomia respeitada')).toBeTruthy();
+  expect(screen.queryByText('Rosa mobiliza voluntários.')).toBeNull();
+  expect(screen.queryByText(/Apoio do personagem/)).toBeNull();
+  expect(screen.getByText('Se concluir: +120 gold · +140 EXP')).toBeTruthy();
+});
+
 it('requires an explicit choice, shows consequences and submits only server identifiers', async () => {
   vi.mocked(gameApi.encounter).mockResolvedValue({ message: 'Famílias orientadas.' });
   render(<EncounterPanel {...props} adventure={adventure} />);

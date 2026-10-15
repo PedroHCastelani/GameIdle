@@ -1,5 +1,6 @@
 import type { Prisma, Profession } from '@prisma/client';
 import { encounterDecision, encounters, type Encounter } from './encounter-rules.js';
+import { storyEncounters, storyView } from './encounter-stories.js';
 
 export const specializations: Record<Profession, [string, string]> = {
   POLICE: ['Investigação', 'Operações'], THIEF: ['Informação', 'Aquisição'], DOCTOR: ['Cuidado comunitário', 'Resposta emergencial'],
@@ -32,44 +33,51 @@ export function professionEncounters(profession: Profession): Encounter[] {
       minExpertise: index + 1, ending: story.endings[index],
     })),
   }));
-  return [...base, ...followups];
+  return [...base, ...followups, ...storyEncounters(profession)];
 }
 
 type ProgressRecord = { missionId: string; stageResults: { enemies: Prisma.JsonValue }[] };
 export function decisionProgress(profession: Profession, records: ProgressRecord[]) {
   const definitions = professionEncounters(profession);
   const completed = new Set<string>();
+  const latest = new Map<string, string>();
   const points = [0, 0];
   for (const record of records) {
     const mission = definitions.find(m => `mvp_encounter_${m.id}` === record.missionId);
     const decision = encounterDecision(record.stageResults[0]?.enemies ?? null);
     const index = mission?.approaches.findIndex(c => c.id === decision?.id) ?? -1;
     if (!mission || index < 0) continue;
+    latest.set(mission.id, mission.approaches[index].id);
     const key = `${mission.id}:${mission.approaches[index].id}`;
     if (completed.has(key)) continue;
     completed.add(key); points[mission.track ?? index]++;
   }
-  return { completed, points };
+  return { completed, points, latest };
 }
 
 export async function loadDecisionProgress(db: Pick<Prisma.TransactionClient, 'stageAttempt'>, id: string, profession: Profession) {
-  const records = await db.stageAttempt.findMany({ where: { characterId: id, outcome: 'BOSS_DEFEATED', missionId: { startsWith: 'mvp_encounter_' } }, select: { missionId: true, stageResults: { where: { stageNumber: 1 }, select: { enemies: true } } } });
+  const records = await db.stageAttempt.findMany({ where: { characterId: id, outcome: 'BOSS_DEFEATED', missionId: { startsWith: 'mvp_encounter_' } }, orderBy: [{ endedAt: 'asc' }, { id: 'asc' }], select: { missionId: true, stageResults: { where: { stageNumber: 1 }, select: { enemies: true } } } });
   return decisionProgress(profession, records);
 }
 
 export function progressionView(profession: Profession, progress: ReturnType<typeof decisionProgress>, power: number) {
-  const definitions = professionEncounters(profession);
+  const definitions = storyView(profession, professionEncounters(profession), progress.completed, progress.latest);
   const paths = specializations[profession].map((name, index) => ({ name, points: progress.points[index], bonus: progress.points[index] * 3 }));
   return { specializations: paths, encounters: definitions.map(m => {
     const source = definitions.find(d => d.id === m.requires?.encounterId);
     const sourceChoice = source?.approaches.find(c => c.id === m.requires?.choiceId);
-    const lockReason = m.requires && !progress.completed.has(`${m.requires.encounterId}:${m.requires.choiceId}`)
+    const baseLock = m.requires && !progress.completed.has(`${m.requires.encounterId}:${m.requires.choiceId}`)
       ? `Conclua ${source?.name} com a abordagem ${sourceChoice?.name}.` : null;
+    const missingAny = m.requiresAny && !m.requiresAny.some(r => progress.completed.has(`${r.encounterId}:${r.choiceId}`));
+    const lockReason = missingAny ? `Conclua uma das opções: ${m.requiresAny!.map(r => {
+      const required = definitions.find(d => d.id === r.encounterId)!;
+      return `${required.name} — ${required.approaches.find(c => c.id === r.choiceId)!.name}`;
+    }).join(' ou ')}.` : baseLock;
     return { ...m, lockReason, approaches: m.approaches.map((c, index) => {
       const path = paths[m.track ?? index];
       const completed = progress.completed.has(`${m.id}:${c.id}`);
-      const unlocks = definitions.filter(d => d.requires?.encounterId === m.id && d.requires.choiceId === c.id).map(d => d.name);
-      return { ...c, specialization: path.name, expertise: path.points, bonus: path.bonus, effectivePower: power + path.bonus, completed, unlocks,
+      const unlocks = definitions.filter(d => [d.requires, ...(d.requiresAny ?? [])].some(r => r?.encounterId === m.id && r.choiceId === c.id)).map(d => d.name);
+      return { ...c, specialization: path.name, expertise: path.points, bonus: path.bonus, storyBonus: m.storyBonus, effectivePower: power + path.bonus + m.storyBonus, completed, unlocks,
         lockReason: path.points < (c.minExpertise ?? 0) ? `Requer ${c.minExpertise} pontos em ${path.name}; você tem ${path.points}.` : null };
     }) };
   }) };
