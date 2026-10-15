@@ -2,7 +2,8 @@ import type { PrismaClient } from '@prisma/client';
 import { ApiError } from '../../lib/security.js';
 import { lockCharacter } from './character-lock.js';
 import { campaignPower, resolveChapter, staminaAt } from './campaign-rules.js';
-import { encounterCooldown, encounterDecision, encounters } from './encounter-rules.js';
+import { encounterCooldown, encounterDecision } from './encounter-rules.js';
+import { loadDecisionProgress, professionEncounters, progressionView } from './encounter-progression.js';
 import { levelFromExperience } from './idle.js';
 
 export function encounterService(db: PrismaClient) {
@@ -11,7 +12,7 @@ export function encounterService(db: PrismaClient) {
       return db.$transaction(async tx => {
         const char = await lockCharacter(tx, userId, id);
         if (char.isPrisoned) throw new ApiError(409, 'Personagem detido não pode atender ocorrências.');
-        const encounter = encounters[char.profession].find(e => e.id === encounterId);
+        const encounter = professionEncounters(char.profession).find(e => e.id === encounterId);
         const choice = encounter?.approaches.find(c => c.id === choiceId);
         if (!encounter || !choice) throw new ApiError(400, 'Ocorrência ou abordagem incompatível com sua profissão.');
         const requestKey = `${id}:${requestId}`, missionId = `mvp_encounter_${encounter.id}`;
@@ -28,7 +29,12 @@ export function encounterService(db: PrismaClient) {
         const stamina = staminaAt(char.staminaCurrent, char.staminaLastRegen, now);
         if (stamina.value < 1) throw new ApiError(409, 'Stamina insuficiente para esta ocorrência.');
         const items = await tx.inventoryItem.findMany({ where: { characterId: id, isEquipped: true } });
-        const power = campaignPower(char.level, char.campaignCycles, items.map(i => i.templateId));
+        const basePower = campaignPower(char.level, char.campaignCycles, items.map(i => i.templateId));
+        const progress = await loadDecisionProgress(tx, id, char.profession);
+        const view = progressionView(char.profession, progress, basePower).encounters.find(e => e.id === encounterId)!;
+        const approach = view.approaches.find(c => c.id === choiceId)!;
+        if (view.lockReason || approach.lockReason) throw new ApiError(409, view.lockReason ?? approach.lockReason!);
+        const power = approach.effectivePower;
         const stages = resolveChapter(power, choice.power), success = stages.every(s => s.success);
         const gold = success ? BigInt(choice.gold) : 0n, exp = success ? BigInt(choice.exp) : 0n;
         const ending = success ? choice.ending : 'Sua preparação foi insuficiente. A equipe de apoio assumiu a ocorrência; você gastou 1 stamina e não recebeu recompensas.';
@@ -37,7 +43,8 @@ export function encounterService(db: PrismaClient) {
         await tx.character.update({ where: { id }, data: { staminaCurrent: stamina.value - 1, staminaLastRegen: stamina.cursor, goldHand: { increment: gold }, experience: { increment: exp }, level: levelFromExperience(char.experience + exp, char.level) } });
         await tx.staminaLog.create({ data: { characterId: id, delta: -1, reason: 'LOCAL_ENCOUNTER' } });
         await tx.economyLog.create({ data: { type: success ? 'STAGE_REWARD' : 'STAGE_PENALTY', characterId: id, goldAmount: gold, metadata: { attemptId: attempt.id, encounterId, choiceId, exp: exp.toString(), power, staminaSpent: 1 } } });
-        return { message: `${ending} +${gold} gold · +${exp} EXP.`, outcome: attempt.outcome };
+        const consequence = success && !approach.completed ? ` Nova experiência: +1 em ${approach.specialization} (+3 poder nas abordagens dessa área).` : '';
+        return { message: `${ending} +${gold} gold · +${exp} EXP.${consequence}`, outcome: attempt.outcome };
       });
     },
   };

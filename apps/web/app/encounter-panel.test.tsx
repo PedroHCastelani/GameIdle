@@ -65,3 +65,19 @@ it('renders an empty list for an older server response', () => {
   expect(screen.getByText('Ocorrências da profissão')).toBeTruthy();
   expect(screen.queryByRole('button', { name: /Confirmar abordagem/ })).toBeNull();
 });
+
+it('explains earned power, permanent progress and prerequisite locks before spending stamina', () => {
+  const followup = { ...mission, id: 'followup', name: 'O retorno das famílias', lockReason: 'Conclua o mutirão com prevenção.', approaches: mission.approaches.map(c => ({...c, specialization:'Cuidado comunitário', bonus:3, effectivePower:28, completed:false, unlocks:['Programa do bairro'], lockReason:'Requer 2 pontos; você tem 1.'})) };
+  const state = { ...adventure, specializations:[{name:'Cuidado comunitário',points:1,bonus:3}], encounters:[followup] };
+  const {rerender} = render(<EncounterPanel {...props} adventure={state} />);
+  expect(screen.getByText('1 pontos · +3 poder nas abordagens dessa área')).toBeTruthy();
+  expect(screen.getByText('Conclua o mutirão com prevenção.')).toBeTruthy();
+  expect(confirm().disabled).toBe(true);
+  const unlocked = {...followup,lockReason:null,approaches:followup.approaches.map(c=>({...c,lockReason:null,completed:true}))};
+  rerender(<EncounterPanel {...props} adventure={{...state,encounters:[unlocked]}} />);
+  fireEvent.click(screen.getByRole('radio',{name:/Conduzir a prevenção/}));
+  expect(confirm().disabled).toBe(false);
+  expect(screen.queryByText(/esta abordagem vai falhar/)).toBeNull();
+  expect(screen.getAllByText(/Experiência já adquirida/)).toHaveLength(2);
+  expect(gameApi.encounter).not.toHaveBeenCalled();
+});

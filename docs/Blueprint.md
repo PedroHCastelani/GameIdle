@@ -30,3 +30,7 @@ IDs D-001 a D-013 constam uma única vez em TASKS.md. D-007 permanece aberta. Es
 ## Incremento autorizado R-006
 
 Ampliar a variedade por profissão após R-005: ocorrências locais repetíveis, decisões com consequências explícitas e histórico persistido, preservando a campanha. Contrato em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md). Não depende da preparação de cadastro público.
+
+## Incremento autorizado R-007
+
+Consequências persistentes das escolhas: duas especializações por profissão, bônus no poder das ocorrências e seis continuidades condicionadas ao histórico. Progressão derivada de decisões distintas bem-sucedidas; repetição não acumula pontos. O recorte segue local e mantém campanha/idle. Contrato em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md).

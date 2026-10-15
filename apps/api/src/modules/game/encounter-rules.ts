@@ -1,7 +1,7 @@
 import type { Profession, Prisma } from '@prisma/client';
 
-export type Approach = { id: string; name: string; description: string; power: number; gold: number; exp: number; ending: string };
-export type Encounter = { id: string; name: string; description: string; level: number; stages: string[]; approaches: Approach[] };
+export type Approach = { id: string; name: string; description: string; power: number; gold: number; exp: number; ending: string; minExpertise?: number };
+export type Encounter = { id: string; name: string; description: string; level: number; stages: string[]; approaches: Approach[]; track?: number; requires?: { encounterId: string; choiceId: string } };
 export const encounterCooldown = 60000;
 
 export const encounters: Record<Profession, Encounter[]> = {

@@ -3,7 +3,8 @@ import { ApiError } from '../../lib/security.js';
 import { lockCharacter } from './character-lock.js';
 import { campaignPower, careers, chapterRules, gear, resolveChapter, staminaAt } from './campaign-rules.js';
 import { levelFromExperience } from './idle.js';
-import { encounterCooldown, encounterDecision, encounters } from './encounter-rules.js';
+import { encounterCooldown, encounterDecision } from './encounter-rules.js';
+import { loadDecisionProgress, progressionView } from './encounter-progression.js';
 
 function freeToAct(character: Character) {
   if (character.isPrisoned) throw new ApiError(409, 'Personagem detido não pode realizar esta ação.');
@@ -18,7 +19,8 @@ export async function campaignView(db: PrismaClient, char: Character) {
   const history = await db.stageAttempt.findMany({ where: { characterId: char.id }, orderBy: { startedAt: 'desc' }, take: 5, include: { mission: { select: { name: true } }, stageResults: { orderBy: { stageNumber: 'asc' } } } });
   const lastEncounter = await db.stageAttempt.findFirst({ where: { characterId: char.id, missionId: { startsWith: 'mvp_encounter_' } }, orderBy: { startedAt: 'desc' } });
   return {
-    encounters: encounters[char.profession], encounterWaitSeconds: lastEncounter ? Math.max(0, Math.ceil((lastEncounter.startedAt.getTime() + encounterCooldown - Date.now()) / 1000)) : 0,
+    ...progressionView(char.profession, await loadDecisionProgress(db, char.id, char.profession), power),
+    encounterWaitSeconds: lastEncounter ? Math.max(0, Math.ceil((lastEncounter.startedAt.getTime() + encounterCooldown - Date.now()) / 1000)) : 0,
     chapter: char.campaignChapter, completed: char.campaignChapter >= 3, ending: careers[char.profession].ending,
     power, skillName: careers[char.profession].skill, skillLevel: 1 + Math.floor(Math.sqrt(char.campaignCycles / 5)), cycles: char.campaignCycles,
     stamina: stamina.value, staminaNextAt: stamina.nextAt, nextLevelExperience: (100n * BigInt(char.level) ** 2n).toString(),

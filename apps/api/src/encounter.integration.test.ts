@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { buildServer } from './server.js';
 import { seedCampaign } from './modules/game/campaign-seed.js';
 import { encounterDecision, encounters } from './modules/game/encounter-rules.js';
+import { decisionProgress, professionEncounters, progressionView } from './modules/game/encounter-progression.js';
 
 it('reads persisted decisions without misinterpreting old campaign records', () => {
   for (const value of [null, {}, [], [null], ['text'], [[]], [{ name: 'old' }]]) expect(encounterDecision(value)).toBeNull();
@@ -37,7 +38,7 @@ describe.skipIf(process.env.RUN_DB_TESTS !== 'true')('profession encounters with
     const p = await player(profession);
     await db.character.update({ where: { id: p.id }, data: { level: 10, experience: 9000, campaignChapter: 3 } });
     const initial = await p.state();
-    expect(initial.adventure.encounters.map((e: {id:string}) => e.id)).toEqual(encounters[profession].map(e => e.id));
+    expect(initial.adventure.encounters.map((e: {id:string}) => e.id)).toEqual(professionEncounters(profession).map(e => e.id));
     for (const encounter of encounters[profession]) for (const choice of encounter.approaches) {
       const before = await db.character.findUniqueOrThrow({ where: { id: p.id } });
       const payload = { encounterId: encounter.id, choiceId: choice.id, requestId: randomUUID() };
@@ -83,6 +84,8 @@ describe.skipIf(process.env.RUN_DB_TESTS !== 'true')('profession encounters with
     const state=await p.state();
     expect(state.character.gold).toBe('100'); expect(state.character.experience).toBe('100');
     expect(state.adventure.stamina).toBe(9); expect(state.adventure.history[0].decision.ending).toContain('preparação foi insuficiente');
+    expect(state.adventure.specializations.map((s: { points: number }) => s.points)).toEqual([0, 0]);
+    expect(state.adventure.encounters[4].lockReason).toBeTruthy();
     expect((await p.post('encounter',payload)).statusCode).toBe(200);
     await advanceCooldown(p.id);
     await db.character.update({where:{id:p.id},data:{level:4,experience:900}});
@@ -103,4 +106,59 @@ describe.skipIf(process.env.RUN_DB_TESTS !== 'true')('profession encounters with
     expect((await p.post('encounter',payload)).statusCode).toBe(409);
     expect(await db.stageAttempt.count({where:{characterId:p.id}})).toBe(0);
   });
+  it.each(['POLICE', 'THIEF', 'DOCTOR'] as const)('unlocks both followups through decisions and persists expertise as %s', async profession => {
+    const p = await player(profession);
+    await db.character.update({ where: { id: p.id }, data: { level: 10, experience: 9000 } });
+    const definitions = professionEncounters(profession);
+    const play = (mission: typeof definitions[number], choiceIndex: number) => p.post('encounter', { encounterId: mission.id, choiceId: mission.approaches[choiceIndex].id, requestId: randomUUID() });
+    for (const track of [0, 1]) {
+      const next = definitions[3 + track];
+      expect((await play(next, 0)).statusCode).toBe(409);
+      expect((await play(definitions[0], track)).json().outcome).toBe('BOSS_DEFEATED');
+      await advanceCooldown(p.id);
+      let view = (await p.state()).adventure;
+      expect(view.encounters[3 + track].lockReason).toBeNull();
+      expect(view.encounters[3 + track].approaches[1].lockReason).toBeTruthy();
+      expect((await play(next, 1)).statusCode).toBe(409);
+      expect((await play(next, 0)).json().outcome).toBe('BOSS_DEFEATED');
+      await advanceCooldown(p.id);
+      view = (await p.state()).adventure;
+      expect(view.encounters[3 + track].approaches[1].lockReason).toBeNull();
+      expect((await play(next, 1)).json().outcome).toBe('BOSS_DEFEATED');
+      await advanceCooldown(p.id);
+      expect((await play(next, 1)).json().outcome).toBe('BOSS_DEFEATED');
+      await advanceCooldown(p.id);
+      expect((await p.state()).adventure.specializations[track].points).toBe(3);
+    }
+    const saved = (await p.state()).adventure;
+    expect(saved.specializations.map((s: { bonus: number }) => s.bonus)).toEqual([9, 9]);
+    expect(saved.stamina).toBe(2);
+    expect(saved.history).toHaveLength(5); // Progress survives beyond the five visible diary entries.
+    expect(saved.encounters[3].approaches[0].completed).toBe(true);
+  });
+  it('uses earned specialization power to turn a later mission into success', async () => {
+    const p = await player('DOCTOR');
+    await db.character.update({where:{id:p.id},data:{level:4,experience:900,campaignCycles:1620}});
+    expect((await p.post('encounter',{encounterId:'doctor_square',choiceId:'prevention',requestId:randomUUID()})).statusCode).toBe(200);
+    await advanceCooldown(p.id);
+    const view = (await p.state()).adventure;
+    expect(view.power).toBe(58);
+    expect(view.encounters[3].approaches[0].effectivePower).toBe(61);
+    const payload = {encounterId:'doctor_followup_0',choiceId:'establish',requestId:randomUUID()};
+    const results = await Promise.all([p.post('encounter',payload),p.post('encounter',payload)]);
+    expect(results.map(r => r.json().outcome)).toEqual(['BOSS_DEFEATED','BOSS_DEFEATED']);
+    expect((await p.state()).adventure.specializations[0].points).toBe(2);
+    await advanceCooldown(p.id);
+    expect((await p.post('encounter',{...payload,choiceId:'expand',requestId:randomUUID()})).json().outcome).toBe('FAILED');
+    expect((await p.state()).adventure.specializations[0].points).toBe(2);
+  });
+});
+
+it('derives bounded expertise from valid historical decisions, ignoring duplicates and legacy data', () => {
+  const valid = { missionId: 'mvp_encounter_police_market', stageResults: [{enemies:[{choiceId:'witnesses',choiceName:'Ouvir',ending:'Fim'}]}] };
+  const progress = decisionProgress('POLICE', [valid, valid, {missionId:'old',stageResults:[]}, {...valid,stageResults:[{enemies:[{choiceId:'unknown',choiceName:'?',ending:'?'}]}]}]);
+  expect(progress.points).toEqual([1,0]);
+  const view = progressionView('POLICE', progress, 58);
+  expect(view.encounters[3].approaches[0].effectivePower).toBe(61);
+  expect(view.encounters[4].lockReason).toContain('Seguir o rastro');
 });

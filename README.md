@@ -86,3 +86,5 @@ Rotas autenticadas adicionais: POST `/api/characters/:id/buy` (`templateId`), `/
 ## Ocorrências da profissão
 
 A aba **Ocorrências** oferece três situações por profissão, liberadas nos níveis 2, 3 e 4. Compare duas abordagens, escolha entre maior EXP ou gold e confirme por 1 stamina. Intervalo de 60 segundos entre tentativas. A decisão e o desfecho ficam no Diário; funciona também após concluir a campanha. Execute `pnpm db:seed` para adicionar o conteúdo. [Regras e testes](docs/Ocorrencias_Profissoes.md).
+
+As decisões também desenvolvem duas especializações por profissão: cada abordagem inédita concluída concede +3 poder nas próximas abordagens dessa área. Seis missões de continuidade dependem das escolhas anteriores, com opções avançadas exigindo experiência na especialização. Total atual: 15 ocorrências e 30 abordagens. Histórico anterior é aproveitado automaticamente; execute o seed para adicionar as continuidades.

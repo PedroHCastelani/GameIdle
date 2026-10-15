@@ -20,3 +20,7 @@ Publicação online, identidade/CPF, provedor externo de e-mail, LGPD pública, 
 ## Expansão R-006 (15/10/2026)
 
 Após o MVP, o usuário autorizou variedade de missões e decisões. Entrega adicional: nove ocorrências repetíveis com 18 abordagens, consequências econômicas e narrativas, diário e intervalo entre tentativas. Detalhes em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md). Preserva o recorte local.
+
+## Expansão R-007 (15/10/2026)
+
+Decisões agora concedem especialização persistente (+3 poder por abordagem inédita concluída) e liberam seis missões de continuidade, totalizando quinze ocorrências e trinta abordagens. Dois caminhos por profissão; requisitos prévios e pontos também bloqueiam abordagens avançadas. Histórico anterior é aproveitado sem duplicar recompensas. Regras e limites em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md).

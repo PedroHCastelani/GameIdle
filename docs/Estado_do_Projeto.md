@@ -45,3 +45,7 @@ O loop completo foi jogado como Médica pela interface; as três profissões tê
 ## R-006 — expansão de decisões
 
 Nove ocorrências repetíveis, com 18 abordagens temáticas e consequências em poder necessário, gold/EXP e relato persistido. Aba Ocorrências com comparação, confirmação de custo e intervalo de 60 segundos; Diário registra decisões. Seed aditivo, sem migration ou reinício do progresso. 63 testes aprovados. Escopo e evidências em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md). A resolução continua determinística; não há simulação permanente de consequências na cidade.
+
+## R-007 — consequências persistentes
+
+Seis especializações temáticas e seis missões de continuidade. Decisões bem-sucedidas inéditas dão pontos, bônus de poder por área e acesso às próximas missões. 69 testes (50 API e 19 UI), incluindo ambos os caminhos das três profissões e bônus alterando resultado. Detalhes em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md).
