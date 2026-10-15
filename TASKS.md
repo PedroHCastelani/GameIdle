@@ -1,5 +1,5 @@
 # TASKS.md — The Life
-Última atualização: 2026-08-10 (atualizado pelo DEV-DATABASE — T-005 e T-006 concluídas)
+Última atualização: 2026-10-15 — reconciliação com código e CI.
 **Regra:** Todo agente atualiza este arquivo antes de iniciar e ao concluir qualquer task.
 **Formato de data:** YYYY-MM-DD HH:MM
 
@@ -17,7 +17,7 @@
 
 ---
 
-## ✅ Concluído (últimas 2 semanas)
+## Entregas históricas implementadas (aprovação e staging não comprovados)
 
 | ID | Título | Agente | Arquivos modificados | Data |
 |---|---|---|---|---|
@@ -35,18 +35,17 @@
 
 ## 🟠 Em Progresso
 
-| ID | Título | Agente | Status | Arquivos em uso | Iniciado em |
-|---|---|---|---|---|---|
-| (vazio) | | | | | |
-
----
+Nenhuma edição concorrente em andamento. Incremento preparado para revisão.
 
 ## 🔵 Aguardando Review
 
-| ID | Título | Agente | PR | Arquivos modificados | Concluído em |
-|---|---|---|---|---|---|
-| (vazio) | | | | | |
+| ID | Entrega | Evidência | Pendência |
+|---|---|---|---|
+| R-001 | Reconciliar documentação e regras | docs atualizados; originais arquivados; IDs deduplicados | Revisão do PR |
+| R-002 | CI reproduzível e testes reais | Geração Prisma explícita; suite com PostgreSQL; LCOV | CI remoto, Sonar e revisão |
+| R-003 | Protótipo local conta-personagem-idle | API, persistência, UI e testes de concorrência | Revisão; não equivale a lançamento público |
 
+R-003 é recorte de T-010–T-018. Essas tarefas completas permanecem no backlog. Notion não sincronizado: handoff em scripts/templates/handoff-2026-10-15.md. Detalhes de validação em docs/Validacao_2026-10-15.md.
 
 ---
 
@@ -65,11 +64,11 @@
 | ID | Título | Agente | Estimativa | Depende de |
 |---|---|---|---|---|
 | — | — | — | — | — |
-| T-005 | Seed de dados (áreas, missões, inimigos, buffs) | DEV-DATABASE | M | T-003 |
-| T-006 | Configurar Prisma ORM | DEV-DATABASE | M (4-8h) | T-003, T-005 |
-| T-007 | Estrutura de rotas API | DEV-BACKEND | M (4-8h) | T-006 |
-| T-008 | SonarCloud — Quality Gate e métricas obrigatórias | DEV-DEVOPS | M | T-004 |
-| T-009 | Hardening CI/SonarCloud e correções QA | DEV-DEVOPS + DEV-QA | G | T-004, T-008 |
+
+
+
+
+| T-009 | Hardening CI/SonarCloud e correções QA (parcial em R-002) | DEV-DEVOPS + DEV-QA | G | T-004, T-008 |
 
 ---
 
@@ -134,8 +133,8 @@
 
 | ID | Título | Agente | Critério de aceite | Depende de |
 |---|---|---|---|---|
-| T-008 | SonarCloud — Quality Gate e métricas obrigatórias | DEV-DEVOPS | Quality Gate ativo no SonarCloud e bloqueando PR; métricas mínimas documentadas: 0 bugs, 0 vulnerabilidades novas, coverage mínimo para código novo, duplicação controlada e análise por PR funcionando | T-004 |
-| T-009 | Hardening CI/SonarCloud e correções QA | DEV-DEVOPS + DEV-QA | Vulnerabilidades SonarCloud revisadas/corrigidas ou justificadas; workflows com mitigação contra injection; secrets removidos do código; teste fraco corrigido; scripts e code smells críticos priorizados; migrations configuradas corretamente no escopo do Sonar | T-004, T-008 |
+
+
 
 ---
 
@@ -157,9 +156,9 @@
 | D-004 | Gateway de pagamento (Stripe / MercadoPago) | Nível 11 | Aberta | PO + jurídico |
 | D-005 | Valores de calibragem econômica | T-037 | Aberta — pós Fase 1 | PO |
 | D-006 | Duração dos buffs médicos e cooldown | T-029 | Aberta | PO |
-| D-007 | Serviço de validação de CPF (BrasilAPI ou Serpro) | T-010 | ✅ BrasilAPI (gratuita) | PO |
+| D-007 | Serviço de validação de CPF (BrasilAPI ou Serpro) | T-010 | Reaberta — integração não comprovada | PO |
 | D-008 | Canal de alertas da equipe (Discord, Slack, outro) | T-037, T-038 | Aberta | PO |
-| D-009 | Workspace Notion (URL, permissões, estrutura) | CI/CD básico | ✅ Claude integrado ao Notion | PO |
+| D-009 | Workspace Notion (URL, permissões, estrutura) | CI/CD básico | Registrada anteriormente; não verificada nesta revisão | PO |
 | D-010 | Ferramentas de geração de assets (pixel art) | T-080 e toda produção de asset | Aberta | DEV-ASSET-LEAD |
 | D-011 | Paleta oficial de cores dos assets (máx 32 cores) | T-081 e toda produção de asset | Aberta | DEV-ASSET-LEAD |
 | D-012 | Tamanho base de sprite (16×16 ou 32×32) | T-081+ | Aberta | DEV-ASSET-LEAD |
@@ -210,21 +209,3 @@
 | T-094 | Animações — UI (loading, stamina, notificação) | DEV-ASSET-ANIM | M | T-081 |
 
 ---
-
-## 📋 Decisões Pendentes — atualizado
-
-| # | Decisão | Bloqueia | Status | Responsável |
-|---|---|---|---|---|
-| D-001 | Custo dos slots de personagem em Gold | T-019 | Aberta | PO |
-| D-002 | Nível mínimo e custo de criação de guild | T-058 | Aberta | PO |
-| D-003 | Vantagem premium no banco | T-035 | Aberta | PO |
-| D-004 | Gateway de pagamento | Nível 11 | Aberta | PO + jurídico |
-| D-005 | Valores de calibragem econômica | T-037 | Aberta — pós Fase 1 | PO |
-| D-006 | Duração dos buffs médicos e cooldown | T-029 | Aberta | PO |
-| D-007 | Serviço de validação de CPF | T-010 | ✅ BrasilAPI (gratuita) | PO |
-| D-008 | Canal de alertas da equipe | T-037, T-038 | Aberta | PO |
-| D-009 | Workspace Notion | T-007 | ✅ Claude integrado ao Notion | PO |
-| D-010 | Ferramentas de geração de assets (pixel art) | T-080 e toda produção de asset | Aberta | DEV-ASSET-LEAD |
-| D-011 | Paleta oficial de cores dos assets (máx 32 cores) | T-081 e toda produção de asset | Aberta | DEV-ASSET-LEAD |
-| D-012 | Tamanho base de sprite (16×16 ou 32×32) | T-081+ | Aberta | DEV-ASSET-LEAD |
-| D-013 | Efeitos sonoros — escopo e ferramentas (fase futura) | Nenhuma task atual | Aberta | PO |

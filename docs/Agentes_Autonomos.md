@@ -1,6 +1,8 @@
 # 🤖 Agentes Autônomos — The Life
 **Versão:** 2.0  
-**Data:** Julho 2026
+**Revisão:** 15/10/2026
+
+Perfis e jobs descritos aqui são planejados, não evidência de execução. TASKS.md é a fonte de status; Estado_do_Projeto.md define o incremento ativo. Os jobs de economia, sessão e cálculo são código determinístico, não chamadas a LLM.
 
 ---
 
@@ -142,7 +144,7 @@ de desenvolvimento de produto e é responsável pela qualidade técnica
 de tudo que é entregue.
 
 ANTES DE QUALQUER AÇÃO:
-1. Leia o arquivo Blueprint.md na raiz do repositório
+1. Leia o arquivo docs/Blueprint.md do repositório
 2. Leia o arquivo TASKS.md na raiz do repositório
 3. Identifique qual task você deve executar ou revisar
 4. Confirme que as dependências da task estão marcadas como Done no TASKS.md
@@ -204,7 +206,7 @@ por tudo que não é código de aplicação: deploy, segurança, banco de dados
 em produção, monitoramento e conformidade LGPD.
 
 ANTES DE QUALQUER AÇÃO:
-1. Leia o Blueprint.md na raiz do repositório
+1. Leia o docs/Blueprint.md do repositório
 2. Leia o TASKS.md na raiz do repositório
 3. Leia o Seguranca_e_LGPD.md antes de qualquer task de segurança
 4. Confirme dependências. Se abertas: marque BLOQUEADO e reporte. PARE.
@@ -655,7 +657,7 @@ Retorne: { itemsExpired, creditsExpired, errors }.
 Calculada no momento da consulta, sem cron.
 ```typescript
 function getCurrentStamina(char: Character, isPremium: boolean): number {
-  const regenPerHour = isPremium ? 1.0 : 0.417;
+  const regenPerHour = isPremium ? (1 / 1.2) : (1 / 2.4);
   const max = isPremium ? 20 : 10;
   const hours = (Date.now() - char.staminaLastRegen.getTime()) / 3600000;
   return Math.min(char.staminaCurrent + Math.floor(hours * regenPerHour), max);
@@ -952,109 +954,3 @@ Ruas e calçadas, exteriores de edifícios em perspectiva top-down, interiores (
 6. **Decisão de ferramenta vai para o Notion** — D-010 deve ser resolvida antes de qualquer geração
 
 ---
-
-## PARTE 5 — AGENTES DE ASSET VISUAL
-
-### Visão Geral
-
-Os agentes de asset são responsáveis por toda a produção visual do The Life. Operam via Claude Code com a mesma hierarquia de governança dos agentes de desenvolvimento — leitura obrigatória de Blueprint.md e TASKS.md antes de qualquer ação.
-
-```
-DEV-ASSET-LEAD  (coordenação, validação, pipeline)
-    ├── DEV-ASSET-CHAR  (sprites de personagens, NPCs, veículos)
-    ├── DEV-ASSET-ENV   (tilesets de ambientação e cenário)
-    └── DEV-ASSET-ANIM  (animações, spritesheets, efeitos visuais)
-```
-
-**Primeira tarefa obrigatória de todos os agentes de asset:**
-DEV-ASSET-LEAD lidera a discussão de ferramentas e paleta, registra as decisões D-010, D-011 e D-012 no Notion e cria `docs/ASSET_GUIDELINES.md`. Nenhum asset é gerado sem esse documento existir e aprovado.
-
----
-
-### DEV-ASSET-LEAD — Asset Lead
-**Arquivo:** `.claude/agents/asset-lead.md`
-
-**Responsabilidade:** Coordena produção visual, define pipeline, valida consistência entre todos os assets e aprova entregas dos demais agentes.
-
-**Decisões que lidera:**
-
-| Decisão | Critérios |
-|---|---|
-| D-010 — Ferramentas | Pesquisa na My ub.ia + compatibilidade Claude Code + API disponível |
-| D-011 — Paleta | Máx 32 cores, distinta do GTA original, coerente com identidade do The Life |
-| D-012 — Tamanho de sprite | 16×16 (mais retrô) vs 32×32 (mais expressivo) — considerar desempenho no navegador |
-
-**Não gera assets diretamente.** Define o padrão e valida.
-
-**Regras invioláveis:**
-- Nunca aprovar asset que copie elementos do GTA (Rockstar Games)
-- Nunca iniciar produção em escala sem ASSET_GUIDELINES.md aprovado
-- Toda decisão de ferramenta registrada no Notion antes de implementar
-- Som (D-013) é fase posterior — foco total em visual
-
----
-
-### DEV-ASSET-CHAR — Agente de Personagens
-**Arquivo:** `.claude/agents/asset-char.md`
-
-**Responsabilidade:** Gera sprites de personagens jogáveis, NPCs e veículos.
-
-**Identidade visual por profissão:**
-- Policial: azul (#4A9EFF), uniforme urbano com progressão por nível
-- Ladrão: vermelho (#FF4757), roupas escuras com progressão por nível
-- Médico: verde (#2ED573), jaleco que muda conforme alinhamento (bem/mal/neutro)
-
-**Especificações:**
-- 4 direções (N, S, L, O) para personagens móveis
-- Outline de 1px obrigatório
-- PNG com canal alpha
-- Spritesheet completo por personagem
-
-**Nunca inicia** sem ASSET_GUIDELINES.md aprovado.
-
----
-
-### DEV-ASSET-ENV — Agente de Ambientação
-**Arquivo:** `.claude/agents/asset-env.md`
-
-**Responsabilidade:** Gera tilesets de ruas, calçadas, edifícios exteriores e interiores, props urbanos.
-
-**Ambientes principais:** ruas e calçadas, exteriores top-down (delegacia, hospital, banco, beco), interiores (delegacia, hospital, banco), props (postes, lixeiras, carros estacionados).
-
-**Especificações:**
-- Tiles modulares — combinam sem costuras
-- Mínimo 2 variações por tile base
-- Paleta de asfalto: tons escuros (#1A1A2E base) — distinto do GTA
-
-**Nunca inicia** sem ASSET_GUIDELINES.md aprovado.
-
----
-
-### DEV-ASSET-ANIM — Agente de Animação
-**Arquivo:** `.claude/agents/asset-anim.md`
-
-**Responsabilidade:** Monta spritesheets de animação a partir dos sprites aprovados pelo DEV-ASSET-CHAR, cria efeitos visuais e UI animada.
-
-**Animações por personagem:** idle (2–4f), walk (6–8f), run (6–8f), action por profissão, hurt, death, prison.
-
-**Efeitos visuais:** hit, shoot, heal, arrest, money, levelup, prison, buff.
-
-**Frame rates padrão:** idle 4–6fps · walk 8fps · run 12fps · effects 12–15fps
-
-**JSON de metadados** obrigatório para cada animação (frameWidth, frameHeight, frameCount, fps, loop, spritesheet path).
-
-**Trabalha sempre após** DEV-ASSET-CHAR ter sprites aprovados pelo LEAD.
-
-**Som:** documenta mapeamento de animações→som em ASSET_GUIDELINES.md (seção "Mapeamento de Som") mas não inicia produção de áudio — escopo futuro definido em D-013.
-
----
-
-### Regras Específicas dos Agentes de Asset
-
-1. **Blueprint.md e TASKS.md primeiro** — mesma regra dos demais agentes de desenvolvimento
-2. **ASSET_GUIDELINES.md é lei** — nenhum asset gerado sem esse documento
-3. **DEV-ASSET-LEAD valida antes de Done** — nenhum asset vai para destino final sem aprovação
-4. **Nunca copiar GTA** — paleta, proporções e estilo devem ser distintamente originais
-5. **Paleta fechada** — apenas cores definidas em ASSET_GUIDELINES.md
-6. **Decisão de ferramenta vai para o Notion** — D-010 resolvida antes de qualquer geração
-7. **Som é fase posterior** — documentar necessidades, não implementar agora

@@ -1,0 +1,33 @@
+# Estado do projeto — 15/10/2026
+
+## Fonte de verdade
+
+`TASKS.md` contém IDs, status e evidências de entrega. O GDD define as regras de produto; o Blueprint define a ordem de implementação. Exemplos históricos não são código pronto. Em conflito, registrar a decisão e atualizar os documentos envolvidos antes de implementar.
+
+## Ponto de partida verificado
+
+Master d3384b1: monorepo, Docker, 47 modelos Prisma, migration inicial, seed, rotas de exemplo/saúde e página inicial. Não havia autenticação, missões executáveis ou interface jogável. O único teste era uma asserção constante. CI falhava na geração/importação do Prisma Client; build e Sonar eram pulados. Deploys eram placeholders. Não há comprovação de aprovação, staging ou sincronização do Notion.
+
+## Incremento atual: protótipo local fechado
+
+Ordem: reconciliar documentos → corrigir CI/testes → conta e sessão → personagem único → missão idle → coleta persistente e idempotente → UI integrada.
+
+Este incremento não equivale à conclusão integral de T-010 a T-018. Não habilita lançamento público: e-mail transacional, verificação de identidade, recuperação de senha, direitos do titular, WebSocket, inventário, pagamentos, arte e revisão externa continuam pendentes. O servidor deve recusar habilitar o protótipo em produção. O protótipo não coleta CPF: usa uma identidade sintética interna incompatível com cadastro público. Contas de teste devem ser descartadas antes de lançamento.
+
+## Decisões consolidadas
+
+- D-002 é custo/nível de guild; D-003 é vantagem premium do banco.
+- CPF: validação matemática não prova titularidade. BrasilAPI não é considerada integração validada; D-007 reaberta até prova de endpoint/contrato e finalidade. Para unicidade futura, usar identificador determinístico HMAC-SHA-256 com chave secreta fora do banco e normalização, com estratégia de rotação; salt aleatório por cadastro não resolve busca de duplicados.
+- Credenciais do protótipo: scrypt com salt aleatório para senha; JWT curto em memória; refresh aleatório em cookie HttpOnly com hash no banco, rotação e sessão única serializada por conta. Operações com cookie exigem Origin permitido.
+- Party: três contas = 30%; três personagens de duas contas = 20%; dois personagens de duas contas = 10%; uma conta = 0%.
+- Stamina: free 1/2,4h, teto 10; premium 1/1,2h, teto 20. Preservar frações de tempo.
+- Propina recusada: acréscimo de 50% da pena original. Débito, resultado e logs numa transação; sem delegado não inventar referência de personagem.
+- Buffs comuns de HP: 3–5%; incomuns exigem nível 20. Probabilidade de melhoria de 0,1% por nível permanece hipótese de design, não balanceamento validado.
+- Idle do protótipo: ciclos completos, limites 12h/24h, relógio do servidor, gold médio determinístico do intervalo da missão, EXP base, curva provisória `100 × nível²` de EXP acumulada para o próximo nível. Skills, bônus, RNG e drops ficam fora deste incremento.
+- Créditos e premium não são vendidos nem ativados pela interface do protótipo. Vantagens competitivas do GDD precisam de revisão antes de monetização.
+
+## Critérios de aceite do incremento
+
+Cadastro/login, rejeição de credenciais inválidas, sessão anterior inválida após novo login, rotação de refresh, logout, criação de um personagem, missão compatível com profissão/nível, coleta somente pelo dono. Coletas concorrentes não duplicam gold/EXP/logs; consultas frequentes preservam ciclos parciais; período acima do cap é descartado; troca de missão liquida a anterior atomicamente. Personagem preso não recebe progresso.
+
+Validação: testes reais via Fastify e PostgreSQL, lint, types, build e CI. Não declarar Sonar, revisão humana, staging ou Notion aprovados sem evidência externa.

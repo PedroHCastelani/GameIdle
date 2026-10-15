@@ -1,62 +1,65 @@
 # The Life
 
-MMORPG Idle de navegador com dualidade de facções, economia interdependente e progressão profunda.
+MMORPG idle de navegador em desenvolvimento. Esta branch entrega um **protótipo local fechado**: conta de teste, sessão única, personagem, missão idle e coleta offline persistente. Sem CPF real, pagamento, deploy público ou promessa de conformidade. Estado e limites: [docs/Estado_do_Projeto.md](docs/Estado_do_Projeto.md).
 
-## Setup Rápido
+## Executar localmente
 
-```bash
-# Pré-requisitos: Node.js 22, pnpm 9, Docker
+Requer Node 22.14+ e Docker. pnpm 10.12.1 é fixado no packageManager.
 
-git clone https://github.com/PedroHCastelani/GameIdle.git
-cd GameIdle
-pnpm install
-docker-compose up -d
-pnpm --filter @thelife/api db:migrate
-pnpm --filter @thelife/api db:seed
+1. Copie .env.example para .env na raiz.
+2. Gere uma chave aleatória de desenvolvimento e preencha JWT_SECRET (mínimo 32 caracteres):
+
+```sh
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+pnpm install --frozen-lockfile
+docker compose up -d
+pnpm db:generate
+pnpm db:migrate
+pnpm db:seed
 pnpm dev
 ```
 
-Frontend: http://localhost:3000  
-API: http://localhost:3001  
-Redis Commander: http://localhost:8081
+Interface: http://localhost:3000 · API: http://localhost:3333 · Liveness: /api/health/light · Disponibilidade DB/Redis: /api/ready.
 
-## Agentes Autônomos (Claude Code)
+Scripts Prisma carregam .env da raiz; variáveis já definidas no ambiente prevalecem. DATABASE_URL e DIRECT_URL precisam ser configuradas. Com PgBouncer, DIRECT_URL deve continuar apontando diretamente PostgreSQL. Não use contas reais. O modo LOCAL_PROTOTYPE=true recusa NODE_ENV=production e host de API fora de loopback. Não publique esta prévia.
 
-Este projeto é desenvolvido com agentes autônomos via Claude Code.
-Cada agente tem um perfil em `.claude/agents/` com escopo e regras definidas.
+Crie uma conta com e-mail fictício, escolha a profissão e inicie uma missão. Após um ciclo, colete gold/EXP. Recarregar a página recupera a sessão e coleta o intervalo pendente. Sair da conta não interrompe a missão. Cada conta tem somente um personagem nesta versão.
 
-**Regra obrigatória para todos os agentes:**
-Leia `docs/Blueprint.md` e `TASKS.md` antes de qualquer ação.
+## Validação
 
-| Agente | Arquivo | Escopo |
+```sh
+pnpm db:generate
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+```
+
+Para a suite de integração, configure DATABASE_URL e DIRECT_URL para um banco **descartável com nome terminado em _test**, aplique migration/seed e execute com RUN_DB_TESTS=true:
+
+```sh
+pnpm --filter @the-life/api test:coverage
+```
+
+No PowerShell, use $env:RUN_DB_TESTS='true'. Sem essa variável, pnpm test executa somente testes unitários/servidor e informa integração pulada. CI sempre exige integração. Testes adicionam registros fictícios no banco de teste; não executam limpeza destrutiva. Nunca aponte a suite a dados reais. Cobertura do núcleo é medida separadamente da interface e não significa cobertura de todo o produto.
+
+## API do incremento
+
+| Método | Endpoint | Comportamento |
 |---|---|---|
-| Product Owner | `.claude/agents/po.md` | Backlog, Notion, TASKS.md |
-| Tech Lead Produto | `.claude/agents/tl-produto.md` | Orquestração, revisão de PR |
-| Tech Lead Infra | `.claude/agents/tl-infra.md` | Deploy, segurança, LGPD |
-| Backend | `.claude/agents/backend.md` | API, motor de cálculo, jobs |
-| Frontend | `.claude/agents/frontend.md` | Next.js, UI, WebSocket |
-| Database | `.claude/agents/database.md` | Schema, migrations, seed |
-| QA | `.claude/agents/qa.md` | Testes, casos de borda |
-| DevOps | `.claude/agents/devops.md` | CI/CD, Docker, ambientes |
-| Segurança | `.claude/agents/security.md` | OWASP, LGPD, auditoria |
+| POST | /api/auth/register | E-mail/senha fictícios, cookie refresh e accessToken |
+| POST | /api/auth/login | Invalida sessões anteriores |
+| POST | /api/auth/refresh | Rotaciona refresh (cookie; Origin obrigatório) |
+| POST | /api/auth/logout | Encerra sessão atual |
+| GET | /api/game | Personagem e missões disponíveis do dono |
+| POST | /api/characters | name e profession: POLICE, THIEF ou DOCTOR |
+| POST | /api/characters/:id/mission | missionId; liquida missão anterior |
+| POST | /api/characters/:id/claim | Corpo vazio; coleta intervalo no servidor |
 
-## Documentação
+Rotas de jogo exigem Authorization: Bearer. Rotas de auth exigem Origin igual a WEB_ORIGIN. Gold/EXP são strings decimais no JSON; nunca números do cliente. Sessões usam banco como fonte de verdade. Nenhuma notificação WebSocket está incluída.
 
-Todos os documentos técnicos estão em `docs/`:
+## Documentação e acompanhamento
 
-| Documento | Descrição |
-|---|---|
-| `Blueprint.md` | Mapa de dependências, fases e critério de go-live |
-| `GDD_Completo.md` | Game Design Document completo |
-| `Schema_Banco_de_Dados.md` | Schema Prisma com todas as tabelas |
-| `Motor_de_Calculo.md` | Lógica de cálculo server-side em TypeScript |
-| `Sistema_Economico.md` | Ciclo econômico, duas moedas, torneiras e ralos |
-| `Seguranca_e_LGPD.md` | 4 camadas de segurança e conformidade LGPD |
-| `Agentes_Autonomos.md` | Perfis e prompts dos agentes de operação |
-| `Definition_of_Done.md` | Critérios de conclusão por tipo de task |
+[Tarefas](TASKS.md) · [Blueprint](docs/Blueprint.md) · [GDD](docs/GDD_Completo.md) · [Motor](docs/Motor_de_Calculo.md) · [Banco](docs/Schema_Banco_de_Dados.md) · [Segurança](docs/Seguranca_e_LGPD.md) · [CI](docs/CI_CD.md).
 
-## Status do Projeto
-
-**Fase atual:** Fase 0 — Fundação
-
-Acompanhe o progresso em `TASKS.md` e no board Kanban no Notion.
+Documentos originais substituídos foram preservados em docs/archive/2026-08, marcados como históricos e não normativos. A produção visual, inventário, skills, economia entre jogadores, PvP e monetização permanecem planejados. Notion e gates externos só são considerados aprovados mediante evidência.

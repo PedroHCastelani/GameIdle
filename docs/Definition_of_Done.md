@@ -1,6 +1,8 @@
 # ✅ Definition of Done — The Life
 **Versão:** 1.0  
-**Data:** Julho 2026
+**Revisão:** 15/10/2026
+
+Implementado, testado localmente, aprovado no CI, aprovado por review e publicado são estados distintos. Não marcar gates externos como concluídos sem evidência. O recorte local está em Estado_do_Projeto.md e não satisfaz o DoD de lançamento público.
 
 ---
 

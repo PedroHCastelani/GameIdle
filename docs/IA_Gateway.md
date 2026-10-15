@@ -141,7 +141,7 @@ export async function moderateContent(message: string): Promise<{ safe: boolean;
 
 ## Tasks Relacionadas
 
-- **T-011** — AG-07 Session Guardian (pode usar embeddings)
+- Sessões, autorização e economia não usam IA; são operações determinísticas.
 - **T-060** — AG-10 Content Moderator (moderação com IA)
 - **T-065+** — Sistema de NPCs com diálogos dinâmicos (Fase 2)
 - **T-080+** — Geração de assets visuais com IA

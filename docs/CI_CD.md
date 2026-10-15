@@ -1,37 +1,8 @@
-# CI/CD — The Life
+# CI/CD — estado real
+Revisão: 15/10/2026
 
-## Pipeline de CI (PR Check)
+CI Pipeline é o workflow único para PRs e pushes em master/staging. Usa Node 22 e a versão de pnpm do packageManager. Ordem: instalação congelada → geração Prisma explícita → migrations e seed em PostgreSQL de teste → lint → types → testes unitários e integração com cobertura → build. Cobertura mínima do núcleo: 80% linhas/funções/statements e 75% branches. LCOV é enviado ao job Sonar.
 
-O pipeline é executado automaticamente em:
-- Pull Requests para `master` ou `staging`
+SonarCloud exige SONAR_TOKEN e projeto externo configurado. Ausência de secret falha explicitamente; não equivale a gate aprovado. PR de fork sem secrets requer fluxo de revisão do mantenedor; nunca expor token a código não confiável. Exigir Validate e SonarCloud na proteção da branch é configuração externa a confirmar.
 
-### Jobs
-
-| Job | Descrição | Serviços |
-|-----|-----------|----------|
-| 🔍 Lint | ESLint em todo o código | - |
-| 🏷️ TypeCheck | TypeScript type checking | - |
-| 🧪 Test | Testes unitários e integração | PostgreSQL 16, Redis 7 |
-| 🏗️ Build | Build de todos os apps | - |
-| 📈 SonarCloud | Análise estática e Quality Gate | SonarCloud |
-
-### SonarCloud e Quality Gate
-
-O SonarCloud é obrigatório para Pull Requests e pushes em branches protegidas. O projeto usa `sonar-project.properties` na raiz como contrato de análise.
-
-Métricas mínimas para código novo:
-
-- 0 bugs novos.
-- 0 vulnerabilidades novas.
-- Quality Gate do SonarCloud em `PASSED`.
-- Duplicação em código novo dentro do limite configurado no SonarCloud.
-- Cobertura reportada para código novo quando houver testes com LCOV disponível.
-
-Pré-requisitos no GitHub:
-
-- Secret `SONAR_TOKEN` configurado no repositório.
-- Projeto `PedroHCastelani_GameIdle` vinculado à organização `pedro-castelani` no SonarCloud.
-- Branch protection exigindo o check `📈 SonarCloud` e o resumo do CI.
-
-### Fluxo de Trabalho
-
+Removidos workflow redundante PR Check e automerge por prefixo de branch que contornava revisão. Deploys não estão provisionados; workflows manuais falham explicitamente, sem criar tags nem simular sucesso. Notion e staging não foram validados nesta mudança.

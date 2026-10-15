@@ -1,7 +1,7 @@
 # 🎮 THE LIFE — Game Design Document Completo
 **Versão:** 0.5  
 **Data:** Julho 2026  
-**Status:** Em definição ativa
+**Status:** Design alvo; implementação e decisões vigentes em Estado_do_Projeto.md
 
 ---
 
@@ -745,61 +745,9 @@ Policiais e Ladrões **não podem estar na mesma guild**. Médicos podem estar e
 
 ## 19. SEGURANÇA, LGPD E SESSÃO ÚNICA
 
-### Dados Coletados e Base Legal (LGPD)
+Cadastro público e privacidade ainda não implementados. O protótipo local não coleta CPF e usa contas fictícias. Ver [Seguranca_e_LGPD.md](Seguranca_e_LGPD.md) para o contrato vigente e pendências antes de lançamento.
 
-| Dado | Finalidade | Base Legal | Retenção |
-|---|---|---|---|
-| E-mail | Autenticação, recuperação | Legítimo interesse / Contrato | Enquanto conta ativa + 90 dias |
-| CPF (hash) | Unicidade de conta, prevenção de fraude | Legítimo interesse | Enquanto conta ativa + 5 anos |
-| IP de login | Segurança, anti-fraude | Legítimo interesse | 90 dias |
-| User-agent | Segurança | Legítimo interesse | 90 dias |
-| Progresso de jogo | Funcionalidade do serviço | Contrato | Enquanto conta ativa |
-| Logs econômicos | Auditoria e integridade | Obrigação legal | 5 anos (imutável) |
-
-**O CPF nunca é armazenado em texto plano** — apenas seu hash SHA-256 com salt é guardado, suficiente para verificar unicidade sem possibilidade de reverter ao número original.
-
-### Direitos do Titular (LGPD Art. 18)
-- **Acesso:** `GET /api/account/my-data` — JSON com todos os dados do titular
-- **Correção:** e-mail pode ser alterado via fluxo verificado
-- **Exclusão:** deleta dados pessoais, anonimiza logs econômicos (preserva integridade da auditoria)
-- **Portabilidade:** export em JSON estruturado
-- **Revogação de consentimento:** encerra conta e agenda exclusão em 30 dias
-
-### Sessão Única por Conta
-Ao fazer login em qualquer dispositivo, **todos os tokens de sessão anteriores são invalidados imediatamente**. O dispositivo anterior recebe uma notificação de encerramento de sessão via WebSocket antes de ser desconectado.
-
-```typescript
-async function loginAndInvalidatePreviousSessions(userId: string) {
-  // Buscar todas as sessões ativas
-  const existingSessions = await db.session.findMany({ where: { userId } });
-
-  // Notificar dispositivos conectados via WebSocket antes de invalidar
-  for (const session of existingSessions) {
-    await redis.publish(`session:${session.id}:terminate`,
-      JSON.stringify({ reason: 'NEW_LOGIN', message: 'Sessão encerrada — novo login detectado' })
-    );
-  }
-
-  // Invalidar todas as sessões existentes
-  await db.session.deleteMany({ where: { userId } });
-  await redis.del(existingSessions.map(s => `session:${s.id}`));
-
-  // Criar nova sessão
-  return createNewSession(userId);
-}
-```
-
-### Verificação de CPF
-- API de validação de CPF na Receita Federal (via BrasilAPI ou similar)
-- CPF verificado na criação da conta e nunca reutilizado
-- CPF banido (conta banida) não pode criar nova conta
-
-### Proteção de Dados Sensíveis
-- Senhas: bcrypt com cost 12+
-- CPF: SHA-256 com salt único por conta
-- HTTPS obrigatório em todos os endpoints
-- Headers de segurança: HSTS, CSP, X-Frame-Options, Referrer-Policy
-- Dados de pagamento: nunca armazenados — processados diretamente pelo gateway (PCI-DSS)
+Requisitos futuros: verificação de e-mail, identidade/unicidade validada, sessão única, proteção contra automação e fluxos de exportação/correção/exclusão. Prazos de retenção e bases legais exigem revisão antes de coleta real. Não reutilizar os exemplos antigos de hash com salt aleatório ou de invalidação por sleep.
 
 ---
 
@@ -860,10 +808,10 @@ O resultado é documentado em `docs/ASSET_GUIDELINES.md` — criado pelo DEV-ASS
 ## 23. ROADMAP
 
 ### Fase 0 — Fundação (2–3 semanas)
-- [ ] Monorepo (Next.js + Fastify + Prisma)
-- [ ] Docker local (PostgreSQL + Redis)
+- [x] Monorepo (Next.js + Fastify + Prisma)
+- [x] Docker local (PostgreSQL + Redis)
 - [ ] Auth com CPF único, sessão única e proteção de novatos (7 dias)
-- [ ] Schema de banco completo
+- [x] Schema inicial versionado (funcionalidades correspondentes ainda em desenvolvimento)
 - [ ] Sistema de duas moedas
 
 ### Fase 1 — MVP Core (6–8 semanas)
@@ -910,10 +858,10 @@ O resultado é documentado em `docs/ASSET_GUIDELINES.md` — criado pelo DEV-ASS
 **D-001: Valores de custo dos slots de personagem**
 Depende de calibragem da curva de progressão. O valor em Gold deve ser alto mas alcançável — requer simulação após Fase 1 funcional.
 
-**D-002: Vantagem premium no banco**
+**D-003: Vantagem premium no banco**
 Candidatos: taxa reduzida na interface, limite maior de saldo, proteção de gold contra apreensão.
 
-**D-003: Nível mínimo e custo de criação de guild**
+**D-002: Nível mínimo e custo de criação de guild**
 Depende de calibragem econômica pós-Fase 1.
 
 ### Média Prioridade
@@ -928,4 +876,4 @@ Custo de missões NPC, preço base de stimulante por nível, taxas de propina �
 Cooldown deve ser sempre maior que a duração máxima do buff. Valores exatos na calibragem.
 
 **D-007: Serviço de validação de CPF**
-BrasilAPI (gratuita, sem garantia de SLA) ou serviço pago com SLA (Serpro, DataValid). Impacta custo operacional e confiabilidade do registro.
+Decisão reaberta: comprovar provedor, endpoint, acesso e finalidade. BrasilAPI não é uma integração de CPF validada. Impacta custo operacional e confiabilidade do registro.
