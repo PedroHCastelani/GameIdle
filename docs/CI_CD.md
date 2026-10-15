@@ -1,37 +1,15 @@
-# CI/CD — The Life
+# CI/CD — estado real
+Revisão: 15/10/2026
 
-## Pipeline de CI (PR Check)
+CI Pipeline é o workflow único para PRs e pushes em master/staging. Usa Node 22 e a versão de pnpm do packageManager. Ordem: instalação congelada → geração Prisma explícita → migrations e seed em PostgreSQL de teste → lint → types → testes unitários e integração com cobertura → build. Cobertura mínima do núcleo: 80% linhas/funções/statements e 75% branches. LCOV é enviado ao job Sonar.
 
-O pipeline é executado automaticamente em:
-- Pull Requests para `master` ou `staging`
+SonarCloud exige SONAR_TOKEN e projeto externo configurado. Ausência de secret falha explicitamente; não equivale a gate aprovado. PR de fork sem secrets requer fluxo de revisão do mantenedor; nunca expor token a código não confiável. Exigir Validate e SonarCloud na proteção da branch é configuração externa a confirmar.
 
-### Jobs
+Removidos workflow redundante PR Check e automerge por prefixo de branch que contornava revisão. Deploys não estão provisionados; workflows manuais falham explicitamente, sem criar tags nem simular sucesso. Notion e staging não foram validados nesta mudança.
 
-| Job | Descrição | Serviços |
-|-----|-----------|----------|
-| 🔍 Lint | ESLint em todo o código | - |
-| 🏷️ TypeCheck | TypeScript type checking | - |
-| 🧪 Test | Testes unitários e integração | PostgreSQL 16, Redis 7 |
-| 🏗️ Build | Build de todos os apps | - |
-| 📈 SonarCloud | Análise estática e Quality Gate | SonarCloud |
+## Configuração Sonar e cobertura (R-004)
+Em 15/10/2026, SONAR_TOKEN foi configurado pelo mantenedor e a execução via Actions conseguiu autenticar e importar a análise. O primeiro gate com cobertura real apontou 74,8%, abaixo dos 80% exigidos. Esse resultado substitui a aprovação anterior sem cobertura da análise automática.
 
-### SonarCloud e Quality Gate
+R-004 adiciona testes de interface e cliente HTTP, amplia a instrumentação API para servidor/rotas e publica ambos os LCOV no mesmo artifact preservando apps/api e apps/web. O limite do gate não foi reduzido. A análise automática deve ficar desligada quando a análise via CI estiver ativa. O segredo é mantido exclusivamente em GitHub Actions Secrets; nunca em código ou documentação.
 
-O SonarCloud é obrigatório para Pull Requests e pushes em branches protegidas. O projeto usa `sonar-project.properties` na raiz como contrato de análise.
-
-Métricas mínimas para código novo:
-
-- 0 bugs novos.
-- 0 vulnerabilidades novas.
-- Quality Gate do SonarCloud em `PASSED`.
-- Duplicação em código novo dentro do limite configurado no SonarCloud.
-- Cobertura reportada para código novo quando houver testes com LCOV disponível.
-
-Pré-requisitos no GitHub:
-
-- Secret `SONAR_TOKEN` configurado no repositório.
-- Projeto `PedroHCastelani_GameIdle` vinculado à organização `pedro-castelani` no SonarCloud.
-- Branch protection exigindo o check `📈 SonarCloud` e o resumo do CI.
-
-### Fluxo de Trabalho
-
+Resultado confirmado em 49e3380: Validate e SonarCloud aprovados; 96,5% de cobertura no código novo. Execução e limites registrados em Validacao_2026-10-15.md. Checks futuros devem ser observados para o respectivo commit.

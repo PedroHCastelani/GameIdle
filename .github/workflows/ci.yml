@@ -1,214 +1,84 @@
 name: CI Pipeline
-
 on:
   push:
-    branches: [master, main, staging]
+    branches: [master, staging]
   pull_request:
-    branches: [master, main, staging]
-
+    branches: [master, staging]
+permissions:
+  contents: read
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
-
-env:
-  NODE_VERSION: '22'
-  PNPM_VERSION: '10'
-  SONAR_PROJECT_KEY: PedroHCastelani_GameIdle
-  SONAR_ORGANIZATION: pedro-castelani
-
 jobs:
-  # ============================================================
-  # JOB 1: LINT
-  # ============================================================
-  lint:
-    name: 🔍 Lint
+  validate:
+    name: Validate
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-    
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 📦 Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
-      - name: 🟢 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: 📥 Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: 🔍 Run ESLint
-        run: pnpm lint
-
-      - name: ✅ Lint passed
-        run: echo "✅ Lint check passed!"
-
-  # ============================================================
-  # JOB 2: TYPECHECK
-  # ============================================================
-  typecheck:
-    name: 🏷️ TypeCheck
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 📦 Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
-      - name: 🟢 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: 📥 Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: 🏷️ Run TypeScript type check
-        run: pnpm typecheck
-
-      - name: ✅ TypeCheck passed
-        run: echo "✅ TypeCheck passed!"
-
-  # ============================================================
-  # JOB 3: TEST
-  # ============================================================
-  test:
-    name: 🧪 Test
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 📦 Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
-      - name: 🟢 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: 📥 Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: 🧪 Run tests
-        run: pnpm test
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16-alpine
         env:
-          NODE_ENV: test
-          DATABASE_URL: postgresql://test:test@localhost:5432/test
-          REDIS_URL: redis://localhost:6379
-
-      - name: ✅ Tests passed
-        run: echo "✅ All tests passed!"
-
-  # ============================================================
-  # JOB 4: BUILD
-  # ============================================================
-  build:
-    name: 🏗️ Build
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: [lint, typecheck, test]
-    
+          POSTGRES_USER: gameidle_test
+          POSTGRES_PASSWORD: local_test_only
+          POSTGRES_DB: gameidle_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U gameidle_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://gameidle_test:local_test_only@localhost:5432/gameidle_test
+      DIRECT_URL: postgresql://gameidle_test:local_test_only@localhost:5432/gameidle_test
+      REDIS_URL: redis://localhost:6379
+      RUN_DB_TESTS: 'true'
     steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 📦 Setup pnpm
-        uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+      - uses: actions/setup-node@v4
         with:
-          version: ${{ env.PNPM_VERSION }}
-
-      - name: 🟢 Setup Node.js
-        uses: actions/setup-node@v4
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:generate
+      - run: pnpm db:migrate
+      - run: pnpm db:seed
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm --filter @the-life/api test:coverage
+      - run: pnpm --filter @the-life/web test:coverage
+      - run: pnpm build
+      - uses: actions/upload-artifact@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: 📥 Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: 🏗️ Build all apps
-        run: pnpm build
-        env:
-          NODE_ENV: production
-
-      - name: ✅ Build passed
-        run: echo "✅ Build completed successfully!"
-
-  # ============================================================
-  # JOB 5: SONARCLOUD
-  # ============================================================
+          name: api-coverage
+          path: |
+            apps/api/coverage/lcov.info
+            apps/web/coverage/lcov.info
+          if-no-files-found: error
   sonarcloud:
-    name: 📈 SonarCloud
+    name: SonarCloud
+    needs: validate
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [lint, typecheck, test, build]
-
     steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: 📈 Run SonarCloud analysis
-        uses: SonarSource/sonarqube-scan-action@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: api-coverage
+          path: apps
+      - name: Require Sonar configuration
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ${{ env.SONAR_PROJECT_KEY }}
-          SONAR_ORGANIZATION: ${{ env.SONAR_ORGANIZATION }}
-
-      - name: 🚦 Check SonarCloud Quality Gate
-        uses: SonarSource/sonarqube-quality-gate-action@v1
-        timeout-minutes: 5
+        run: test -n "$SONAR_TOKEN"
+      - uses: SonarSource/sonarqube-scan-action@2f77a1ec69fb1d595b06f35ab27e97605bdef703 # v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  # ============================================================
-  # JOB 6: SUMMARY
-  # ============================================================
-  summary:
-    name: 📊 CI Summary
-    runs-on: ubuntu-latest
-    needs: [lint, typecheck, test, build, sonarcloud]
-    if: always()
-    
-    steps:
-      - name: 📊 Check all jobs status
-        run: |
-          echo "=========================================="
-          echo "📊 CI Pipeline Summary"
-          echo "=========================================="
-          echo "Lint: ${{ needs.lint.result }}"
-          echo "TypeCheck: ${{ needs.typecheck.result }}"
-          echo "Test: ${{ needs.test.result }}"
-          echo "Build: ${{ needs.build.result }}"
-          echo "SonarCloud: ${{ needs.sonarcloud.result }}"
-          echo "=========================================="
-          
-          if [[ "${{ needs.lint.result }}" != "success" ]] || \
-             [[ "${{ needs.typecheck.result }}" != "success" ]] || \
-             [[ "${{ needs.test.result }}" != "success" ]] || \
-             [[ "${{ needs.build.result }}" != "success" ]] || \
-             [[ "${{ needs.sonarcloud.result }}" != "success" ]]; then
-            echo "❌ CI Pipeline FAILED"
-            exit 1
-          fi
-          
-          echo "✅ CI Pipeline PASSED"
+      - uses: SonarSource/sonarqube-quality-gate-action@7a5fffe8e523c40e0c740b6bc2712ab503e52efa # v1
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

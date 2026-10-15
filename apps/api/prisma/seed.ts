@@ -1,4 +1,5 @@
-import { PrismaClient, Profession, Alignment, Difficulty, MissionType, SkillCategory, BuffType, BuffTier } from '@prisma/client';
+import { PrismaClient, Profession, MissionType, SkillCategory, BuffType, BuffTier } from '@prisma/client';
+import { seedCampaign } from '../src/modules/game/campaign-seed.js';
 
 const prisma = new PrismaClient();
 
@@ -95,8 +96,8 @@ async function main() {
       description: 'Aumenta a Vida Máxima do paciente.',
       type: BuffType.HP_MAX_PERCENT,
       tier: BuffTier.COMMON,
-      valueMin: 10.0,
-      valueMax: 15.0,
+      valueMin: 3.0,
+      valueMax: 5.0,
       durationHours: 4,
       minDoctorLevel: 1,
     },
@@ -120,7 +121,7 @@ async function main() {
       valueMin: 15.0,
       valueMax: 25.0,
       durationHours: 6,
-      minDoctorLevel: 15,
+      minDoctorLevel: 20,
     },
   ];
 
@@ -183,7 +184,7 @@ async function main() {
       description: 'Garantir a segurança dos estudantes e do tráfego nas proximidades da escola.',
       profession: Profession.POLICE,
       minLevel: 1,
-      maxLevel: 10,
+      maxLevel: null,
       type: MissionType.IDLE,
       durationBase: 60,
       goldMin: 20,
@@ -201,7 +202,7 @@ async function main() {
       description: 'Procurar pistas de atividades ilícitas no beco atrás da boate.',
       profession: Profession.POLICE,
       minLevel: 10,
-      maxLevel: 25,
+      maxLevel: null,
       type: MissionType.IDLE,
       durationBase: 120,
       goldMin: 80,
@@ -219,6 +220,7 @@ async function main() {
       description: 'Liderar uma incursão tática para limpar um armazém tomado pela criminalidade.',
       profession: Profession.POLICE,
       minLevel: 20,
+      maxLevel: null,
       type: MissionType.STAGE,
       durationBase: 300,
       goldMin: 300,
@@ -236,6 +238,7 @@ async function main() {
       description: 'Garantir a chegada segura de um carro-forte até a tesouraria central.',
       profession: Profession.POLICE,
       minLevel: 30,
+      maxLevel: null,
       type: MissionType.IDLE,
       durationBase: 600,
       goldMin: 500,
@@ -253,6 +256,7 @@ async function main() {
       description: 'Trabalho de inteligência sob disfarce para desmantelar cartéis econômicos.',
       profession: Profession.POLICE,
       minLevel: 50,
+      maxLevel: null,
       type: MissionType.IDLE,
       durationBase: 1200,
       goldMin: 1200,
@@ -272,7 +276,7 @@ async function main() {
       description: 'Aproveitar a distração de compradores para subtrair pequenas carteiras.',
       profession: Profession.THIEF,
       minLevel: 1,
-      maxLevel: 10,
+      maxLevel: null,
       type: MissionType.IDLE,
       durationBase: 45,
       goldMin: 25,
@@ -290,7 +294,7 @@ async function main() {
       description: 'Entrar silenciosamente em uma casa vazia e roubar eletrodomésticos leves.',
       profession: Profession.THIEF,
       minLevel: 10,
-      maxLevel: 25,
+      maxLevel: null,
       type: MissionType.IDLE,
       durationBase: 150,
       goldMin: 120,
@@ -308,6 +312,7 @@ async function main() {
       description: 'Quebrar vitrines e desarmar alarmes táticos para roubar diamantes e ouro.',
       profession: Profession.THIEF,
       minLevel: 25,
+      maxLevel: null,
       type: MissionType.STAGE,
       durationBase: 360,
       goldMin: 600,
@@ -325,6 +330,7 @@ async function main() {
       description: 'Perfurar o cofre de um banco de médio porte sob a escuridão da noite.',
       profession: Profession.THIEF,
       minLevel: 40,
+      maxLevel: null,
       type: MissionType.STAGE,
       durationBase: 720,
       goldMin: 1500,
@@ -342,6 +348,7 @@ async function main() {
       description: 'Subtrair chips e equipamentos eletrônicos de um contêiner no porto.',
       profession: Profession.THIEF,
       minLevel: 60,
+      maxLevel: null,
       type: MissionType.IDLE,
       durationBase: 1500,
       goldMin: 2500,
@@ -361,7 +368,7 @@ async function main() {
       description: 'Atender resfriados, alergias e pequenas contusões no posto local.',
       profession: Profession.DOCTOR,
       minLevel: 1,
-      maxLevel: 12,
+      maxLevel: null,
       type: MissionType.IDLE,
       durationBase: 60,
       goldMin: 30,
@@ -379,7 +386,7 @@ async function main() {
       description: 'Trabalho sob pressão no pronto-socorro para estabilizar pacientes críticos.',
       profession: Profession.DOCTOR,
       minLevel: 15,
-      maxLevel: 35,
+      maxLevel: null,
       type: MissionType.IDLE,
       durationBase: 180,
       goldMin: 150,
@@ -397,6 +404,7 @@ async function main() {
       description: 'Atender feridos no meio de tiroteios e acidentes em vias expressas.',
       profession: Profession.DOCTOR,
       minLevel: 30,
+      maxLevel: null,
       type: MissionType.IDLE,
       durationBase: 480,
       goldMin: 450,
@@ -414,6 +422,7 @@ async function main() {
       description: 'Isolar compostos químicos em laboratório para produzir remédios potentes.',
       profession: Profession.DOCTOR,
       minLevel: 50,
+      maxLevel: null,
       type: MissionType.IDLE,
       durationBase: 900,
       goldMin: 1000,
@@ -431,6 +440,7 @@ async function main() {
       description: 'Atendimento estético de alta complexidade para celebridades e oficiais influentes.',
       profession: Profession.DOCTOR,
       minLevel: 75,
+      maxLevel: null,
       type: MissionType.IDLE,
       durationBase: 1800,
       goldMin: 3000,
@@ -472,6 +482,7 @@ async function main() {
   }
 
   console.log('✅ Database seeded successfully!');
+  await seedCampaign(prisma);
 }
 
 main()

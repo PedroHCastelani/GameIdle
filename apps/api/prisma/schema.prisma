@@ -18,8 +18,8 @@ model User {
   emailVerified   Boolean   @default(false)
   verifyToken     String?
   passwordHash    String
-  cpfHash         String    @unique  // SHA-256 com salt — nunca texto plano
-  cpfSalt         String            // salt único por conta
+  cpfHash         String    @unique  // Legado: identidade sintética prototype:UUID no protótipo; nunca CPF real
+  cpfSalt         String            // NOT_A_CPF no protótipo
   accountSide     AccountSide?      // definido ao criar o primeiro personagem
   pvpProtected    Boolean   @default(true)   // false após 7 dias
   isBanned        Boolean   @default(false)
@@ -37,6 +37,7 @@ model User {
 
   characters      Character[]
   sessions        Session[]
+  accountTokens   AccountToken[]
   transactions    PremiumTransaction[]
   slotPurchases   SlotPurchase[]
   friendships     Friendship[]  @relation("UserFriendships")
@@ -57,7 +58,7 @@ enum AccountSide {
 model Session {
   id           String   @id @default(cuid())
   userId       String
-  refreshToken String   @unique
+  refreshToken String   @unique // SHA-256 do token aleatório, nunca token bruto
   expiresAt    DateTime
   ipAddress    String?
   userAgent    String?
@@ -68,6 +69,24 @@ model Session {
 
   @@index([userId])
   @@map("sessions")
+}
+
+enum AccountTokenPurpose {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+
+model AccountToken {
+  id        String @id @default(cuid())
+  userId    String
+  purpose   AccountTokenPurpose
+  tokenHash String @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, purpose])
+  @@map("account_tokens")
 }
 
 model UserPremium {
@@ -161,6 +180,8 @@ model Character {
   attrPrecision     Int       @default(10)
   attrInvestigation Int       @default(10)
   attributePoints   Int       @default(0)
+  campaignChapter   Int       @default(0)
+  campaignCycles    Int       @default(0)
 
   // Alinhamento (médico no MVP; todos na Fase 2)
   alignment             Alignment  @default(NEUTRAL)
@@ -440,6 +461,7 @@ enum MissionType {
 
 model StageAttempt {
   id             String       @id @default(cuid())
+  requestKey     String?      @unique
   characterId    String
   missionId      String
   partyId        String?
@@ -1171,6 +1193,10 @@ model EconomyLog {
 }
 
 enum EconomyLogType {
+  NPC_PURCHASE
+  NPC_SALE
+  EQUIPMENT_CHANGE
+  ITEM_DROP
   MISSION_REWARD
   STAGE_REWARD
   STAGE_PENALTY

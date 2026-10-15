@@ -1,30 +1,12 @@
-name: Deploy Staging
-
-on:
-  push:
-    branches: [staging]
-
+name: Deploy Staging (not configured)
+on: workflow_dispatch
+permissions:
+  contents: read
 jobs:
-  deploy:
-    name: Deploy to Staging
+  not-configured:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v3
-        with: { version: 9 }
-
-      - uses: actions/setup-node@v4
-        with: { node-version: '22', cache: 'pnpm' }
-
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm test --run
-      - run: pnpm build
-
-      # Deploy configurar de acordo com plataforma escolhida (Railway / Fly.io)
-      - name: Deploy to staging
-        run: echo "Configurar deploy aqui (Railway CLI / Fly CLI)"
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      - name: Deployment unavailable
+        run: |
+          echo 'Deployment is not provisioned. Configure target, review gates and smoke tests first.'
+          exit 1

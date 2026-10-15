@@ -21,6 +21,7 @@ out/
 coverage/
 
 # Logs
+.local-mail/
 *.log
 npm-debug.log*
 pnpm-debug.log*

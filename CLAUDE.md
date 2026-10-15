@@ -19,8 +19,8 @@ Todo agente, em toda sessão, antes de escrever qualquer código:
 1. Leia `docs/Blueprint.md`
 2. Leia `TASKS.md` na raiz
 3. Identifique a task que deve executar
-4. Confirme que todas as dependências estão com status DONE no TASKS.md
-   - Se não estiverem: marque a task como BLOQUEADO e pare
+4. Confirme dependências do incremento vigente em docs/Estado_do_Projeto.md e TASKS.md
+   - Registre bloqueios reais; tarefas futuras fora do recorte não impedem protótipo local autorizado.
 5. Confirme que nenhum arquivo que você vai tocar está em "Arquivos em uso" por outro agente
    - Se estiver: reporte ao Tech Lead e pare
 6. Atualize TASKS.md: status = IN_PROGRESS, liste os arquivos que serão modificados
@@ -70,7 +70,7 @@ Não há exceção para esta regra.
 ## Regras Globais de Código
 
 1. Zero lógica de jogo no frontend — cliente apenas renderiza
-2. Toda rota de API precisa de: validação Zod + middleware JWT + rate limiting
+2. Toda rota de API precisa de: validação Zod + autenticação quando protegida + rate limiting
 3. Transação atômica (db.$transaction) sempre que múltiplas tabelas são afetadas
 4. Todo movimento de gold/créditos gera INSERT em economy_logs
 5. CPF nunca em texto plano, nunca em logs

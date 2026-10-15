@@ -1,5 +1,7 @@
 # 💰 Sistema Econômico — The Life
-**Versão:** 0.5
+**Versão:** 0.5 — design alvo, sem economia pública implementada
+
+Incremento local usa somente recompensas de missão e log atômico. Taxas, mercados, créditos e reguladores automáticos permanecem planejados. Vantagens premium exigem revisão de equilíbrio; não tratar como apenas conveniência.
 
 ---
 

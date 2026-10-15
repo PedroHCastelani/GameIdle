@@ -1,62 +1,92 @@
 # The Life
 
-MMORPG Idle de navegador com dualidade de facções, economia interdependente e progressão profunda.
+MMORPG idle de navegador em desenvolvimento. Esta branch entrega um **protótipo local fechado**: conta de teste, sessão única, três profissões, missões idle, inventário/equipamentos e campanha solo de três capítulos com progresso persistente. Sem CPF real, pagamento, deploy público ou promessa de conformidade. Estado e limites: [docs/Estado_do_Projeto.md](docs/Estado_do_Projeto.md).
 
-## Setup Rápido
+## Executar localmente
 
-```bash
-# Pré-requisitos: Node.js 22, pnpm 9, Docker
+Requer Node 22.14+ e Docker. pnpm 10.12.1 é fixado no packageManager.
 
-git clone https://github.com/PedroHCastelani/GameIdle.git
-cd GameIdle
-pnpm install
-docker-compose up -d
-pnpm --filter @thelife/api db:migrate
-pnpm --filter @thelife/api db:seed
+1. Copie .env.example para .env na raiz.
+2. Gere uma chave aleatória de desenvolvimento e preencha JWT_SECRET (mínimo 32 caracteres):
+
+```sh
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+pnpm install --frozen-lockfile
+docker compose up -d
+pnpm db:generate
+pnpm db:migrate
+pnpm db:seed
 pnpm dev
 ```
 
-Frontend: http://localhost:3000  
-API: http://localhost:3001  
-Redis Commander: http://localhost:8081
+Interface: http://localhost:3000 · API: http://localhost:3333 · Liveness: /api/health/light · Disponibilidade DB/Redis: /api/ready.
 
-## Agentes Autônomos (Claude Code)
+Scripts Prisma carregam .env da raiz; variáveis já definidas no ambiente prevalecem. DATABASE_URL e DIRECT_URL precisam ser configuradas. Com PgBouncer, DIRECT_URL deve continuar apontando diretamente PostgreSQL. Não use contas reais. O modo LOCAL_PROTOTYPE=true recusa NODE_ENV=production e host de API fora de loopback. Não publique esta prévia.
 
-Este projeto é desenvolvido com agentes autônomos via Claude Code.
-Cada agente tem um perfil em `.claude/agents/` com escopo e regras definidas.
+Crie uma conta com e-mail fictício, escolha a profissão e inicie uma missão. Após um ciclo, colete gold/EXP. Recarregar a página recupera a sessão e coleta o intervalo pendente. Sair da conta não interrompe a missão. Cada conta tem somente um personagem nesta versão.
 
-**Regra obrigatória para todos os agentes:**
-Leia `docs/Blueprint.md` e `TASKS.md` antes de qualquer ação.
+## Validação
 
-| Agente | Arquivo | Escopo |
+```sh
+pnpm db:generate
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+```
+
+Para a suite de integração, configure DATABASE_URL e DIRECT_URL para um banco **descartável com nome terminado em _test**, aplique migration/seed e execute com RUN_DB_TESTS=true:
+
+```sh
+pnpm --filter @the-life/api test:coverage
+```
+
+No PowerShell, use $env:RUN_DB_TESTS='true'. Sem essa variável, pnpm test executa somente testes unitários/servidor e informa integração pulada. CI sempre exige integração. Testes adicionam registros fictícios no banco de teste; não executam limpeza destrutiva. Nunca aponte a suite a dados reais. Cobertura do núcleo é medida separadamente da interface e não significa cobertura de todo o produto.
+
+## API do incremento
+
+| Método | Endpoint | Comportamento |
 |---|---|---|
-| Product Owner | `.claude/agents/po.md` | Backlog, Notion, TASKS.md |
-| Tech Lead Produto | `.claude/agents/tl-produto.md` | Orquestração, revisão de PR |
-| Tech Lead Infra | `.claude/agents/tl-infra.md` | Deploy, segurança, LGPD |
-| Backend | `.claude/agents/backend.md` | API, motor de cálculo, jobs |
-| Frontend | `.claude/agents/frontend.md` | Next.js, UI, WebSocket |
-| Database | `.claude/agents/database.md` | Schema, migrations, seed |
-| QA | `.claude/agents/qa.md` | Testes, casos de borda |
-| DevOps | `.claude/agents/devops.md` | CI/CD, Docker, ambientes |
-| Segurança | `.claude/agents/security.md` | OWASP, LGPD, auditoria |
+| POST | /api/auth/register | E-mail/senha fictícios, cookie refresh e accessToken |
+| POST | /api/auth/login | Invalida sessões anteriores |
+| POST | /api/auth/refresh | Rotaciona refresh (cookie; Origin obrigatório) |
+| POST | /api/auth/logout | Encerra sessão atual |
+| GET | /api/game | Personagem e missões disponíveis do dono |
+| POST | /api/characters | name e profession: POLICE, THIEF ou DOCTOR |
+| POST | /api/characters/:id/mission | missionId; liquida missão anterior |
+| POST | /api/characters/:id/claim | Corpo vazio; coleta intervalo no servidor |
 
-## Documentação
+Rotas de jogo exigem Authorization: Bearer. Rotas de auth exigem Origin igual a WEB_ORIGIN. Gold/EXP são strings decimais no JSON; nunca números do cliente. Sessões usam banco como fonte de verdade. Nenhuma notificação WebSocket está incluída.
 
-Todos os documentos técnicos estão em `docs/`:
+## Documentação e acompanhamento
 
-| Documento | Descrição |
-|---|---|
-| `Blueprint.md` | Mapa de dependências, fases e critério de go-live |
-| `GDD_Completo.md` | Game Design Document completo |
-| `Schema_Banco_de_Dados.md` | Schema Prisma com todas as tabelas |
-| `Motor_de_Calculo.md` | Lógica de cálculo server-side em TypeScript |
-| `Sistema_Economico.md` | Ciclo econômico, duas moedas, torneiras e ralos |
-| `Seguranca_e_LGPD.md` | 4 camadas de segurança e conformidade LGPD |
-| `Agentes_Autonomos.md` | Perfis e prompts dos agentes de operação |
-| `Definition_of_Done.md` | Critérios de conclusão por tipo de task |
+[Tarefas](TASKS.md) · [Blueprint](docs/Blueprint.md) · [GDD](docs/GDD_Completo.md) · [Motor](docs/Motor_de_Calculo.md) · [Banco](docs/Schema_Banco_de_Dados.md) · [Segurança](docs/Seguranca_e_LGPD.md) · [CI](docs/CI_CD.md).
 
-## Status do Projeto
+Documentos originais substituídos foram preservados em docs/archive/2026-08, marcados como históricos e não normativos. Produção visual final, talentos completos, economia entre jogadores, PvP e monetização permanecem planejados. Inventário e prática de carreira têm implementação simplificada local. Notion e gates externos só são considerados aprovados mediante evidência.
+## Confirmação e recuperação na prévia local
 
-**Fase atual:** Fase 0 — Fundação
+O painel **Segurança da conta** permite solicitar confirmação de e-mail e redefinir senha. Após solicitar uma mensagem, abra o JSON mais recente destinado ao seu e-mail fictício na pasta `.local-mail/` da raiz do repositório e copie o campo `code` para o formulário correspondente. Essa pasta é local, ignorada pelo Git e não é servida pela API. Nenhum e-mail é enviado pela internet.
 
-Acompanhe o progresso em `TASKS.md` e no board Kanban no Notion.
+Confirmação expira em 24 horas; recuperação em 30 minutos. Aguarde 60 segundos para reenviar. Reenvio substitui o código anterior. Após redefinir a senha, entre novamente: as sessões anteriores são encerradas. Execute `pnpm db:migrate` antes de iniciar esta versão para criar `account_tokens`.
+
+Rotas adicionais: `GET /api/auth/account`, `POST /api/auth/email/request`, `POST /api/auth/email/confirm` (`code`), `POST /api/auth/password/request` (`email`) e `POST /api/auth/password/reset` (`code`, `password`). Confirmação solicitada exige login; todos os POST exigem o Origin configurado. Verificação de e-mail ainda não impede o acesso ao jogo local. Provedor real e liberação pública permanecem pendentes.
+
+Teste a interface com `pnpm --filter @the-life/web test:coverage`. O CI publica cobertura de API e interface para o SonarCloud.
+
+## Jogar o MVP local
+
+Após migration e seed, escolha uma das três profissões. Inicie a primeira missão marcada CAMPANHA, colete ciclos de 10 segundos e compre/equipe a ferramenta e o colete nas abas Loja e Inventário. O painel Jornada mostra o próximo nível/poder necessário. Complete uma operação, equipe sua recompensa e avance para as missões liberadas. Termine os três capítulos para ver o desfecho da profissão. Missões EXTRA preservam o conteúdo antigo e rendem apenas gold/EXP.
+
+As operações custam 1 stamina; poder insuficiente causa falha, informada antes de confirmar. Equipamentos e prática aumentam o poder. Suprimentos recebidos a cada cinco ciclos podem ser vendidos. Recarregar recupera a sessão e o progresso; a conclusão permanece salva.
+
+Rotas autenticadas adicionais: POST `/api/characters/:id/buy` (`templateId`), `/item` (`itemId`, `action`: equip/unequip/sell) e `/challenge` (`chapter`, `requestId` UUID). O servidor valida propriedade, saldo, nível e repetição. GET `/api/game` inclui campanha, inventário, loja, histórico e missões bloqueadas.
+
+[Escopo do MVP](docs/MVP_Local.md) · [Teste como jogador](docs/Playtest_MVP_2026-10-15.md).
+
+## Ocorrências da profissão
+
+A aba **Ocorrências** oferece três situações por profissão, liberadas nos níveis 2, 3 e 4. Compare duas abordagens, escolha entre maior EXP ou gold e confirme por 1 stamina. Intervalo de 60 segundos entre tentativas. A decisão e o desfecho ficam no Diário; funciona também após concluir a campanha. Execute `pnpm db:seed` para adicionar o conteúdo. [Regras e testes](docs/Ocorrencias_Profissoes.md).
+
+As decisões também desenvolvem duas especializações por profissão: cada abordagem inédita concluída concede +3 poder nas próximas abordagens dessa área. Seis missões de continuidade dependem das escolhas anteriores, com opções avançadas exigindo experiência na especialização. Com os episódios narrativos R-008, o total atual é 21 ocorrências e 42 abordagens. Histórico anterior é aproveitado automaticamente; execute o seed para adicionar as continuidades.
+
+R-008 adiciona Helena, Íris e Rosa, com dois episódios por profissão no nível 5. Os personagens reconhecem trabalhos anteriores; parceria ou autonomia muda diálogo, participação no acontecimento seguinte, poder e recompensa. O último compromisso bem-sucedido permanece salvo; os desfechos antigos do diário não mudam.

@@ -21,8 +21,11 @@
     "docker:logs": "docker-compose logs -f",
     "lint:fix": "turbo lint:fix",
     "test:watch": "turbo test:watch",
-    "test:coverage": "turbo test:coverage",
-    "ci": "turbo lint typecheck test build --concurrency=1"
+    "test:coverage": "pnpm --filter @the-life/api test:coverage",
+    "ci": "turbo lint typecheck test build --concurrency=1",
+    "db:generate": "pnpm --filter @the-life/api db:generate",
+    "db:migrate": "pnpm --filter @the-life/api db:migrate",
+    "db:seed": "pnpm --filter @the-life/api db:seed"
   },
   "devDependencies": {
     "@notionhq/client": "^5.24.0",
