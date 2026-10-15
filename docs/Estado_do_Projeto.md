@@ -31,3 +31,5 @@ Este incremento não equivale à conclusão integral de T-010 a T-018. Não habi
 Cadastro/login, rejeição de credenciais inválidas, sessão anterior inválida após novo login, rotação de refresh, logout, criação de um personagem, missão compatível com profissão/nível, coleta somente pelo dono. Coletas concorrentes não duplicam gold/EXP/logs; consultas frequentes preservam ciclos parciais; período acima do cap é descartado; troca de missão liquida a anterior atomicamente. Personagem preso não recebe progresso.
 
 Validação: testes reais via Fastify e PostgreSQL, lint, types, build e CI. Não declarar Sonar, revisão humana, staging ou Notion aprovados sem evidência externa.
+
+Entrega proposta no [PR #6](https://github.com/PedroHCastelani/GameIdle/pull/6). Validate e análise automática SonarCloud passaram no commit `74ac801`; o job que envia a cobertura ao SonarCloud está bloqueado pela ausência de `SONAR_TOKEN`. Evidências e limites em [Validação do incremento](Validacao_2026-10-15.md). Revisão e merge continuam pendentes.

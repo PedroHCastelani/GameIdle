@@ -18,3 +18,12 @@ Cobertura reportada refere-se a src/modules e src/lib da API, não a todo o repo
 Avisos de ferramentas: configuração de seed package.json do Prisma 6 é depreciada para uma futura migração à versão 7; plugin Next.js não detectado na configuração customizada de ESLint. Os checks atuais passam, sem alegação de auditoria completa de dependências.
 
 No Windows, pare o servidor antes de regenerar Prisma: a DLL do engine fica em uso. Não há mudança estrutural de schema, apenas comentários contratuais; não foi criada migration cosmética.
+
+## Evidência remota e revisão
+
+- [PR #6](https://github.com/PedroHCastelani/GameIdle/pull/6), aberto como draft para revisão.
+- No commit `74ac801`, [Validate passou no GitHub Actions](https://github.com/PedroHCastelani/GameIdle/actions/runs/38680476802): instalação limpa, geração do Prisma, migration, seed, lint, types, cobertura e build.
+- O check independente **SonarCloud Code Analysis** passou nesse commit após os ajustes de confiabilidade da UI e fixação das actions de terceiros por SHA.
+- O job **SonarCloud** da pipeline continua falhando porque o segredo `SONAR_TOKEN` está ausente. A análise automática aprovada não comprova importação do LCOV pelo job. Configurar o segredo no GitHub, confirmar o modo de análise no SonarCloud e executar novamente antes do merge. Não foi reduzido ou ignorado esse requisito.
+- Após os ajustes, a prévia restaurou a sessão e recuperou mais sete ciclos: personagem no nível 2, 380 gold e 120 EXP. Lint, types e build locais passaram novamente.
+- Este registro é um snapshot das execuções vinculadas; alterações posteriores exigem observar os checks do novo commit.
