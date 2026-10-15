@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 import { gameApi, restoreSession, useSession, type GameState, type Profession } from '../services/game';
+import { AccountPanel } from './account-panel';
 
 function formText(data: FormData, key: string): string {
   const value = data.get(key);
@@ -88,6 +89,7 @@ export default function Home() {
       {notice && <output className="message success">{notice}</output>}
       {busy && <output className="loading">Processando…</output>}
       {renderJourney()}
+      <AccountPanel signedIn={Boolean(token)} />
       <footer>The Life · Protótipo em desenvolvimento. Progresso persistido neste ambiente local.</footer>
     </main>
   );

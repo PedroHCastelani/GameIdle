@@ -10,8 +10,10 @@ import { ZodError } from 'zod';
 import { ApiError } from './lib/security.js';
 import { healthRoutes } from './routes/health.js';
 import { prototypeRoutes } from './modules/prototype.routes.js';
+import { localMailbox } from './lib/local-mail.js';
+import type { DeliverMessage } from './modules/auth/account.service.js';
 
-export async function buildServer(options: { db?: PrismaClient; logger?: boolean } = {}) {
+export async function buildServer(options: { db?: PrismaClient; logger?: boolean; deliver?: DeliverMessage } = {}) {
   const prototype = process.env.LOCAL_PROTOTYPE === 'true';
   if (prototype && process.env.NODE_ENV === 'production') throw new Error('Local prototype cannot run in production');
   if (prototype && (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32)) throw new Error('JWT_SECRET must contain at least 32 characters');
@@ -29,7 +31,7 @@ export async function buildServer(options: { db?: PrismaClient; logger?: boolean
   await app.register(async scope => healthRoutes(scope, db), { prefix: '/api' });
   if (prototype) {
     await app.register(jwt, { secret: process.env.JWT_SECRET! });
-    await prototypeRoutes(app, db, webOrigin);
+    await prototypeRoutes(app, db, webOrigin, options.deliver ?? localMailbox());
   }
   app.addHook('onSend', async (_request, reply, payload) => {
     reply.header('Cache-Control', 'no-store');

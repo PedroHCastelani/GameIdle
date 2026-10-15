@@ -37,6 +37,7 @@ model User {
 
   characters      Character[]
   sessions        Session[]
+  accountTokens   AccountToken[]
   transactions    PremiumTransaction[]
   slotPurchases   SlotPurchase[]
   friendships     Friendship[]  @relation("UserFriendships")
@@ -68,6 +69,24 @@ model Session {
 
   @@index([userId])
   @@map("sessions")
+}
+
+enum AccountTokenPurpose {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+
+model AccountToken {
+  id        String @id @default(cuid())
+  userId    String
+  purpose   AccountTokenPurpose
+  tokenHash String @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, purpose])
+  @@map("account_tokens")
 }
 
 model UserPremium {

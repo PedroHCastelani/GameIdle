@@ -60,3 +60,15 @@ export const gameApi = {
   start: (id: string, missionId: string) => request(`/characters/${id}/mission`, 'POST', { missionId }),
   claim: (id: string) => request<{ cycles: number; gold: string; exp: string; capped: boolean }>(`/characters/${id}/claim`, 'POST', {}),
 };
+
+export const accountApi = {
+  status: () => request<{ email: string; emailVerified: boolean }>('/auth/account'),
+  requestVerification: () => request<{ message: string }>('/auth/email/request', 'POST', {}),
+  confirm: (code: string) => raw('/auth/email/confirm', 'POST', { code }),
+  requestReset: (email: string) => raw('/auth/password/request', 'POST', { email }),
+  async reset(code: string, password: string) {
+    const result = await raw('/auth/password/reset', 'POST', { code, password });
+    useSession.getState().setToken(null);
+    return result;
+  },
+};

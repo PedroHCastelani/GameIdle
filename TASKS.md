@@ -35,7 +35,7 @@
 
 ## 🟠 Em Progresso
 
-Nenhuma edição concorrente em andamento. Incremento preparado para revisão.
+R-004 — confirmação de e-mail e recuperação de senha no ambiente local (recorte de T-010). Em progresso em 2026-10-15. Arquivos em uso: schema/migrations, módulos auth, testes API, UI e documentação. Depende do incremento R-003 já implementado; sua revisão permanece no PR #6. Escopo autorizado: continuar o desenvolvimento, sem liberação pública.
 
 ## 🔵 Aguardando Review
 

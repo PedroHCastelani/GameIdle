@@ -40,7 +40,7 @@ export function authService(db: PrismaClient) {
       return db.$transaction(async tx => {
         await lockUser(tx, user.id);
         const current = await tx.user.findUniqueOrThrow({ where: { id: user.id } });
-        if (current.isBanned) throw new ApiError(401, 'Credenciais inválidas.');
+        if (current.isBanned || current.passwordHash !== user.passwordHash) throw new ApiError(401, 'Credenciais inválidas.');
         return newSession(tx, user.id);
       });
     },

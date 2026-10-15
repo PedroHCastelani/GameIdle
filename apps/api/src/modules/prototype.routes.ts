@@ -4,14 +4,16 @@ import { z } from 'zod';
 import { ApiError, publicJson } from '../lib/security.js';
 import { authService } from './auth/auth.service.js';
 import { gameService } from './game/game.service.js';
+import { accountService, requestMessage, type DeliverMessage } from './auth/account.service.js';
 
 const credentials = z.object({ email: z.string().trim().toLowerCase().email().max(254), password: z.string().min(10).max(128) }).strict();
 const characterInput = z.object({ name: z.string().trim().min(3).max(24).regex(/^[\p{L}\p{N} _-]+$/u), profession: z.enum(['POLICE', 'THIEF', 'DOCTOR']) }).strict();
 const characterParams = z.object({ id: z.string().min(1).max(64) });
 type Identity = { sub: string; sid: string };
 
-export async function prototypeRoutes(app: FastifyInstance, db: PrismaClient, webOrigin: string) {
+export async function prototypeRoutes(app: FastifyInstance, db: PrismaClient, webOrigin: string, deliver: DeliverMessage) {
   const auth = authService(db), game = gameService(db);
+  const account = accountService(db, deliver);
   const cookie = { httpOnly: true, sameSite: 'strict' as const, secure: webOrigin.startsWith('https://'), path: '/api/auth', maxAge: 30 * 86400 };
   const requireOrigin = async (request: FastifyRequest) => {
     if (request.headers.origin !== webOrigin) throw new ApiError(403, 'Origem não permitida.');
@@ -28,6 +30,32 @@ export async function prototypeRoutes(app: FastifyInstance, db: PrismaClient, we
     return { accessToken: app.jwt.sign({ sub: result.userId, sid: result.sessionId }, { expiresIn: '15m' }) };
   };
   const authOptions = { preHandler: requireOrigin, config: { rateLimit: { max: 10, timeWindow: '1 minute' } } };
+  const codeInput = z.string().regex(/^[a-f0-9]{64}$/);
+  app.get('/api/auth/account', { preHandler: authenticate }, async req => {
+    const user = await db.user.findUniqueOrThrow({ where: { id: (req.user as Identity).sub } });
+    return { email: user.email, emailVerified: user.emailVerified };
+  });
+  app.post('/api/auth/email/request', { ...authOptions, preHandler: [requireOrigin, authenticate] }, async req => {
+    z.object({}).strict().parse(req.body ?? {});
+    await account.requestVerification((req.user as Identity).sub);
+    return { message: requestMessage };
+  });
+  app.post('/api/auth/email/confirm', authOptions, async req => {
+    const { code } = z.object({ code: codeInput }).strict().parse(req.body);
+    await account.verify(code);
+    return { message: 'E-mail confirmado.' };
+  });
+  app.post('/api/auth/password/request', authOptions, async req => {
+    const { email } = z.object({ email: credentials.shape.email }).strict().parse(req.body);
+    await account.requestReset(email);
+    return { message: requestMessage };
+  });
+  app.post('/api/auth/password/reset', authOptions, async (req, reply) => {
+    const { code, password } = z.object({ code: codeInput, password: credentials.shape.password }).strict().parse(req.body);
+    await account.reset(code, password);
+    reply.clearCookie('refresh', { path: cookie.path });
+    return { message: 'Senha atualizada. Entre novamente; as sessões anteriores foram encerradas.' };
+  });
   app.post('/api/auth/register', authOptions, async (req, reply) => {
     const input = credentials.parse(req.body);
     const result = await auth.register(input.email, input.password);

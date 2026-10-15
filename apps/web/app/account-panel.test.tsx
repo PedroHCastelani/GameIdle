@@ -1,0 +1,40 @@
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { AccountPanel } from './account-panel';
+import { accountApi } from '../services/game';
+vi.mock('../services/game', () => ({ accountApi: { status: vi.fn(), requestVerification: vi.fn(), confirm: vi.fn(), requestReset: vi.fn(), reset: vi.fn() } }));
+beforeEach(() => { vi.resetAllMocks(); });
+afterEach(cleanup);
+it('requests and confirms email and renders the updated verification status', async () => {
+  vi.mocked(accountApi.status).mockResolvedValueOnce({ email: 'player@example.test', emailVerified: false }).mockResolvedValueOnce({ email: 'player@example.test', emailVerified: true });
+  vi.mocked(accountApi.requestVerification).mockResolvedValue({ message: 'Mensagem criada' });
+  vi.mocked(accountApi.confirm).mockResolvedValue({ message: 'Confirmado' });
+  render(<AccountPanel signedIn />);
+  fireEvent.click(await screen.findByRole('button', { name: 'Solicitar código de confirmação' }));
+  await screen.findByText('Mensagem criada');
+  fireEvent.change(screen.getByLabelText('Código de confirmação'), { target: { value: 'a'.repeat(64) } });
+  fireEvent.submit(screen.getByLabelText('Código de confirmação').closest('form')!);
+  await screen.findByText('E-mail confirmado: player@example.test');
+  expect(accountApi.confirm).toHaveBeenCalledWith('a'.repeat(64));
+});
+it('supports recovery while signed out, preserves password whitespace and displays failures', async () => {
+  vi.mocked(accountApi.requestReset).mockResolvedValue({ message: 'Confira a caixa local' });
+  vi.mocked(accountApi.reset).mockRejectedValueOnce(new Error('Código expirado')).mockResolvedValueOnce({ message: 'Senha atualizada' });
+  render(<AccountPanel signedIn={false} />);
+  fireEvent.click(screen.getByText('Esqueci minha senha'));
+  fireEvent.change(screen.getByLabelText('E-mail para recuperação'), { target: { value: 'player@example.test' } });
+  fireEvent.submit(screen.getByLabelText('E-mail para recuperação').closest('form')!);
+  await screen.findByText('Confira a caixa local');
+  fireEvent.change(screen.getByLabelText('Código de recuperação'), { target: { value: 'b'.repeat(64) } });
+  fireEvent.change(screen.getByLabelText('Nova senha'), { target: { value: ' padded-password ' } });
+  fireEvent.submit(screen.getByLabelText('Nova senha').closest('form')!);
+  await screen.findByRole('alert');
+  expect(accountApi.reset).toHaveBeenCalledWith('b'.repeat(64), ' padded-password ');
+  fireEvent.submit(screen.getByLabelText('Nova senha').closest('form')!);
+  await screen.findByText('Senha atualizada');
+});
+it('shows a safe error if account status cannot be loaded', async () => {
+  vi.mocked(accountApi.status).mockRejectedValue(new Error('offline'));
+  render(<AccountPanel signedIn />);
+  await waitFor(() => expect(screen.getByRole('alert').textContent).toContain('consultar sua conta'));
+});
