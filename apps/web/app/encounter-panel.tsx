@@ -35,8 +35,8 @@ export function EncounterPanel({ adventure, characterId, level, busy, act, refre
     {mission && <section className="encounter-detail" aria-label={mission.name}><h3>{mission.name}</h3><p>{mission.description}</p><ol>{mission.stages.map(s => <li key={s}>{s}</li>)}</ol>
       {level < mission.level && <p>Alcance o nível {mission.level} para participar.</p>}
       <fieldset disabled={busy || level < mission.level}><legend>Como você quer agir?</legend><div className="chapter-grid">{mission.approaches.map(c => <label className={'approach ' + (choiceId === c.id ? 'selected' : '')} key={c.id}><input type="radio" name="approach" value={c.id} checked={choiceId === c.id} onChange={() => { setChoiceId(c.id); setResult(''); }} /><strong>{c.name}</strong><span>{c.description}</span><span>Poder necessário: {c.power} · Seu poder: {adventure.power}</span><span>Se concluir: +{c.gold} gold · +{c.exp} EXP</span></label>)}</div></fieldset>
-      {choice && adventure.power < choice.power && <p className="danger" role="status">Seu poder é insuficiente: esta abordagem vai falhar e consumir 1 stamina. Equipe-se ou escolha outra abordagem.</p>}
-      {wait > 0 && <p role="status">Próxima ocorrência em {wait}s.</p>}
+      {choice && adventure.power < choice.power && <output className="danger encounter-status">Seu poder é insuficiente: esta abordagem vai falhar e consumir 1 stamina. Equipe-se ou escolha outra abordagem.</output>}
+      {wait > 0 && <output className="encounter-status">Próxima ocorrência em {wait}s.</output>}
       {adventure.stamina < 1 && <p>Sem stamina. Ela se recupera com o tempo; continue nas missões idle.</p>}
       <button className="primary" type="button" disabled={busy || !choice || level < mission.level || wait > 0 || adventure.stamina < 1} onClick={play}>Confirmar abordagem (1 stamina)</button>
       {result && <output className="message success encounter-result">{result}</output>}

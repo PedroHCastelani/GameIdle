@@ -49,10 +49,10 @@ export function CampaignPanel(props: Props) {
   function diary() {
     return <>{a.history.length === 0 && <p>Nenhuma operação realizada ainda. Prepare seu primeiro capítulo na Jornada.</p>}{a.history.map(entry => <article className="chapter" key={entry.id}><h3>{entry.name}</h3>{entry.decision && <p><strong>{entry.decision.name}</strong> · {entry.decision.ending}</p>}<p>{entry.outcome === 'BOSS_DEFEATED' ? 'Operação concluída' : 'Operação interrompida'} · +{entry.gold} gold · +{entry.exp} EXP</p><ol>{entry.stages.map(s => <li key={s.number}>Etapa {s.number}: {s.outcome === 'SUCCESS' ? 'concluída' : 'poder insuficiente'}</li>)}</ol></article>)}</>;
   }
-  const views = { Jornada: journey, Ocorrências: () => <EncounterPanel {...props} />, Inventário: inventory, Loja: shop, Diário: diary };
+  const views = { Jornada: journey, Inventário: inventory, Loja: shop, Diário: diary };
   return <section className="panel campaign" aria-label="Campanha local"><div className="campaign-heading"><div><p className="eyebrow">HISTÓRIAS DO BAIRRO</p><h2>Sua jornada · {a.chapter}/3 capítulos</h2></div><div className="stats"><div><span>Poder</span><strong>{a.power}</strong></div><div><span>{a.skillName}</span><strong>{a.skillLevel}</strong></div><div><span>Stamina</span><strong>{a.stamina}/10</strong></div></div></div>
     <p className="muted">Prática cresce a cada coleta local. Stamina regenera 1 ponto a cada 2h24; missões idle são gratuitas.</p>
     <nav className="tabs" aria-label="Áreas do jogo">{tabs.map(name => <button type="button" key={name} aria-pressed={tab === name} onClick={() => setTab(name)}>{name}</button>)}</nav>
-    {views[tab]()}
+    {tab === 'Ocorrências' ? <EncounterPanel {...props} /> : views[tab]()}
   </section>;
 }

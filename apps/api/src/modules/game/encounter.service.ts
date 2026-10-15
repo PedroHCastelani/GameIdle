@@ -7,7 +7,7 @@ import { levelFromExperience } from './idle.js';
 
 export function encounterService(db: PrismaClient) {
   return {
-    async play(userId: string, id: string, encounterId: string, choiceId: string, requestId: string) {
+    play(userId: string, id: string, encounterId: string, choiceId: string, requestId: string) {
       return db.$transaction(async tx => {
         const char = await lockCharacter(tx, userId, id);
         if (char.isPrisoned) throw new ApiError(409, 'Personagem detido não pode atender ocorrências.');

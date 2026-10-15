@@ -56,3 +56,4 @@ input[type=radio] { accent-color: var(--accent); justify-self: start; }
 .encounter-list button[aria-pressed=true],.approach.selected { border-color: var(--accent); background: #24302a; }
 .approach { border: 1px solid var(--line); border-radius: 12px; padding: 20px; cursor: pointer; }.approach span { line-height: 1.6; }
 .encounter-detail fieldset { margin: 24px 0; }.encounter-detail fieldset:disabled { opacity: .6; }.encounter-result { margin-top: 20px; }
+.encounter-status { display: block; margin: 1rem 0; }

@@ -45,8 +45,8 @@ describe.skipIf(process.env.RUN_DB_TESTS !== 'true')('profession encounters with
       expect(reply.statusCode).toBe(200); expect(reply.json().message).toContain(choice.ending);
       expect(reply.json().outcome).toBe('BOSS_DEFEATED');
       const after = await db.character.findUniqueOrThrow({ where: { id: p.id } });
-      expect(after.goldHand - before.goldHand).toBe(BigInt(choice.gold));
-      expect(after.experience - before.experience).toBe(BigInt(choice.exp));
+      expect(BigInt(after.goldHand) - BigInt(before.goldHand)).toBe(BigInt(choice.gold));
+      expect(BigInt(after.experience) - BigInt(before.experience)).toBe(BigInt(choice.exp));
       expect(after.staminaCurrent).toBe(before.staminaCurrent - 1); expect(after.campaignChapter).toBe(3);
       const state = await p.state();
       expect(state.adventure.encounterWaitSeconds).toBeGreaterThan(0);
