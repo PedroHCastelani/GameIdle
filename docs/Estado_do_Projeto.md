@@ -41,3 +41,7 @@ R-004 acrescenta confirmação de e-mail e recuperação de senha, com códigos 
 Escopo explicitamente escolhido: MVP local completo e teste como jogador, sem publicação online. Implementados três caminhos com missões próprias, progressão por nível/prática, compra/equipamento/venda, drops de suprimentos e campanha de três operações com stamina e recompensa única. A migration local_campaign é aditiva. Dados antigos e missões anteriores são preservados.
 
 O loop completo foi jogado como Médica pela interface; as três profissões têm cobertura de integração. São 51 testes (38 API, 13 UI/cliente). Validate e SonarCloud passaram em 2748538, cobertura nova 97,2%. Detalhes e limitações em [MVP_Local.md](MVP_Local.md), [Playtest_MVP_2026-10-15.md](Playtest_MVP_2026-10-15.md) e [Validacao_2026-10-15.md](Validacao_2026-10-15.md). A Fase 1 integral, publicação, revisão e merge não estão concluídos.
+
+## R-006 — expansão de decisões
+
+Nove ocorrências repetíveis, com 18 abordagens temáticas e consequências em poder necessário, gold/EXP e relato persistido. Aba Ocorrências com comparação, confirmação de custo e intervalo de 60 segundos; Diário registra decisões. Seed aditivo, sem migration ou reinício do progresso. 63 testes aprovados. Escopo e evidências em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md). A resolução continua determinística; não há simulação permanente de consequências na cidade.

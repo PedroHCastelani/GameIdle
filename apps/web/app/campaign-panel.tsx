@@ -1,11 +1,12 @@
 'use client';
 import { useState } from 'react';
 import { gameApi, type Adventure } from '../services/game';
+import { EncounterPanel } from './encounter-panel';
 
 type Props = Readonly<{ adventure: Adventure; characterId: string; level: number; gold: string; busy: boolean; act: (action: () => Promise<void>) => Promise<void>; refresh: () => Promise<void>; notify: (message: string) => void }>;
-const tabs = ['Jornada', 'Inventário', 'Loja', 'Diário'] as const;
+const tabs = ['Jornada', 'Ocorrências', 'Inventário', 'Loja', 'Diário'] as const;
 function nextGoal(adventure: Adventure, level: number) {
-  if (adventure.completed) return 'Você concluiu os três capítulos. Continue nas missões para evoluir e experimentar equipamentos.';
+  if (adventure.completed) return 'Você concluiu os três capítulos. Experimente as decisões da sua profissão na aba Ocorrências ou continue evoluindo nas missões.';
   const chapter = adventure.chapters[adventure.chapter];
   if (level < chapter.level) return `Faça missões e colete EXP até o nível ${chapter.level}. Depois enfrente ${chapter.name}.`;
   if (adventure.power < chapter.power) return `Você precisa de ${chapter.power} de poder. Compre ou equipe itens no inventário; níveis e prática também aumentam seu poder.`;
@@ -46,9 +47,9 @@ export function CampaignPanel(props: Props) {
     return <><p>Loja do bairro · saldo: {gold} gold. Não há dinheiro real.</p><div className="chapter-grid">{a.shop.map(item => <article className="chapter" key={item.id}><h3>{item.name}</h3><p>{item.description}</p><p>{item.price} gold · Poder +{item.power}</p><button type="button" disabled={busy || BigInt(gold) < BigInt(item.price)} onClick={() => perform(() => gameApi.buy(props.characterId, item.id))}>Comprar {item.name}</button></article>)}</div></>;
   }
   function diary() {
-    return <>{a.history.length === 0 && <p>Nenhuma operação realizada ainda. Prepare seu primeiro capítulo na Jornada.</p>}{a.history.map(entry => <article className="chapter" key={entry.id}><h3>{entry.name}</h3><p>{entry.outcome === 'BOSS_DEFEATED' ? 'Operação concluída' : 'Operação interrompida'} · +{entry.gold} gold · +{entry.exp} EXP</p><ol>{entry.stages.map(s => <li key={s.number}>Etapa {s.number}: {s.outcome === 'SUCCESS' ? 'concluída' : 'poder insuficiente'}</li>)}</ol></article>)}</>;
+    return <>{a.history.length === 0 && <p>Nenhuma operação realizada ainda. Prepare seu primeiro capítulo na Jornada.</p>}{a.history.map(entry => <article className="chapter" key={entry.id}><h3>{entry.name}</h3>{entry.decision && <p><strong>{entry.decision.name}</strong> · {entry.decision.ending}</p>}<p>{entry.outcome === 'BOSS_DEFEATED' ? 'Operação concluída' : 'Operação interrompida'} · +{entry.gold} gold · +{entry.exp} EXP</p><ol>{entry.stages.map(s => <li key={s.number}>Etapa {s.number}: {s.outcome === 'SUCCESS' ? 'concluída' : 'poder insuficiente'}</li>)}</ol></article>)}</>;
   }
-  const views = { Jornada: journey, Inventário: inventory, Loja: shop, Diário: diary };
+  const views = { Jornada: journey, Ocorrências: () => <EncounterPanel {...props} />, Inventário: inventory, Loja: shop, Diário: diary };
   return <section className="panel campaign" aria-label="Campanha local"><div className="campaign-heading"><div><p className="eyebrow">HISTÓRIAS DO BAIRRO</p><h2>Sua jornada · {a.chapter}/3 capítulos</h2></div><div className="stats"><div><span>Poder</span><strong>{a.power}</strong></div><div><span>{a.skillName}</span><strong>{a.skillLevel}</strong></div><div><span>Stamina</span><strong>{a.stamina}/10</strong></div></div></div>
     <p className="muted">Prática cresce a cada coleta local. Stamina regenera 1 ponto a cada 2h24; missões idle são gratuitas.</p>
     <nav className="tabs" aria-label="Áreas do jogo">{tabs.map(name => <button type="button" key={name} aria-pressed={tab === name} onClick={() => setTab(name)}>{name}</button>)}</nav>

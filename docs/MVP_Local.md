@@ -16,3 +16,7 @@ Curva de nível preservada: próximo nível exige 100 × nível² de EXP acumula
 
 ## Fora deste recorte
 Publicação online, identidade/CPF, provedor externo de e-mail, LGPD pública, múltiplos personagens, talentos completos, quatro dificuldades/filas de stages, prisão/propina, morte/PvP, serviços médicos entre jogadores, banco, mercado entre jogadores, social/guild, premium e produção artística final. Não apresentar esses itens como implementados.
+
+## Expansão R-006 (15/10/2026)
+
+Após o MVP, o usuário autorizou variedade de missões e decisões. Entrega adicional: nove ocorrências repetíveis com 18 abordagens, consequências econômicas e narrativas, diário e intervalo entre tentativas. Detalhes em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md). Preserva o recorte local.

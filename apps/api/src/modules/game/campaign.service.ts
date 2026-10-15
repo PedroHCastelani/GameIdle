@@ -3,6 +3,7 @@ import { ApiError } from '../../lib/security.js';
 import { lockCharacter } from './character-lock.js';
 import { campaignPower, careers, chapterRules, gear, resolveChapter, staminaAt } from './campaign-rules.js';
 import { levelFromExperience } from './idle.js';
+import { encounterCooldown, encounterDecision, encounters } from './encounter-rules.js';
 
 function freeToAct(character: Character) {
   if (character.isPrisoned) throw new ApiError(409, 'Personagem detido não pode realizar esta ação.');
@@ -15,14 +16,16 @@ export async function campaignView(db: PrismaClient, char: Character) {
   const stamina = staminaAt(char.staminaCurrent, char.staminaLastRegen, new Date());
   const power = campaignPower(char.level, char.campaignCycles, items.filter(i => i.isEquipped).map(i => i.templateId));
   const history = await db.stageAttempt.findMany({ where: { characterId: char.id }, orderBy: { startedAt: 'desc' }, take: 5, include: { mission: { select: { name: true } }, stageResults: { orderBy: { stageNumber: 'asc' } } } });
+  const lastEncounter = await db.stageAttempt.findFirst({ where: { characterId: char.id, missionId: { startsWith: 'mvp_encounter_' } }, orderBy: { startedAt: 'desc' } });
   return {
+    encounters: encounters[char.profession], encounterWaitSeconds: lastEncounter ? Math.max(0, Math.ceil((lastEncounter.startedAt.getTime() + encounterCooldown - Date.now()) / 1000)) : 0,
     chapter: char.campaignChapter, completed: char.campaignChapter >= 3, ending: careers[char.profession].ending,
     power, skillName: careers[char.profession].skill, skillLevel: 1 + Math.floor(Math.sqrt(char.campaignCycles / 5)), cycles: char.campaignCycles,
     stamina: stamina.value, staminaNextAt: stamina.nextAt, nextLevelExperience: (100n * BigInt(char.level) ** 2n).toString(),
     chapters: chapterRules.map((rule, index) => ({ ...rule, chapter: index + 1, name: careers[char.profession].chapters[index], stages: careers[char.profession].stages })),
     shop: gear.filter(g => g.price > 0),
     inventory: items.map(i => ({ id: i.id, name: i.template.name, description: i.template.description, quantity: i.quantity, equipped: i.isEquipped, slot: i.template.slot, power: gear.find(g => g.id === i.templateId)?.power ?? 0, level: gear.find(g => g.id === i.templateId)?.level ?? 1, sell: i.template.baseValueGold, rarity: i.template.rarity })),
-    history: history.map(h => ({ id: h.id, name: h.mission.name, outcome: h.outcome, gold: h.goldGained, exp: h.expGained, stages: h.stageResults.map(s => ({ number: s.stageNumber, outcome: s.outcome })) })),
+    history: history.map(h => ({ id: h.id, name: h.mission.name, outcome: h.outcome, gold: h.goldGained, exp: h.expGained, decision: encounterDecision(h.stageResults[0]?.enemies ?? null), stages: h.stageResults.map(s => ({ number: s.stageNumber, outcome: s.outcome })) })),
   };
 }
 export async function grantCycleDrops(tx: Prisma.TransactionClient, char: Character, cycles: number) {

@@ -44,12 +44,14 @@ async function request<T>(path: string, method = 'GET', body?: unknown): Promise
 }
 
 export type Profession = 'POLICE' | 'THIEF' | 'DOCTOR';
+export type Encounter = { id: string; name: string; description: string; level: number; stages: string[]; approaches: { id: string; name: string; description: string; power: number; gold: number; exp: number; ending: string }[] };
 export type Adventure = {
+  encounters?: Encounter[]; encounterWaitSeconds?: number; encounterReceivedAt?: number;
   chapter: number; completed: boolean; ending: string; power: number; skillName: string; skillLevel: number; cycles: number; stamina: number; staminaNextAt: string | null; nextLevelExperience: string;
   chapters: { chapter: number; level: number; power: number; gold: number; exp: number; reward: string | null; name: string; stages: string[] }[];
   shop: { id: string; name: string; slot: string; power: number; price: number; level: number; sell: number; description: string }[];
   inventory: { id: string; name: string; description: string | null; quantity: number; equipped: boolean; slot: string | null; power: number; level: number; sell: number; rarity: string }[];
-  history: { id: string; name: string; outcome: string; gold: string; exp: string; stages: { number: number; outcome: string }[] }[];
+  history: { id: string; name: string; outcome: string; gold: string; exp: string; decision?: { id: string; name: string; ending: string } | null; stages: { number: number; outcome: string }[] }[];
 };
 export type GameState = {
   character: { id: string; name: string; profession: Profession; level: number; experience: string; gold: string; missionId: string | null; isOnMission: boolean; isPrisoned: boolean; lastCollectedAt: string } | null;
@@ -64,13 +66,18 @@ export const gameApi = {
     useSession.getState().setToken(data.accessToken);
   },
   async logout() { await raw('/auth/logout', 'POST'); useSession.getState().setToken(null); },
-  state: () => request<GameState>('/game'),
+  state: async () => {
+    const state = await request<GameState>('/game');
+    if (state.adventure) state.adventure.encounterReceivedAt = Date.now();
+    return state;
+  },
   create: (name: string, profession: Profession) => request('/characters', 'POST', { name, profession }),
   start: (id: string, missionId: string) => request(`/characters/${id}/mission`, 'POST', { missionId }),
   claim: (id: string) => request<{ cycles: number; gold: string; exp: string; capped: boolean }>(`/characters/${id}/claim`, 'POST', {}),
   buy: (id: string, templateId: string) => request<{ message: string }>(`/characters/${id}/buy`, 'POST', { templateId }),
   item: (id: string, itemId: string, action: 'equip' | 'unequip' | 'sell') => request<{ message: string }>(`/characters/${id}/item`, 'POST', { itemId, action }),
   challenge: (id: string, chapter: number, requestId: string) => request<{ message: string }>(`/characters/${id}/challenge`, 'POST', { chapter, requestId }),
+  encounter: (id: string, encounterId: string, choiceId: string, requestId: string) => request<{ message: string }>(`/characters/${id}/encounter`, 'POST', { encounterId, choiceId, requestId }),
 };
 
 export const accountApi = {

@@ -82,3 +82,7 @@ As operações custam 1 stamina; poder insuficiente causa falha, informada antes
 Rotas autenticadas adicionais: POST `/api/characters/:id/buy` (`templateId`), `/item` (`itemId`, `action`: equip/unequip/sell) e `/challenge` (`chapter`, `requestId` UUID). O servidor valida propriedade, saldo, nível e repetição. GET `/api/game` inclui campanha, inventário, loja, histórico e missões bloqueadas.
 
 [Escopo do MVP](docs/MVP_Local.md) · [Teste como jogador](docs/Playtest_MVP_2026-10-15.md).
+
+## Ocorrências da profissão
+
+A aba **Ocorrências** oferece três situações por profissão, liberadas nos níveis 2, 3 e 4. Compare duas abordagens, escolha entre maior EXP ou gold e confirme por 1 stamina. Intervalo de 60 segundos entre tentativas. A decisão e o desfecho ficam no Diário; funciona também após concluir a campanha. Execute `pnpm db:seed` para adicionar o conteúdo. [Regras e testes](docs/Ocorrencias_Profissoes.md).

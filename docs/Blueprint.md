@@ -26,3 +26,7 @@ Local é o único alvo deste incremento. CI não equivale a deploy. Staging e pr
 
 ## Decisões e estimativas
 IDs D-001 a D-013 constam uma única vez em TASKS.md. D-007 permanece aberta. Estimativas antigas de 2–3/8–10 semanas são históricas, não compromissos atuais. Reestimar depois do fluxo jogável e de medir o trabalho restante.
+
+## Incremento autorizado R-006
+
+Ampliar a variedade por profissão após R-005: ocorrências locais repetíveis, decisões com consequências explícitas e histórico persistido, preservando a campanha. Contrato em [Ocorrencias_Profissoes.md](Ocorrencias_Profissoes.md). Não depende da preparação de cadastro público.

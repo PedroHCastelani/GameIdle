@@ -6,6 +6,7 @@ import { authService } from './auth/auth.service.js';
 import { gameService } from './game/game.service.js';
 import { accountService, requestMessage, type DeliverMessage } from './auth/account.service.js';
 import { campaignService } from './game/campaign.service.js';
+import { encounterService } from './game/encounter.service.js';
 
 const credentials = z.object({ email: z.string().trim().toLowerCase().email().max(254), password: z.string().min(10).max(128) }).strict();
 const characterInput = z.object({ name: z.string().trim().min(3).max(24).regex(/^[\p{L}\p{N} _-]+$/u), profession: z.enum(['POLICE', 'THIEF', 'DOCTOR']) }).strict();
@@ -16,6 +17,7 @@ export async function prototypeRoutes(app: FastifyInstance, db: PrismaClient, we
   const auth = authService(db), game = gameService(db);
   const account = accountService(db, deliver);
   const campaign = campaignService(db);
+  const encounters = encounterService(db);
   const cookie = { httpOnly: true, sameSite: 'strict' as const, secure: webOrigin.startsWith('https://'), path: '/api/auth', maxAge: 30 * 86400 };
   const requireOrigin = async (request: FastifyRequest) => {
     if (request.headers.origin !== webOrigin) throw new ApiError(403, 'Origem não permitida.');
@@ -92,6 +94,11 @@ export async function prototypeRoutes(app: FastifyInstance, db: PrismaClient, we
     const { id } = characterParams.parse(req.params);
     const { chapter, requestId } = z.object({ chapter: z.number().int().min(1).max(3), requestId: z.string().uuid() }).strict().parse(req.body);
     return campaign.challenge((req.user as Identity).sub, id, chapter, requestId);
+  });
+  app.post('/api/characters/:id/encounter', { preHandler: authenticate }, async req => {
+    const { id } = characterParams.parse(req.params);
+    const { encounterId, choiceId, requestId } = z.object({ encounterId: z.string().min(1).max(64), choiceId: z.string().min(1).max(64), requestId: z.string().uuid() }).strict().parse(req.body);
+    return encounters.play((req.user as Identity).sub, id, encounterId, choiceId, requestId);
   });
   app.post('/api/characters', { preHandler: authenticate }, async (req, reply) => {
     const input = characterInput.parse(req.body);
