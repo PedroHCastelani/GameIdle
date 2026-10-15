@@ -11,3 +11,5 @@ Removidos workflow redundante PR Check e automerge por prefixo de branch que con
 Em 15/10/2026, SONAR_TOKEN foi configurado pelo mantenedor e a execução via Actions conseguiu autenticar e importar a análise. O primeiro gate com cobertura real apontou 74,8%, abaixo dos 80% exigidos. Esse resultado substitui a aprovação anterior sem cobertura da análise automática.
 
 R-004 adiciona testes de interface e cliente HTTP, amplia a instrumentação API para servidor/rotas e publica ambos os LCOV no mesmo artifact preservando apps/api e apps/web. O limite do gate não foi reduzido. A análise automática deve ficar desligada quando a análise via CI estiver ativa. O segredo é mantido exclusivamente em GitHub Actions Secrets; nunca em código ou documentação.
+
+Resultado confirmado em 49e3380: Validate e SonarCloud aprovados; 96,5% de cobertura no código novo. Execução e limites registrados em Validacao_2026-10-15.md. Checks futuros devem ser observados para o respectivo commit.

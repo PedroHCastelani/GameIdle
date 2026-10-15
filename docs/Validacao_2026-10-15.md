@@ -1,5 +1,17 @@
 # Validação do incremento — 15/10/2026
 
+## Atualização R-004 — evidência mais recente
+
+- [Execução 38683932738](https://github.com/PedroHCastelani/GameIdle/actions/runs/38683932738), commit `49e3380`: **Validate, SonarCloud e SonarCloud Code Analysis aprovados**. Cobertura do código novo **96,5%**, duplicação **0,0%**, zero security hotspots reportados. O gate passou; há 21 apontamentos não bloqueantes, portanto não se declara ausência de dívida técnica.
+- SONAR_TOKEN configurado pelo mantenedor, autenticação e envio da análise bem-sucedidos. A primeira reexecução revelou cobertura de 74,8%; os testes e relatórios foram ampliados sem baixar o gate.
+- **39 testes**: 30 API e 9 UI/cliente HTTP. Migration aditiva `20261015050000_account_tokens` aplicada nos bancos local e de integração. Lint, types e build aprovados.
+- Cobertura local API ampliada a `src/**/*.ts` (exceto bootstrap `src/index.ts`): 81,05% linhas, 92,44% branches, 95,45% funções. Inclui arquivos antigos de exemplo não usados e não cobertos. UI/cliente HTTP: 100% linhas, 94,52% branches, 93,02% funções; layout estático não instrumentado. Esses percentuais têm denominadores diferentes do código novo no SonarCloud.
+- Casos verificados: confirmação de e-mail, cooldown, expiração, troca de código, separação de finalidade, consumo concorrente, recuperação de senha, revogação de JWT/refresh/códigos, conta desconhecida/banida, Origin, payload inválido e rollback em falha de entrega. UI testa cadastro/personagem/missão/coleta, restauração, erros e novos formulários.
+- No navegador, a conta fictícia `preview@example.test` solicitou uma mensagem local, consumiu o código e exibiu e-mail confirmado. Recuperação validada por testes API/UI; nenhuma mensagem foi enviada externamente.
+- Limites: caixa local de arquivos, sem provedor real, fila/outbox ou gate obrigatório de e-mail para jogar. Cadastro público, revisão humana, staging, Notion e merge permanecem pendentes.
+
+As seções abaixo preservam o histórico do primeiro incremento R-001–R-003 e de suas execuções anteriores; não substituem a atualização R-004 acima.
+
 ## Escopo
 Branch codex/foundation-playable-slice. Protótipo local fechado, não liberação pública. Banco de integração descartável gameidle_test e banco de demonstração separado gameidle_preview. Nenhum dado real de CPF/pagamento.
 

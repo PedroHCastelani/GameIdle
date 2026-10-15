@@ -63,7 +63,7 @@ Rotas de jogo exigem Authorization: Bearer. Rotas de auth exigem Origin igual a 
 [Tarefas](TASKS.md) · [Blueprint](docs/Blueprint.md) · [GDD](docs/GDD_Completo.md) · [Motor](docs/Motor_de_Calculo.md) · [Banco](docs/Schema_Banco_de_Dados.md) · [Segurança](docs/Seguranca_e_LGPD.md) · [CI](docs/CI_CD.md).
 
 Documentos originais substituídos foram preservados em docs/archive/2026-08, marcados como históricos e não normativos. A produção visual, inventário, skills, economia entre jogadores, PvP e monetização permanecem planejados. Notion e gates externos só são considerados aprovados mediante evidência.
-# Confirmação e recuperação na prévia local
+## Confirmação e recuperação na prévia local
 
 O painel **Segurança da conta** permite solicitar confirmação de e-mail e redefinir senha. Após solicitar uma mensagem, abra o JSON mais recente destinado ao seu e-mail fictício na pasta `.local-mail/` da raiz do repositório e copie o campo `code` para o formulário correspondente. Essa pasta é local, ignorada pelo Git e não é servida pela API. Nenhum e-mail é enviado pela internet.
 

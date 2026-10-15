@@ -35,15 +35,16 @@
 
 ## 🟠 Em Progresso
 
-R-004 — confirmação de e-mail e recuperação de senha no ambiente local (recorte de T-010). Em progresso em 2026-10-15. Arquivos em uso: schema/migrations, módulos auth, testes API, UI e documentação. Depende do incremento R-003 já implementado; sua revisão permanece no PR #6. Escopo autorizado: continuar o desenvolvimento, sem liberação pública.
+Nenhuma edição concorrente em andamento. R-004 implementada e em revisão no PR #6; recorte autorizado de T-010, sem liberação pública.
 
 ## 🔵 Aguardando Review
 
 | ID | Entrega | Evidência | Pendência |
 |---|---|---|---|
 | R-001 | Reconciliar documentação e regras | docs atualizados; originais arquivados; IDs deduplicados | Revisão do PR |
-| R-002 | CI reproduzível e testes reais | Geração Prisma explícita; suite com PostgreSQL; LCOV | CI remoto, Sonar e revisão |
+| R-002 | CI reproduzível e testes reais | Validate e SonarCloud aprovados em 49e3380; cobertura nova 96,5% | Revisão PR #6 |
 | R-003 | Protótipo local conta-personagem-idle | API, persistência, UI e testes de concorrência | Revisão; não equivale a lançamento público |
+| R-004 | Confirmação e recuperação de conta locais | Migration account_tokens, painel, caixa local, 39 testes, gate aprovado em 49e3380 | Revisão PR #6; provedor real e cadastro público pendentes |
 
 R-003 é recorte de T-010–T-018. Essas tarefas completas permanecem no backlog. Notion não sincronizado: handoff em scripts/templates/handoff-2026-10-15.md. Detalhes de validação em docs/Validacao_2026-10-15.md.
 

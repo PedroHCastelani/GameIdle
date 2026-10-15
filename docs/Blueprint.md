@@ -8,7 +8,7 @@ Leia Estado_do_Projeto.md e TASKS.md antes de implementar. TASKS.md é a fonte �
 1. R-001: reconciliar documentos, eliminar IDs duplicados e separar design de entrega.
 2. R-002 / T-009: gerar Prisma explicitamente, unificar CI, validar rotas e banco com testes reais. Remover automerge que contorna review e desabilitar deploy incompleto.
 3. R-003: protótipo local fechado conforme Estado_do_Projeto.md. Conta, sessão única, um personagem por conta, missão e coleta offline atômica. UI mobile/desktop com estados de erro e espera.
-4. Concluir T-010/T-011 antes de público: identidade, e-mail verificado, recuperação de senha, export/exclusão, notificações de sessão e revisão de segurança.
+4. Concluir T-010/T-011 antes de público: identidade, e-mail verificado, recuperação de senha, export/exclusão, notificações de sessão e revisão de segurança. R-004 entrega o recorte local de confirmação/recuperação e sua UI; adaptador real de e-mail e fila/outbox continuam pendentes.
 5. Expandir T-012–T-018: slots/composição, atributos, skills, drops e inventário. Só então economia, stages e médicos.
 6. Social/PvP/guild e produção visual depois da validação do ciclo principal. Monetização depende de decisão explícita e revisão do equilíbrio premium.
 

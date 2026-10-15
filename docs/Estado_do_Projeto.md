@@ -32,4 +32,6 @@ Cadastro/login, rejeição de credenciais inválidas, sessão anterior inválida
 
 Validação: testes reais via Fastify e PostgreSQL, lint, types, build e CI. Não declarar Sonar, revisão humana, staging ou Notion aprovados sem evidência externa.
 
-Entrega proposta no [PR #6](https://github.com/PedroHCastelani/GameIdle/pull/6). Validate e análise automática SonarCloud passaram no commit `74ac801`; o job que envia a cobertura ao SonarCloud está bloqueado pela ausência de `SONAR_TOKEN`. Evidências e limites em [Validação do incremento](Validacao_2026-10-15.md). Revisão e merge continuam pendentes.
+Entrega proposta no [PR #6](https://github.com/PedroHCastelani/GameIdle/pull/6). O segredo SONAR_TOKEN foi configurado e usado com sucesso em 15/10/2026. O primeiro gate com cobertura apontou 74,8%; após R-004, Validate e SonarCloud passaram no commit 49e3380 com 96,5% de cobertura no código novo. Evidências e limites em [Validação do incremento](Validacao_2026-10-15.md). Revisão e merge continuam pendentes.
+
+R-004 acrescenta confirmação de e-mail e recuperação de senha, com códigos de uso único, expiração, reenvio limitado e revogação de sessões. Inclui painel integrado, migration aditiva account_tokens e entrega exclusiva numa caixa local de arquivos. São 39 testes (30 API e 9 UI/cliente HTTP). Ainda faltam provedor real/fila de envio, verificação obrigatória antes de jogar publicamente, identidade/antifraude e direitos do titular. T-010 integral permanece aberta.
