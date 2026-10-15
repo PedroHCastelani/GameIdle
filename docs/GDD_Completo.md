@@ -1,3 +1,5 @@
+> Estado de implementação em 15/10/2026: este GDD descreve o produto completo planejado. O MVP local entregue é o recorte solo de [MVP_Local.md](MVP_Local.md), com três profissões e campanha curta. Sistemas mencionados neste GDD não são automaticamente recursos já disponíveis.
+
 # 🎮 THE LIFE — Game Design Document Completo
 **Versão:** 0.5  
 **Data:** Julho 2026  

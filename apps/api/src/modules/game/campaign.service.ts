@@ -47,7 +47,7 @@ export function campaignService(db: PrismaClient) {
         const created = await tx.inventoryItem.create({ data: { characterId: id, templateId, isIdentified: true, obtainedFrom: 'NPC' } });
         await tx.character.update({ where: { id }, data: { goldHand: { decrement: item.price } } });
         await tx.economyLog.create({ data: { type: 'NPC_PURCHASE', characterId: id, itemId: created.id, goldAmount: -BigInt(item.price) } });
-        return { message: `${item.name} comprado. Equipe no inventário.` };
+        return { message: `Compra concluída: ${item.name}. Equipe no inventário.` };
       });
     },
     async item(userId: string, id: string, itemId: string, action: 'equip' | 'unequip' | 'sell') {

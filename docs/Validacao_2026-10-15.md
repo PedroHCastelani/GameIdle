@@ -39,3 +39,11 @@ No Windows, pare o servidor antes de regenerar Prisma: a DLL do engine fica em u
 - O job **SonarCloud** da pipeline continua falhando porque o segredo `SONAR_TOKEN` está ausente. A análise automática aprovada não comprova importação do LCOV pelo job. Configurar o segredo no GitHub, confirmar o modo de análise no SonarCloud e executar novamente antes do merge. Não foi reduzido ou ignorado esse requisito.
 - Após os ajustes, a prévia restaurou a sessão e recuperou mais sete ciclos: personagem no nível 2, 380 gold e 120 EXP. Lint, types e build locais passaram novamente.
 - Este registro é um snapshot das execuções vinculadas; alterações posteriores exigem observar os checks do novo commit.
+
+## R-005 — MVP local (atualização mais recente)
+
+51 testes aprovados: 38 API e 13 UI/cliente. Lint, types e build aprovados. Migration local_campaign aplicada nos bancos preview e teste; seed aditivo. Integração cobre três profissões até a conclusão, drops, substituição de equipamento, vendas, propriedade, compras concorrentes, recompensa única, repetição de requestId, falha e regeneração de stamina.
+
+[CI em 2748538](https://github.com/PedroHCastelani/GameIdle/actions/runs/38695699223): Validate, SonarCloud e análise aprovados. Código novo: 97,2% cobertura, 0% duplicação, nenhum security hotspot e 28 apontamentos não bloqueantes. O segredo SONAR_TOKEN funciona; a falha de segredo registrada acima é histórica. Snapshot anterior ao acabamento do playtest; observar checks do último commit no PR #6 antes de merge.
+
+Teste manual e ajustes: [Playtest_MVP_2026-10-15.md](Playtest_MVP_2026-10-15.md). Nenhuma publicação online.

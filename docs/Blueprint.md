@@ -1,3 +1,7 @@
+## Entrega local vigente — 15/10/2026
+
+R-005 implementa o MVP solo acordado em [MVP_Local.md](MVP_Local.md): três profissões, progressão, inventário/equipamentos e campanha de três capítulos. Validar o percurso completo como jogador e registrar correções em [Playtest_MVP_2026-10-15.md](Playtest_MVP_2026-10-15.md). Este recorte precede a preparação pública; as fases completas abaixo continuam no backlog.
+
 # Blueprint de execução — The Life
 Revisão: 15/10/2026
 

@@ -8,7 +8,7 @@
 
 Master d3384b1: monorepo, Docker, 47 modelos Prisma, migration inicial, seed, rotas de exemplo/saúde e página inicial. Não havia autenticação, missões executáveis ou interface jogável. O único teste era uma asserção constante. CI falhava na geração/importação do Prisma Client; build e Sonar eram pulados. Deploys eram placeholders. Não há comprovação de aprovação, staging ou sincronização do Notion.
 
-## Incremento atual: protótipo local fechado
+## Incremento inicial R-003 (histórico)
 
 Ordem: reconciliar documentos → corrigir CI/testes → conta e sessão → personagem único → missão idle → coleta persistente e idempotente → UI integrada.
 
@@ -23,7 +23,7 @@ Este incremento não equivale à conclusão integral de T-010 a T-018. Não habi
 - Stamina: free 1/2,4h, teto 10; premium 1/1,2h, teto 20. Preservar frações de tempo.
 - Propina recusada: acréscimo de 50% da pena original. Débito, resultado e logs numa transação; sem delegado não inventar referência de personagem.
 - Buffs comuns de HP: 3–5%; incomuns exigem nível 20. Probabilidade de melhoria de 0,1% por nível permanece hipótese de design, não balanceamento validado.
-- Idle do protótipo: ciclos completos, limites 12h/24h, relógio do servidor, gold médio determinístico do intervalo da missão, EXP base, curva provisória `100 × nível²` de EXP acumulada para o próximo nível. Skills, bônus, RNG e drops ficam fora deste incremento.
+- Idle do protótipo: ciclos completos, limites 12h/24h, relógio do servidor, gold médio determinístico do intervalo da missão, EXP base, curva provisória `100 × nível²` de EXP acumulada para o próximo nível. Em R-003, skills, bônus, RNG e drops ficaram fora. R-005 acrescenta prática, poder por equipamento e drops determinísticos conforme MVP_Local.md.
 - Créditos e premium não são vendidos nem ativados pela interface do protótipo. Vantagens competitivas do GDD precisam de revisão antes de monetização.
 
 ## Critérios de aceite do incremento
@@ -35,3 +35,9 @@ Validação: testes reais via Fastify e PostgreSQL, lint, types, build e CI. Nã
 Entrega proposta no [PR #6](https://github.com/PedroHCastelani/GameIdle/pull/6). O segredo SONAR_TOKEN foi configurado e usado com sucesso em 15/10/2026. O primeiro gate com cobertura apontou 74,8%; após R-004, Validate e SonarCloud passaram no commit 49e3380 com 96,5% de cobertura no código novo. Evidências e limites em [Validação do incremento](Validacao_2026-10-15.md). Revisão e merge continuam pendentes.
 
 R-004 acrescenta confirmação de e-mail e recuperação de senha, com códigos de uso único, expiração, reenvio limitado e revogação de sessões. Inclui painel integrado, migration aditiva account_tokens e entrega exclusiva numa caixa local de arquivos. São 39 testes (30 API e 9 UI/cliente HTTP). Ainda faltam provedor real/fila de envio, verificação obrigatória antes de jogar publicamente, identidade/antifraude e direitos do titular. T-010 integral permanece aberta.
+
+## Estado atual — R-005: MVP local jogável
+
+Escopo explicitamente escolhido: MVP local completo e teste como jogador, sem publicação online. Implementados três caminhos com missões próprias, progressão por nível/prática, compra/equipamento/venda, drops de suprimentos e campanha de três operações com stamina e recompensa única. A migration local_campaign é aditiva. Dados antigos e missões anteriores são preservados.
+
+O loop completo foi jogado como Médica pela interface; as três profissões têm cobertura de integração. São 51 testes (38 API, 13 UI/cliente). Validate e SonarCloud passaram em 2748538, cobertura nova 97,2%. Detalhes e limitações em [MVP_Local.md](MVP_Local.md), [Playtest_MVP_2026-10-15.md](Playtest_MVP_2026-10-15.md) e [Validacao_2026-10-15.md](Validacao_2026-10-15.md). A Fase 1 integral, publicação, revisão e merge não estão concluídos.

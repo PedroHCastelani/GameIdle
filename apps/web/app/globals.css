@@ -50,3 +50,4 @@ input[type=radio] { accent-color: var(--accent); justify-self: start; }
 .campaign .tabs { flex-wrap: wrap; }.campaign .stats { margin-left: 0; }.campaign .stats strong { font-size: 21px; }
 .loading { color: var(--accent); }footer { padding: 30px 0 10px; font-size: 12px; }
 @media(max-width: 700px) { .shell { padding: 20px 16px; }.intro { padding-top: 32px; }.panel { padding: 20px; }.profession-grid,.mission-grid { grid-template-columns: 1fr; }.character-panel { flex-wrap: wrap; }.stats { margin-left: 0; width: 100%; }.tabs { flex-wrap: wrap; }.topbar { gap: 12px; }.badge { font-size: 10px; } }
+.stats small { display: block; color: var(--muted); margin-top: 4px; font-size: 12px; }

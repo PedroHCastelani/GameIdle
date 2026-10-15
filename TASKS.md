@@ -35,7 +35,7 @@
 
 ## 🟠 Em Progresso
 
-R-005 — MVP local jogável e playtest (autorizado em 15/10/2026). Em progresso: campanha das três profissões, progressão, inventário/equipamentos, desafios, orientação e teste como jogador. Arquivos em uso: schema/migrations/seed, módulos game, UI, testes e docs. Escopo acordado em docs/MVP_Local.md; não equivale à Fase 1 completa do GDD nem a publicação online.
+Nenhuma tarefa em execução. R-005 segue para revisão no PR #6.
 
 ## 🔵 Aguardando Review
 
@@ -44,6 +44,7 @@ R-005 — MVP local jogável e playtest (autorizado em 15/10/2026). Em progresso
 | R-001 | Reconciliar documentação e regras | docs atualizados; originais arquivados; IDs deduplicados | Revisão do PR |
 | R-002 | CI reproduzível e testes reais | Validate e SonarCloud aprovados em 49e3380; cobertura nova 96,5% | Revisão PR #6 |
 | R-003 | Protótipo local conta-personagem-idle | API, persistência, UI e testes de concorrência | Revisão; não equivale a lançamento público |
+| R-005 | MVP local: três profissões, campanha, inventário e progressão | 51 testes; campanha Médica concluída pela UI; docs/MVP_Local.md e Playtest_MVP_2026-10-15.md | Revisão PR #6; escopo local, não Fase 1 integral |
 | R-004 | Confirmação e recuperação de conta locais | Migration account_tokens, painel, caixa local, 39 testes, gate aprovado em 49e3380 | Revisão PR #6; provedor real e cadastro público pendentes |
 
 R-003 é recorte de T-010–T-018. Essas tarefas completas permanecem no backlog. Notion não sincronizado: handoff em scripts/templates/handoff-2026-10-15.md. Detalhes de validação em docs/Validacao_2026-10-15.md.

@@ -25,7 +25,7 @@ export function CampaignPanel(props: Props) {
       {a.completed && <div className="victory"><h2>Campanha concluída!</h2><p>{a.ending}</p><p>Três operações. Uma história nas ruas.</p></div>}
       <div className="chapter-grid">{a.chapters.map(c => <article className={'chapter ' + (c.chapter <= a.chapter ? 'complete' : '')} key={c.chapter}>
         <span className="badge">CAPÍTULO {c.chapter} · {c.chapter <= a.chapter ? 'CONCLUÍDO' : 'OPERAÇÃO'}</span><h3>{c.name}</h3>
-        <p>Nível {c.level} · Poder recomendado {c.power}</p><p className="muted">Recompensa única: {c.gold} gold · {c.exp} EXP{c.reward ? ' + equipamento' : ' + título de conclusão'}</p>
+        <p>Nível {c.level} · Poder recomendado {c.power}</p><p className="muted">Recompensa única: {c.gold} gold · {c.exp} EXP{c.reward ? ' + equipamento' : ' + conclusão da campanha'}</p>
         <button type="button" disabled={busy || c.chapter !== a.chapter + 1 || level < c.level} onClick={() => setPrepared(c.chapter)}>Preparar {c.name}</button>
         {prepared === c.chapter && c.chapter === a.chapter + 1 && <div className="operation-preview"><ol>{c.stages.map(stage => <li key={stage}>{stage}</li>)}</ol><p>Seu poder: <strong>{a.power}</strong> / {c.power}. Custo: 1 stamina.</p>
           {a.power < c.power && <p className="danger">Seu poder está abaixo do necessário. A tentativa vai falhar; melhore o equipamento primeiro.</p>}

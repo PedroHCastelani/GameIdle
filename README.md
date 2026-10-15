@@ -1,6 +1,6 @@
 # The Life
 
-MMORPG idle de navegador em desenvolvimento. Esta branch entrega um **protótipo local fechado**: conta de teste, sessão única, personagem, missão idle e coleta offline persistente. Sem CPF real, pagamento, deploy público ou promessa de conformidade. Estado e limites: [docs/Estado_do_Projeto.md](docs/Estado_do_Projeto.md).
+MMORPG idle de navegador em desenvolvimento. Esta branch entrega um **protótipo local fechado**: conta de teste, sessão única, três profissões, missões idle, inventário/equipamentos e campanha solo de três capítulos com progresso persistente. Sem CPF real, pagamento, deploy público ou promessa de conformidade. Estado e limites: [docs/Estado_do_Projeto.md](docs/Estado_do_Projeto.md).
 
 ## Executar localmente
 
@@ -62,7 +62,7 @@ Rotas de jogo exigem Authorization: Bearer. Rotas de auth exigem Origin igual a 
 
 [Tarefas](TASKS.md) · [Blueprint](docs/Blueprint.md) · [GDD](docs/GDD_Completo.md) · [Motor](docs/Motor_de_Calculo.md) · [Banco](docs/Schema_Banco_de_Dados.md) · [Segurança](docs/Seguranca_e_LGPD.md) · [CI](docs/CI_CD.md).
 
-Documentos originais substituídos foram preservados em docs/archive/2026-08, marcados como históricos e não normativos. A produção visual, inventário, skills, economia entre jogadores, PvP e monetização permanecem planejados. Notion e gates externos só são considerados aprovados mediante evidência.
+Documentos originais substituídos foram preservados em docs/archive/2026-08, marcados como históricos e não normativos. Produção visual final, talentos completos, economia entre jogadores, PvP e monetização permanecem planejados. Inventário e prática de carreira têm implementação simplificada local. Notion e gates externos só são considerados aprovados mediante evidência.
 ## Confirmação e recuperação na prévia local
 
 O painel **Segurança da conta** permite solicitar confirmação de e-mail e redefinir senha. Após solicitar uma mensagem, abra o JSON mais recente destinado ao seu e-mail fictício na pasta `.local-mail/` da raiz do repositório e copie o campo `code` para o formulário correspondente. Essa pasta é local, ignorada pelo Git e não é servida pela API. Nenhum e-mail é enviado pela internet.
@@ -72,3 +72,13 @@ Confirmação expira em 24 horas; recuperação em 30 minutos. Aguarde 60 segund
 Rotas adicionais: `GET /api/auth/account`, `POST /api/auth/email/request`, `POST /api/auth/email/confirm` (`code`), `POST /api/auth/password/request` (`email`) e `POST /api/auth/password/reset` (`code`, `password`). Confirmação solicitada exige login; todos os POST exigem o Origin configurado. Verificação de e-mail ainda não impede o acesso ao jogo local. Provedor real e liberação pública permanecem pendentes.
 
 Teste a interface com `pnpm --filter @the-life/web test:coverage`. O CI publica cobertura de API e interface para o SonarCloud.
+
+## Jogar o MVP local
+
+Após migration e seed, escolha uma das três profissões. Inicie a primeira missão marcada CAMPANHA, colete ciclos de 10 segundos e compre/equipe a ferramenta e o colete nas abas Loja e Inventário. O painel Jornada mostra o próximo nível/poder necessário. Complete uma operação, equipe sua recompensa e avance para as missões liberadas. Termine os três capítulos para ver o desfecho da profissão. Missões EXTRA preservam o conteúdo antigo e rendem apenas gold/EXP.
+
+As operações custam 1 stamina; poder insuficiente causa falha, informada antes de confirmar. Equipamentos e prática aumentam o poder. Suprimentos recebidos a cada cinco ciclos podem ser vendidos. Recarregar recupera a sessão e o progresso; a conclusão permanece salva.
+
+Rotas autenticadas adicionais: POST `/api/characters/:id/buy` (`templateId`), `/item` (`itemId`, `action`: equip/unequip/sell) e `/challenge` (`chapter`, `requestId` UUID). O servidor valida propriedade, saldo, nível e repetição. GET `/api/game` inclui campanha, inventário, loja, histórico e missões bloqueadas.
+
+[Escopo do MVP](docs/MVP_Local.md) · [Teste como jogador](docs/Playtest_MVP_2026-10-15.md).
