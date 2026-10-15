@@ -35,7 +35,7 @@
 
 ## 🟠 Em Progresso
 
-Nenhuma edição concorrente em andamento. R-004 implementada e em revisão no PR #6; recorte autorizado de T-010, sem liberação pública.
+R-005 — MVP local jogável e playtest (autorizado em 15/10/2026). Em progresso: campanha das três profissões, progressão, inventário/equipamentos, desafios, orientação e teste como jogador. Arquivos em uso: schema/migrations/seed, módulos game, UI, testes e docs. Escopo acordado em docs/MVP_Local.md; não equivale à Fase 1 completa do GDD nem a publicação online.
 
 ## 🔵 Aguardando Review
 

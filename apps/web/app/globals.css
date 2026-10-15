@@ -40,6 +40,13 @@ input[type=radio] { accent-color: var(--accent); justify-self: start; }
 .stats { margin-left: auto; flex-wrap: wrap; }.stats span { display: block; color: var(--muted); font-size: 12px; }.stats strong { font-size: 24px; overflow-wrap: anywhere; }
 .active-mission { border-left: 3px solid var(--accent); }
 .mission { display: flex; flex-direction: column; }.mission button { margin-top: auto; }.mission .badge { align-self: start; }
-.message { border-radius: 8px; padding: 16px; margin-bottom: 20px; }.error { background: #422729; border: 1px solid #d78080; }.success { background: #263d2c; border: 1px solid #78a884; }
+.message { display: block; border-radius: 8px; padding: 16px; margin-bottom: 20px; }.error { background: #422729; border: 1px solid #d78080; }.success { background: #263d2c; border: 1px solid #78a884; }
+.campaign-heading { display: flex; gap: 24px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+.chapter-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 16px; }
+.chapter { padding: 20px; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 12px; min-width: 0; }
+.chapter.complete { border-color: #75a45e; }.chapter button { width: 100%; overflow-wrap: anywhere; }.item-actions { display: grid; gap: 10px; }
+.operation-preview { margin-top: 18px; }.danger { color: #ffb0aa; }.victory { padding: 24px; border: 1px solid var(--accent); background: #253d2c; border-radius: 12px; margin-bottom: 20px; }
+.cycle-status progress { width: 100%; height: 12px; accent-color: var(--accent); }.locked-mission { color: var(--muted); padding: 10px; border-left: 2px solid var(--line); }
+.campaign .tabs { flex-wrap: wrap; }.campaign .stats { margin-left: 0; }.campaign .stats strong { font-size: 21px; }
 .loading { color: var(--accent); }footer { padding: 30px 0 10px; font-size: 12px; }
 @media(max-width: 700px) { .shell { padding: 20px 16px; }.intro { padding-top: 32px; }.panel { padding: 20px; }.profession-grid,.mission-grid { grid-template-columns: 1fr; }.character-panel { flex-wrap: wrap; }.stats { margin-left: 0; width: 100%; }.tabs { flex-wrap: wrap; }.topbar { gap: 12px; }.badge { font-size: 10px; } }

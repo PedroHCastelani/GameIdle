@@ -2,6 +2,8 @@ import { Prisma, type PrismaClient, type Character, type Profession } from '@pri
 import { ApiError } from '../../lib/security.js';
 import { lockUser } from '../auth/auth.service.js';
 import { calculateIdle, levelFromExperience } from './idle.js';
+import { lockCharacter } from './character-lock.js';
+import { campaignView, grantCycleDrops } from './campaign.service.js';
 
 const characterView = (c: Character) => ({
   id: c.id, name: c.name, profession: c.profession, level: c.level,
@@ -10,12 +12,6 @@ const characterView = (c: Character) => ({
 });
 
 export function gameService(db: PrismaClient) {
-  async function lockCharacter(tx: Prisma.TransactionClient, userId: string, id: string) {
-    await tx.$queryRaw`SELECT id FROM characters WHERE id = ${id} AND "userId" = ${userId} FOR UPDATE`;
-    const char = await tx.character.findFirst({ where: { id, userId } });
-    if (!char) throw new ApiError(404, 'Personagem não encontrado.');
-    return char;
-  }
   async function collect(tx: Prisma.TransactionClient, char: Character, now: Date) {
     if (char.isPrisoned) throw new ApiError(409, 'Personagem preso não recebe progresso.');
     if (!char.isOnMission || !char.currentMissionId) return { cycles: 0, gold: 0n, exp: 0n, capped: false };
@@ -27,6 +23,7 @@ export function gameService(db: PrismaClient) {
     const result = calculateIdle({ since: char.lastOnlineAt, now, premium: Boolean(premium?.activeUntil && premium.activeUntil > now),
       duration: mission.durationBase, goldMin: mission.goldMin, goldMax: mission.goldMax, exp: mission.expBase });
     if (!result.cycles) return { cycles: 0, gold: 0n, exp: 0n, capped: result.capped };
+    if (mission.id.startsWith('mvp_')) await grantCycleDrops(tx, char, result.cycles);
     await tx.character.update({ where: { id: char.id }, data: {
       goldHand: { increment: result.gold }, experience: { increment: result.exp },
       level: levelFromExperience(char.experience + result.exp, char.level), lastOnlineAt: result.cursor,
@@ -46,9 +43,10 @@ export function gameService(db: PrismaClient) {
       const missions = char ? await db.missionDefinition.findMany({
         where: { profession: char.profession, type: 'IDLE', isActive: true, minLevel: { lte: char.level },
           OR: [{ maxLevel: null }, { maxLevel: { gte: char.level } }] }, orderBy: { minLevel: 'asc' },
-        select: { id: true, name: true, description: true, durationBase: true, goldMin: true, goldMax: true, expBase: true },
+        select: { id: true, name: true, description: true, durationBase: true, goldMin: true, goldMax: true, expBase: true, minLevel: true },
       }) : [];
-      return { character: char ? characterView(char) : null, missions, serverTime: new Date() };
+      const lockedMissions = char ? await db.missionDefinition.findMany({ where: { profession: char.profession, type: 'IDLE', isActive: true, id: { startsWith: 'mvp_' }, minLevel: { gt: char.level } }, orderBy: { minLevel: 'asc' }, select: { id: true, name: true, minLevel: true } }) : [];
+      return { character: char ? characterView(char) : null, missions, lockedMissions, adventure: char ? await campaignView(db, char) : null, serverTime: new Date() };
     },
     async createCharacter(userId: string, name: string, profession: Profession) {
       try {

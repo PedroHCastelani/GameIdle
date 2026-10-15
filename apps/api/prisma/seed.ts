@@ -1,4 +1,5 @@
 import { PrismaClient, Profession, MissionType, SkillCategory, BuffType, BuffTier } from '@prisma/client';
+import { seedCampaign } from '../src/modules/game/campaign-seed.js';
 
 const prisma = new PrismaClient();
 
@@ -481,6 +482,7 @@ async function main() {
   }
 
   console.log('✅ Database seeded successfully!');
+  await seedCampaign(prisma);
 }
 
 main()

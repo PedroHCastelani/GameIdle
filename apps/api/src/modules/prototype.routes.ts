@@ -5,6 +5,7 @@ import { ApiError, publicJson } from '../lib/security.js';
 import { authService } from './auth/auth.service.js';
 import { gameService } from './game/game.service.js';
 import { accountService, requestMessage, type DeliverMessage } from './auth/account.service.js';
+import { campaignService } from './game/campaign.service.js';
 
 const credentials = z.object({ email: z.string().trim().toLowerCase().email().max(254), password: z.string().min(10).max(128) }).strict();
 const characterInput = z.object({ name: z.string().trim().min(3).max(24).regex(/^[\p{L}\p{N} _-]+$/u), profession: z.enum(['POLICE', 'THIEF', 'DOCTOR']) }).strict();
@@ -14,6 +15,7 @@ type Identity = { sub: string; sid: string };
 export async function prototypeRoutes(app: FastifyInstance, db: PrismaClient, webOrigin: string, deliver: DeliverMessage) {
   const auth = authService(db), game = gameService(db);
   const account = accountService(db, deliver);
+  const campaign = campaignService(db);
   const cookie = { httpOnly: true, sameSite: 'strict' as const, secure: webOrigin.startsWith('https://'), path: '/api/auth', maxAge: 30 * 86400 };
   const requireOrigin = async (request: FastifyRequest) => {
     if (request.headers.origin !== webOrigin) throw new ApiError(403, 'Origem não permitida.');
@@ -76,6 +78,21 @@ export async function prototypeRoutes(app: FastifyInstance, db: PrismaClient, we
     return { loggedOut: true };
   });
   app.get('/api/game', { preHandler: authenticate }, async req => publicJson(await game.state((req.user as Identity).sub)));
+  app.post('/api/characters/:id/buy', { preHandler: authenticate }, async req => {
+    const { id } = characterParams.parse(req.params);
+    const { templateId } = z.object({ templateId: z.string().min(1).max(64) }).strict().parse(req.body);
+    return campaign.buy((req.user as Identity).sub, id, templateId);
+  });
+  app.post('/api/characters/:id/item', { preHandler: authenticate }, async req => {
+    const { id } = characterParams.parse(req.params);
+    const { itemId, action } = z.object({ itemId: z.string().min(1).max(64), action: z.enum(['equip', 'unequip', 'sell']) }).strict().parse(req.body);
+    return campaign.item((req.user as Identity).sub, id, itemId, action);
+  });
+  app.post('/api/characters/:id/challenge', { preHandler: authenticate }, async req => {
+    const { id } = characterParams.parse(req.params);
+    const { chapter, requestId } = z.object({ chapter: z.number().int().min(1).max(3), requestId: z.string().uuid() }).strict().parse(req.body);
+    return campaign.challenge((req.user as Identity).sub, id, chapter, requestId);
+  });
   app.post('/api/characters', { preHandler: authenticate }, async (req, reply) => {
     const input = characterInput.parse(req.body);
     const result = await game.createCharacter((req.user as Identity).sub, input.name, input.profession);
